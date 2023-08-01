@@ -52,7 +52,8 @@ console.log(razorpay_key)
 
     showToast(
       'info',
-      'Complete payment for successfull registration...',
+      'Do payment for successfull registration.',
+      'સફળ નોંધણી માટે ચુકવણી કરો.',
       5000,
     );
   }, []);

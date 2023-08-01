@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   Button,
   ScrollView,
   TouchableOpacity,
@@ -45,7 +44,7 @@ const FirstForm = () => {
   const handleRegister = () => {
     setLocations('');
     if (locations === '') {
-      showToast('error', 'Select your village / તમારું ગામ પસંદ કરો.', 2500);
+      showToast('error', 'Select your village.', 'તમારું ગામ પસંદ કરો.', 2500);
     } else {
       navigation.navigate('RegisterForm', {locations_id: locations});
     }
@@ -60,7 +59,8 @@ const FirstForm = () => {
             style={styles.input}
             selectedValue={locations}
             onValueChange={itemValue => setLocations(itemValue)}
-            dropdownIconColor="gray">
+            dropdownIconColor="gray"
+            mode="dropdown">
             <Picker.Item
               label="Select your village / તમારું ગામ પસંદ કરો"
               value=""

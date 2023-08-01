@@ -59,10 +59,10 @@ export default function LoginScreen({ navigation }) {
           AsyncStorage.setItem('villageData', villageData);
           AsyncStorage.setItem('isTest', JSON.stringify(true));
           navigation.navigate('HomePage');
-          showToast('success', 'Login successfully.', 1500);
+          showToast('success', 'Login successfully.','સફળતાપૂર્વક લૉગિન થઈ ગયું.', 2000);
         }
       } catch (error) {
-        console.log(error);
+        console.log("error",error);
         AsyncStorage.setItem('isTest', JSON.stringify(false));
       }
     }
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     elevation: 5,
     width: '100%',
-    // flexBasis: "90%"
+    height: 50,
   },
 
   forgot_button: {

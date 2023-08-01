@@ -47,7 +47,7 @@ const CustomSidebarMenu = props => {
     AsyncStorage.removeItem('villageData');
     AsyncStorage.setItem('isTest', JSON.stringify(false));
     navigation.navigate('HomePage');
-    showToast('success', 'Logout successfully.', 2000);
+    showToast('success', 'Logout successfully.', 'સફળતાપૂર્વક લોગઆઉટ થઈ ગયુ.', 2000);
   };
 
   return (
@@ -99,7 +99,7 @@ const CustomSidebarMenu = props => {
           onPress={() => navigation.navigate('ContactUs')}
           style={styles.customDrawerItem}>
           <MaterialCommunityIcons name="email" color="#666" size={30} />
-          <Text style={styles.customDrawerItemText}>Contact us</Text>
+          <Text style={styles.customDrawerItemText}>Contact Us</Text>
         </TouchableOpacity>
       </DrawerContentScrollView>
 

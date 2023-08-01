@@ -34,8 +34,8 @@ const FamilyRegister = ({route}) => {
   const _id = userId;
   const [parentsData, setParentsData] = useState(null);
   const [checkpayment, setCheckpayment] = useState(null);
-  console.log(parentsData?.payment_id, 'parentsData');
-  console.log(checkpayment?.payment_id, 'checkpayment');
+  // console.log(parentsData?.payment_id, 'parentsData');
+  // console.log(checkpayment?.payment_id, 'checkpayment');
 
   useEffect(() => {
     const final = AsyncStorage.getItem('userData')
@@ -172,7 +172,8 @@ const FamilyRegister = ({route}) => {
       console.log(maxFormsAllowed, '<- - - - - maxFormsAllowed');
       console.log(forms.length, '<= = = = formsLength');
       if (forms.length >= maxFormsAllowed) {
-        showToast('error', `You can't add more than 7 forms.`, 2500);
+        showToast('error', `You can't add more than 7 forms.`, 'તમે ૭ થી વધારે ફોર્મ ના ઉમેરી શકો.', 2500);
+
         return;
       }
 
@@ -190,7 +191,7 @@ const FamilyRegister = ({route}) => {
       };
       setForms([...forms, newForm]);
     } else {
-      showToast('error', 'Fill the data to add new form !', 2500);
+      showToast('error', 'Fill the data to add new form.', 'નવું ફોર્મ ઉમેરવા માટે તમામ માહિતી ભરો.', 2500);
     }
   };
 
@@ -249,7 +250,7 @@ const FamilyRegister = ({route}) => {
               console.log('new child store');
             });
           });
-          showToast('success', 'Data registerd successfully', 2500);
+          showToast('success', 'Data registerd successfully.', 'ડેટા સફળતાપૂર્વક રજીસ્ટર થઈ ગયા.', 2500);
 
           navigation.navigate('ProfilePage');
           setFirstname('');
@@ -267,7 +268,7 @@ const FamilyRegister = ({route}) => {
           console.error('Registration failed:', error);
         });
     } else {
-      showToast('error', 'Please fill all the required fields !', 2500);
+      showToast('error', 'Please fill all the required fields !','કૃપા કરીને તમામ જરૂરી માહિતી ભરો', 2500);
     }
   };
 
@@ -430,7 +431,8 @@ const FamilyRegister = ({route}) => {
                 style={[styles.input, {marginTop: 0}]}
                 selectedValue={form.relationship}
                 onValueChange={value => handleRelationshipChange(index, value)}
-                dropdownIconColor="gray">
+                dropdownIconColor="gray"
+                mode="dropdown">
                 <Picker.Item
                   label="Select Relation / સંબંધ પસંદ કરો"
                   value=""
@@ -471,7 +473,8 @@ const FamilyRegister = ({route}) => {
                 style={[styles.input, {marginTop: 0}]}
                 selectedValue={form.maritalStatus}
                 onValueChange={value => handleMaritalStatusChange(index, value)}
-                dropdownIconColor="gray">
+                dropdownIconColor="gray"
+                mode="dropdown">
                 <Picker.Item
                   label="Marital status / વૈવાહિક સ્ટેટસ"
                   value=""
@@ -620,7 +623,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    // height: 40,
+    height: 50,
     borderColor: 'gray',
     borderWidth: 1,
     marginTop: 16,

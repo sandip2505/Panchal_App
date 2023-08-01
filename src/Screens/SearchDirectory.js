@@ -30,6 +30,7 @@ const SearchDirectory = ({navigation}) => {
             searchValue: searchValue,
           });
         } else {
+          setIsLoading(true);
           response = await axios.get(`${API_BASE_URL}/user-list`);
         }
 
@@ -115,7 +116,7 @@ const SearchDirectory = ({navigation}) => {
         </View>
       </View>
       {isLoading ? (
-        <ActivityIndicator size="small" color="#00a9ff" />
+        <ActivityIndicator size="large" color="#00a9ff" />
       ) : users.searchData ? (
         <FlatList
           data={users.searchData}
@@ -130,7 +131,7 @@ const SearchDirectory = ({navigation}) => {
           keyExtractor={(item, index) => item._id + index.toString()}
           contentContainerStyle={styles.userList}
         />
-      ) : !isLoading && (
+      ) : (
         <View style={styles.blankcontainer}>
           <Image
             source={require('../assets/EmptySearch.png')}
@@ -166,6 +167,8 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     color: '#000',
+    height: 45,
+
   },
 
   iconcontainer: {
@@ -197,7 +200,7 @@ const styles = StyleSheet.create({
   userImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 100
+    borderRadius: 100,
   },
 
   userInfoContainer: {

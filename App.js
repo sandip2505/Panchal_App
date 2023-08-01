@@ -32,7 +32,7 @@ import ContactUs from './src/Screens/ContactUs';
 import TermsAndCondition from './src/Screens/TermsAndCondition';
 import RegisterForm from './src/Screens/RegisterForm';
 import FirstForm from './src/Screens/FirstForm';
-import ChildRegisterForm from './src/Screens/ChildRegisterForm';
+// import ChildRegisterForm from './src/Screens/ChildRegisterForm';
 import Villages from './src/Screens/Villages';
 import PaymentPage from './src/Screens/PaymentPage';
 import Directory from './src/Screens/Directory';
@@ -112,11 +112,11 @@ function FirstScreenStack({navigation}) {
         component={FirstForm}
         options={{title: 'Register'}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ChildRegisterForm"
         component={ChildRegisterForm}
         options={{title: 'Register'}}
-      />
+      /> */}
       <Stack.Screen
         name="Villages"
         component={Villages}
@@ -165,7 +165,7 @@ function FirstScreenStack({navigation}) {
       <Stack.Screen
         name="ContactUs"
         component={ContactUs}
-        options={{title: 'Contact us'}}
+        options={{title: 'Contact Us'}}
       />
       <Stack.Screen
         name="LoginScreen"
@@ -204,20 +204,26 @@ function App() {
   }, []);
 
   const toastConfig = {
-    error: ({text1, ...rest}) => (
+    error: ({text1, text2, ...rest}) => (
       <BaseToast
         {...rest}
         style={{borderLeftColor: 'red', width: '90%', top: '5%'}}
         contentContainerStyle={{paddingHorizontal: 15}}
         text1Style={{
-          fontSize: 18,
+          fontSize: 19,
           fontWeight: 'semibold',
           color: 'red',
         }}
+        text2Style={{
+          fontSize: 16,
+          color: 'red',
+          opacity: 0.7
+        }}
         text1={text1}
+        text2={text2}
       />
     ),
-    success: ({text1, ...rest}) => (
+    success: ({text1, text2, ...rest}) => (
       <BaseToast
         {...rest}
         style={{borderLeftColor: 'green', width: '90%', top: '5%'}}
@@ -227,10 +233,16 @@ function App() {
           fontWeight: 'semibold',
           color: 'green',
         }}
+        text2Style={{
+          fontSize: 16,
+          color: 'green',
+          opacity: 0.7
+        }}
         text1={text1}
+        text2={text2}
       />
     ),
-    info: ({text1, ...rest}) => (
+    info: ({text1, text2, ...rest}) => (
       <BaseToast
         {...rest}
         style={{borderLeftColor: '#0000ff', width: '90%', top: '5%'}}
@@ -240,7 +252,13 @@ function App() {
           fontWeight: 'semibold',
           color: '#444',
         }}
+        text2Style={{
+          fontSize: 16,
+          color: '#444',
+          opacity: 0.7
+        }}
         text1={text1}
+        text2={text2}
       />
     ),
   };
@@ -286,9 +304,6 @@ function App() {
         </Drawer.Navigator>
       ) : (
         <CheckConnection />
-        // <View style={styles.noInternetContainer}>
-        //   <Text style={styles.noInternetText}>No Internet Connection</Text>
-        // </View>
       )}
       <Toast config={toastConfig} />
     </NavigationContainer>

@@ -214,23 +214,33 @@ const RegisterForm = ({route}) => {
           .then(res => {
             const userId = res.data._id;
             const PerentsData = res.data;
-            AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
-            setFirstname('');
-            setMiddlename('');
-            setLastname('');
-            setPassword('');
-            setDob(null);
-            setShowPicker(false);
-            setMobileNumber('');
-            setState('');
-            setCity('');
-            setPincode('');
-            setGender('');
-            setEducation('');
-            setAddress('');
-            setJob('');
-            setMaritalStatus('');
-            navigation.navigate('PaymentPage');
+            if (res.data.mobileError === 'Mobile number already register') {
+              console.log(res.data.mobileError);
+              showToast(
+                'error',
+                'Mobile number is already registered !',
+                'મોબાઈલ નંબર પહેલેથી જ રજીસ્ટર છે.',
+                2500,
+              );
+            } else {
+              AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
+              setFirstname('');
+              setMiddlename('');
+              setLastname('');
+              setPassword('');
+              setDob(null);
+              setShowPicker(false);
+              setMobileNumber('');
+              setState('');
+              setCity('');
+              setPincode('');
+              setGender('');
+              setEducation('');
+              setAddress('');
+              setJob('');
+              setMaritalStatus('');
+              navigation.navigate('PaymentPage');
+            }
           })
           .catch(err => {
             console.log('i got error ouchhhh!!!   ::: ', err);
@@ -245,7 +255,12 @@ const RegisterForm = ({route}) => {
         }
       }
     } else {
-      showToast('error', 'Please fill all the required fields !', 2500);
+      showToast(
+        'error',
+        'Please fill all the required fields !',
+        'કૃપા કરીને તમામ જરૂરી માહિતી ભરો.',
+        2500,
+      );
     }
   };
 
@@ -445,6 +460,7 @@ const RegisterForm = ({route}) => {
               style={[styles.input, {marginTop: maritalStatusError ? 16 : 0}]}
               selectedValue={marital_status}
               onValueChange={itemValue => setMaritalStatus(itemValue)}
+              mode="dropdown"
               defaultValue="Married"
               dropdownIconColor="gray">
               <Picker.Item
@@ -581,6 +597,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     color: 'black',
     paddingHorizontal: 8,
+    height: 50,
   },
 
   inputContainer: {

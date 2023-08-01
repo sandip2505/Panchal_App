@@ -45,7 +45,7 @@ const Villages = ({ navigation }) => {
         <View style={styles.container}>
                 {isLoading ? (
                     <View style={{marginTop: 10}}>
-                    <ActivityIndicator size="small" color="#00a9ff" />
+                    <ActivityIndicator size="large" color="#00a9ff" />
                   </View>
                 ) : (
                     <View style={{width: "100%"}}>

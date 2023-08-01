@@ -5,7 +5,6 @@ import {
   Pressable,
   FlatList,
   StyleSheet,
-  TextInput,
   Button,
   Image,
   ActivityIndicator,
@@ -100,7 +99,7 @@ const Directory = ({navigation}) => {
           <Text
             style={
               styles.userName
-            }>{`${item.lastname} ${item.firstname} ${item.middlename}`}</Text>
+            }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
           <Text style={styles.userMobile}>
             <Text style={{fontWeight: 'bold'}}>Mo.</Text> {item.mobile_number}
           </Text>
@@ -123,7 +122,8 @@ const Directory = ({navigation}) => {
           selectedValue={searchValue}
           onValueChange={itemValue => setSearchValue(itemValue)}
           style={styles.input}
-          dropdownIconColor="gray">
+          dropdownIconColor="gray"
+          mode="dropdown">
           <Picker.Item label="All villages / બધા ગામો" value="" />
 
           {options.map(option => (
@@ -137,7 +137,7 @@ const Directory = ({navigation}) => {
       </View>
       {isLoading ? (
         <View>
-          <ActivityIndicator size="small" color="#00a9ff" />
+          <ActivityIndicator size="large" color="#00a9ff" />
         </View>
       ) : users && users.length ? (
         <FlatList

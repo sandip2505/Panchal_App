@@ -95,7 +95,7 @@ const ProfilePage = () => {
               AsyncStorage.setItem('userData', userData);
               navigation.navigate('HomePage');
               navigation.navigate('ProfilePage');
-              showToast('success', 'Profile image updated successfully.', 2500);
+              showToast('success', 'Profile image updated successfully.','પ્રોફાઇલ ફોટો સફળતાપૂર્વક અપડેટ થઈ ગયો.', 2500);
               setIsLoading(false);
             });
           });
@@ -118,7 +118,7 @@ const ProfilePage = () => {
             <View style={styles.imageContainer}>
               {isLoading ? (
                 <View>
-                  <ActivityIndicator size="small" color="#00a9ff" />
+                  <ActivityIndicator size="large" color="#00a9ff" />
                 </View>
               ) : parentsData?.photo ? (
                 <View style={styles.imageIconContainer}>

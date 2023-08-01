@@ -22,9 +22,9 @@ const FamilyList = ({navigation, route}) => {
   const [ChildData, setChildData] = useState([]);
   const [mainData, setmainData] = useState([]);
   const [villageData, setVillageData] = useState([]);
-  const [selectedUser, setSelectedUserf] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-console.log("villageData",villageData)
+
   useEffect(() => {
     fetchVillagesData();
   }, []);
@@ -131,7 +131,7 @@ console.log("villageData",villageData)
 
       {isLoading ? (
         <View style={{paddingTop: 20}}>
-          <ActivityIndicator size="small" color="#00a9ff" />
+          <ActivityIndicator size="large" color="#00a9ff" />
         </View>
       ) : ChildData.length > 0 ? (
         <View style={styles.MainContainer}>
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   mainDetails: {
     fontSize: 14,
     color: '#444',
-    flexBasis: '34%',
+    flexBasis: '33%',
     textTransform: 'capitalize',
   },
 
@@ -325,6 +325,7 @@ const styles = StyleSheet.create({
   },
 
   familyDetails: {
+    flexBasis: '45%',
     fontSize: 14,
     color: '#444',
     textTransform: 'capitalize',

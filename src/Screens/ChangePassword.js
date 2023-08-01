@@ -93,6 +93,7 @@ const ChangePassword = () => {
           showToast(
             'success',
             'Password updated successfully.',
+            'પાસવર્ડ સફળતાપૂર્વક અપડેટ થયો.',
             2500,
           );
           navigation.navigate('ProfilePage');
@@ -245,6 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 5,
     width: '100%',
+    height: 50,
   },
 
   passwordBtn: {
