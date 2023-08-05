@@ -53,7 +53,6 @@ const FirstForm = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {/* <Text style={styles.title}>Register Form</Text> */}
         <View style={styles.inputContainer}>
           <Picker
             style={styles.input}
@@ -62,7 +61,7 @@ const FirstForm = () => {
             dropdownIconColor="gray"
             mode="dropdown">
             <Picker.Item
-              label="Select your village / તમારું ગામ પસંદ કરો"
+              label="Select your village / તમારું ગામ પસંદ કરો."
               value=""
               selectedValue
               enabled={false}
@@ -92,41 +91,29 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  // title: {
-  //     fontSize: 25,
-  //     fontWeight: "bold",
-  //     textAlign: 'center',
-  //     marginBottom: 16,
-  //     color: '#515151',
-  //     textTransform: "uppercase"
-  // },
 
   inputContainer: {
-    height: 45,
+    height: 55,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 4,
+    borderRadius: 6,
     marginBottom: 16,
     justifyContent: 'center',
   },
 
   input: {
-    height: 40,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 4,
     color: 'black',
-    paddingHorizontal: 8,
   },
 
   button: {
     height: 50,
     backgroundColor: '#00a9ff',
-    borderRadius: 4,
+    borderRadius: 6,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   btntext: {
     color: 'white',
     fontSize: 20,

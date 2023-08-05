@@ -172,7 +172,12 @@ const FamilyRegister = ({route}) => {
       console.log(maxFormsAllowed, '<- - - - - maxFormsAllowed');
       console.log(forms.length, '<= = = = formsLength');
       if (forms.length >= maxFormsAllowed) {
-        showToast('error', `You can't add more than 7 forms.`, 'તમે ૭ થી વધારે ફોર્મ ના ઉમેરી શકો.', 2500);
+        showToast(
+          'error',
+          `You can't add more than 7 forms.`,
+          'તમે ૭ થી વધારે ફોર્મ ના ઉમેરી શકો.',
+          2500,
+        );
 
         return;
       }
@@ -191,7 +196,12 @@ const FamilyRegister = ({route}) => {
       };
       setForms([...forms, newForm]);
     } else {
-      showToast('error', 'Fill the data to add new form.', 'નવું ફોર્મ ઉમેરવા માટે તમામ માહિતી ભરો.', 2500);
+      showToast(
+        'error',
+        'Fill the data to add new form.',
+        'નવું ફોર્મ ઉમેરવા માટે તમામ માહિતી ભરો.',
+        2500,
+      );
     }
   };
 
@@ -250,7 +260,12 @@ const FamilyRegister = ({route}) => {
               console.log('new child store');
             });
           });
-          showToast('success', 'Data registerd successfully.', 'ડેટા સફળતાપૂર્વક રજીસ્ટર થઈ ગયા.', 2500);
+          showToast(
+            'success',
+            'Data registerd successfully.',
+            'ડેટા સફળતાપૂર્વક રજીસ્ટર થઈ ગયા.',
+            2500,
+          );
 
           navigation.navigate('ProfilePage');
           setFirstname('');
@@ -268,7 +283,12 @@ const FamilyRegister = ({route}) => {
           console.error('Registration failed:', error);
         });
     } else {
-      showToast('error', 'Please fill all the required fields !','કૃપા કરીને તમામ જરૂરી માહિતી ભરો', 2500);
+      showToast(
+        'error',
+        'Please fill all the required fields !',
+        'કૃપા કરીને તમામ જરૂરી માહિતી ભરો.',
+        2500,
+      );
     }
   };
 
@@ -280,7 +300,7 @@ const FamilyRegister = ({route}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.mainTitle}> Family Details </Text>
+      <Text style={styles.mainTitle}> Family Members </Text>
       <ScrollView>
         {forms.map((form, index) => (
           <View key={index}>
@@ -590,7 +610,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     marginBottom: 16,
-    borderRadius: 4,
+    borderRadius: 6,
     paddingHorizontal: 8,
   },
 
@@ -627,7 +647,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginTop: 16,
-    borderRadius: 4,
+    borderRadius: 6,
     color: 'black',
     paddingHorizontal: 8,
   },
@@ -641,7 +661,7 @@ const styles = StyleSheet.create({
   button: {
     height: 50,
     width: '45%',
-    borderRadius: 4,
+    borderRadius: 6,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -651,7 +671,7 @@ const styles = StyleSheet.create({
   removebtn: {
     height: 40,
     width: '15%',
-    borderRadius: 4,
+    borderRadius: 6,
     backgroundColor: 'red',
     display: 'flex',
     alignItems: 'center',
@@ -669,7 +689,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 4,
+    borderRadius: 6,
     marginTop: 16,
     justifyContent: 'center',
   },
@@ -681,7 +701,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 5,
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 6,
     marginTop: 16,
   },
 

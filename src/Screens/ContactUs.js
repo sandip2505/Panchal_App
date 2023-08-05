@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,21 +10,17 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import { API_BASE_URL, API_KEY } from '@env';
-import { Divider } from 'native-base';
+import {API_BASE_URL, API_KEY} from '@env';
+import {Divider} from 'native-base';
 import axios from 'axios';
 
-const ContactUs = ({ navigation }) => {
+const ContactUs = ({navigation}) => {
   const [contact1, setcontact1] = useState('');
   const [contactno1, setcontactno1] = useState('');
   const [contact2, setcontact2] = useState('');
   const [contactno2, setcontactno2] = useState('');
   const [facebook, setfacebook] = useState('');
   const [telegram, settelegram] = useState('');
-  // console.log('-------------------===================>1', contact1)
-  // console.log('-------------------===================>2', contactno1)
-  // console.log('-------------------===================>3', contact2)
-  // console.log('-------------------===================>4', contactno2)
   useEffect(() => {
     paymentamout();
   }, []);
@@ -40,12 +36,13 @@ const ContactUs = ({ navigation }) => {
         const contactno2 = data.find(item => item.key === 'contactno2');
         const facebook = data.find(item => item.key === 'facebook');
         const telegram = data.find(item => item.key === 'telegram');
-        setcontact1(contact1.value)
-        setcontactno1(contactno1.value)
-        setcontact2(contact2.value)
-        setcontactno2(contactno2.value)
-        setfacebook(facebook.value)
-        settelegram(telegram.value)
+
+        setcontact1(contact1?.value);
+        setcontactno1(contactno1?.value);
+        setcontact2(contact2?.value);
+        setcontactno2(contactno2?.value);
+        setfacebook(facebook?.value);
+        settelegram(telegram?.value);
       } else {
         console.log('Request failed with status:', response.status);
       }
@@ -54,34 +51,33 @@ const ContactUs = ({ navigation }) => {
     }
   };
 
-
   const handleFirstNumberPress = () => {
-    const phoneNumber = '9876543210';
-    Linking.openURL(`tel:${phoneNumber}`).catch(error => {
+    // const phoneNumber = '9876543210';
+    Linking.openURL(`tel:${contactno1}`).catch(error => {
       console.error('Error opening phone number:', error);
     });
   };
 
   const handleSecondNumberPress = () => {
-    const phoneNumber = '9876543210';
-    Linking.openURL(`tel:${phoneNumber}`).catch(error => {
+    // const phoneNumber = '9876543210';
+    Linking.openURL(`tel:${contactno2}`).catch(error => {
       console.error('Error opening phone number:', error);
     });
   };
 
-  const handleFacebookLinkPress = () => {
-    const url = facebook;
-    Linking.openURL(url).catch(error => {
-      console.error('Error opening facebook link:', error);
-    });
-  };
+  // const handleFacebookLinkPress = () => {
+  //   const url = facebook;
+  //   Linking.openURL(url).catch(error => {
+  //     console.error('Error opening facebook link:', error);
+  //   });
+  // };
 
-  const handleTeligramLinkPress = () => {
-    const url = telegram;
-    Linking.openURL(url).catch(error => {
-      console.error('Error opening telegram link:', error);
-    });
-  };
+  // const handleTeligramLinkPress = () => {
+  //   const url = telegram;
+  //   Linking.openURL(url).catch(error => {
+  //     console.error('Error opening telegram link:', error);
+  //   });
+  // };
 
   const handleDeveloperNumberPress = () => {
     const phoneNumber = '9724669622';
@@ -99,24 +95,26 @@ const ContactUs = ({ navigation }) => {
         <View style={styles.details}>
           <View style={styles.upperdetails}>
             <Text style={styles.upperdetailstext}>
-              સમાજની એપમાં કોઈ ક્ષતિ હોય, જાહેરાત મુકવી હોય, પાસવર્ડ મેળવવા હોય
-              વગેરે માટે નીચે આપેલ નંબર પર સંપર્ક કરો
+              સમાજની એપમાં કોઈ ક્ષતિ હોય, જાહેરાત મુકવી હોય વગેરે માટે નીચે આપેલ
+              નંબર પર સંપર્ક કરો
             </Text>
 
-            <Text style={styles.contact}>
-              {contact1}
+            <View>
+              <Text style={styles.contact}>
+                {contact1 ? contact1 : 'પંચાલ સમાજ'}
+              </Text>
               <Text style={styles.number} onPress={handleFirstNumberPress}>
-                {' '}{contactno1}
+                {contactno1}
               </Text>
-            </Text>
-            <Text style={styles.contact}>
-              {contact2}
+            </View>
+            <View>
+              <Text style={styles.contact}>{contact2}</Text>
               <Text style={styles.number} onPress={handleSecondNumberPress}>
-                {' '}{contactno2}
+                {contactno2}
               </Text>
-            </Text>
+            </View>
 
-            <View style={styles.link}>
+            {/* <View style={styles.link}>
               <Pressable onPress={handleFacebookLinkPress}>
                 <Text style={styles.linktext}>
                   Click here to Like us on Facebook
@@ -127,7 +125,7 @@ const ContactUs = ({ navigation }) => {
                   Click here to join us on Telegram
                 </Text>
               </Pressable>
-            </View>
+            </View> */}
           </View>
 
           <View style={styles.divider}></View>
@@ -140,12 +138,15 @@ const ContactUs = ({ navigation }) => {
             <View style={styles.developer}>
               <Text
                 onPress={() => Linking.openURL('https://codecrewinfotech.com')}
-                style={styles.developerlink}
-              >
+                style={styles.developerlink}>
                 https://codecrewinfotech.com
               </Text>
 
-              <Text onPress={handleDeveloperNumberPress} style={styles.developerlink}>972-466-9622</Text>
+              <Text
+                onPress={handleDeveloperNumberPress}
+                style={styles.developerlink}>
+                972-466-9622
+              </Text>
             </View>
 
             <Text style={styles.developertext}>Developed by</Text>
@@ -161,8 +162,6 @@ const ContactUs = ({ navigation }) => {
             </Pressable>
           </View>
         </View>
-
-
       </ImageBackground>
     </View>
   );
@@ -188,11 +187,9 @@ const styles = StyleSheet.create({
   },
 
   upperdetails: {
-    justifyContent: 'center',
     padding: 15,
     gap: 15,
     flexBasis: '55%',
-    // marginVertical: 20
   },
 
   upperdetailstext: {
@@ -211,20 +208,24 @@ const styles = StyleSheet.create({
 
   number: {
     color: '#1b2093',
-    textDecorationLine: 'underline',
-  },
-
-  link: {
-    gap: 7,
-  },
-
-  linktext: {
-    color: '#21258d',
-    fontSize: 20,
+    fontSize: 21,
     textAlign: 'center',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
+    opacity: 0.8,
   },
+
+  // link: {
+  //   gap: 7,
+  // },
+
+  // linktext: {
+  //   color: '#21258d',
+  //   fontSize: 20,
+  //   textAlign: 'center',
+  //   fontWeight: 'bold',
+  //   textDecorationLine: 'underline',
+  // },
 
   divider: {
     borderTopWidth: 2,
@@ -247,9 +248,9 @@ const styles = StyleSheet.create({
 
   developer: {
     textAlign: 'center',
-    display: "flex",
-    flexDirection: "column",
-    gap: 5
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 5,
   },
 
   developerlink: {

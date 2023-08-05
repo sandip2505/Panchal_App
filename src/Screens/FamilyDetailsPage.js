@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, ScrollView, Pressable} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AgeCount from '../component/AgeCount';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
@@ -55,8 +55,22 @@ const FamilyDetailsPage = () => {
 
     return (
       <>
-        <View style={[styles.MainContainer, { marginBottom: 30 }]}>
+        <View style={[styles.MainContainer, {marginBottom: 30}]}>
           <View style={styles.familyItem}>
+            <Pressable
+              style={styles.EditIcon}
+              onPress={() =>
+                navigation.navigate('EditMainDetails', {
+                  mainId: parentsData?._id,
+                })
+              }>
+              <MaterialCommunityIcons
+                name="account-edit"
+                size={30}
+                color="#00000090"
+              />
+            </Pressable>
+
             <View style={styles.dropdownContent}>
               <View>
                 <Text style={styles.FamilyName}>
@@ -118,8 +132,22 @@ const FamilyDetailsPage = () => {
         return (
           <View key={index} style={styles.MainContainer}>
             <View style={styles.familyItem}>
+              <Pressable
+                style={styles.EditIcon}
+                onPress={() =>
+                  navigation.navigate('EditFamilyDetails', {
+                    childId: child && child?._id,
+                  })
+                }>
+                <MaterialCommunityIcons
+                  name="account-edit-outline"
+                  size={30}
+                  color="#00000090"
+                />
+              </Pressable>
+
               <View style={styles.dropdownContent}>
-                <View>
+                <View style={styles.headingRelation}>
                   <Text style={styles.FamilyName}>
                     {child && child?.relationship}
                   </Text>
@@ -131,10 +159,10 @@ const FamilyDetailsPage = () => {
                 <Text style={styles.familyDetails}>
                   {child &&
                     child?.lastname +
-                    ' ' +
-                    child?.firstname +
-                    ' ' +
-                    child?.middlename}
+                      ' ' +
+                      child?.firstname +
+                      ' ' +
+                      child?.middlename}
                 </Text>
               </View>
 
@@ -172,7 +200,7 @@ const FamilyDetailsPage = () => {
       })
     ) : (
       <View style={styles.blankcontainer}>
-        <Text style={styles.blank}>Family details are not available...</Text>
+        <Text style={styles.blank}>Family members are not available...</Text>
       </View>
     );
   };
@@ -209,14 +237,24 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
   },
 
   dropdownContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 10,
+  },
+
+  EditIcon: {
+    position: 'absolute',
+    right: 7,
+    top: 7,
   },
 
   FamilyName: {
@@ -253,81 +291,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
 
-  title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 16,
-    color: '#515151',
-    textTransform: 'capitalize',
-  },
-
-  sectionContainer: {
-    marginBottom: 20,
-    backgroundColor: 'gray',
-  },
-
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: 'black',
-  },
-
-  mainItem: {
-    backgroundColor: '#edf9ff',
-    padding: 10,
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-
-  fieldLabel: {
-    fontSize: 16,
-    color: 'red',
-  },
-
-  mainDetailsContainer: {
-    padding: 10,
-    flexBasis: '100%',
-    // display: 'flex',
-    flexWrap: 'wrap',
-  },
-
-  mainName: {
-    color: 'black',
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 4,
-    textTransform: 'capitalize',
-    paddingVertical: 5,
-    // flexWrap: 'wrap',
-  },
-
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-
-  Mainlabel: {
-    alignItems: 'flex-start',
-    flexBasis: '36%',
-    fontSize: 15,
-    color: '#333',
-    fontWeight: '600',
-  },
-
-  mainDetails: {
-    fontSize: 14,
-    color: '#444',
-    textTransform: 'capitalize',
-  },
-
   blankcontainer: {
     flex: 1,
     alignItems: 'center',
@@ -348,7 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0083ff',
-    borderRadius: 4,
+    borderRadius: 8,
     padding: 10,
     margin: 10,
     flexDirection: 'row',

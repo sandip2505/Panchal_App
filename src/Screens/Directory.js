@@ -167,16 +167,16 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'black',
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 6,
     color: 'black',
     paddingHorizontal: 8,
   },
 
   inputContainer: {
-    // height: 45,
+    height: 55,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 4,
+    borderRadius: 6,
     marginBottom: 16,
     justifyContent: 'center',
     marginVertical: 20,
@@ -199,25 +199,14 @@ const styles = StyleSheet.create({
   userImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 100
+    borderRadius: 100,
   },
 
   userInfoContainer: {
     flex: 1,
   },
 
-  searchInput: {
-    flex: 1,
-    height: 40,
-    paddingHorizontal: 10,
-    marginRight: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-  },
-
   userItem: {
-    // height: 60,
     backgroundColor: '#edf9ff',
     padding: 8,
     marginVertical: 6,

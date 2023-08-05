@@ -213,7 +213,7 @@ const FamilyList = ({navigation, route}) => {
       ) : (
         <View style={styles.blankcontainer}>
           <Text style={styles.blank}>
-            Family details are not available for this user...
+            Family members are not available for this user...
           </Text>
         </View>
       )}
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
 
   Mainlabel: {
     alignItems: 'flex-start',
-    flexBasis: '34%',
+    flexBasis: '33%',
     fontSize: 15,
     color: '#333',
     fontWeight: '600',

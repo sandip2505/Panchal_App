@@ -1,10 +1,10 @@
-import { StyleSheet, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { API_BASE_URL } from '@env';
-import { WebView } from 'react-native-webview';
+import {API_BASE_URL} from '@env';
+import {WebView} from 'react-native-webview';
 
-const AboutUs = ({ navigation }) => {
+const AboutUs = ({navigation}) => {
   const [aboutUs, setaboutUs] = useState([]);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const AboutUs = ({ navigation }) => {
   const injectCSS = `
     <style>
       .description {
-        font-size: 30px;
+        font-size: 35px;
         text-align: justify;
         padding: 20px;
       }

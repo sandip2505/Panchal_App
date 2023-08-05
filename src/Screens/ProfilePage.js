@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
   familybtn: {
     height: 50,
     backgroundColor: '#68b300',
-    borderRadius: 4,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'gray',
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
   logoutbtn: {
     height: 50,
     backgroundColor: '#ff0000',
-    borderRadius: 4,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'gray',

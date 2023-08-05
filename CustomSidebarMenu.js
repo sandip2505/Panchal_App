@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -16,13 +16,12 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
 import CustomModal from './src/component/CustomModal';
-import Toast from 'react-native-toast-message';
-import { showToast } from './src/component/CustomToast';
-
+import {showToast} from './src/component/CustomToast';
 
 const CustomSidebarMenu = props => {
   const navigation = useNavigation();
@@ -47,14 +46,19 @@ const CustomSidebarMenu = props => {
     AsyncStorage.removeItem('villageData');
     AsyncStorage.setItem('isTest', JSON.stringify(false));
     navigation.navigate('HomePage');
-    showToast('success', 'Logout successfully.', 'સફળતાપૂર્વક લોગઆઉટ થઈ ગયુ.', 2000);
+    showToast(
+      'success',
+      'Logout successfully.',
+      'લોગઆઉટ સફળતાપૂર્વક થઈ ગયુ.',
+      2000,
+    );
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff', width: '100%'}}>
       <Image
         source={require('./src/assets/panchal.png')}
-        alt='panchalImage'
+        alt="panchalImage"
         style={styles.sideMenuProfileIcon}
       />
 
@@ -62,55 +66,83 @@ const CustomSidebarMenu = props => {
         <DrawerItemList {...props} />
 
         {isTestData ? (
-          <>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ProfilePage')}
-              style={styles.customDrawerItem}>
-              <FontAwesome
-                name="user"
-                color="#666"
-                size={30}
-                style={{
-                  marginLeft: 4,
-                  marginRight: 4,
-                }}
-              />
-              <Text style={styles.customDrawerItemText}>Profile</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              // onPress={removeData}
-              onPress={() => setShowModal(true)}
-              style={styles.customDrawerItem}>
-              <MaterialCommunityIcons name="logout" size={30} color="#666" />
-              <Text style={styles.customDrawerItemText}>Logout</Text>
-            </TouchableOpacity>
-          </>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ProfilePage')}
+            style={styles.customDrawerItem}>
+            <View
+              style={{
+                flexBasis: '15%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome name="user-circle-o" color="#666" size={30} />
+            </View>
+            <Text style={styles.customDrawerItemText}>Profile</Text>
+          </TouchableOpacity>
         ) : (
           <TouchableOpacity
             onPress={() => navigation.navigate('LoginScreen')}
             style={styles.customDrawerItem}>
-            <MaterialCommunityIcons name="login" color="#666" size={30} />
+            <View
+              style={{
+                flexBasis: '15%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <MaterialCommunityIcons name="login" color="#666" size={30} />
+            </View>
             <Text style={styles.customDrawerItemText}>Login</Text>
           </TouchableOpacity>
         )}
 
         <TouchableOpacity
+          onPress={() => navigation.navigate('committeeMembers')}
+          style={styles.customDrawerItem}>
+          <View
+            style={{
+              flexBasis: '15%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <FontAwesome name="users" color="#666" size={28} />
+          </View>
+          <Text style={styles.customDrawerItemText}>Committee Members </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => navigation.navigate('ContactUs')}
           style={styles.customDrawerItem}>
-          <MaterialCommunityIcons name="email" color="#666" size={30} />
+          <View
+            style={{
+              flexBasis: '15%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <MaterialCommunityIcons name="email" color="#666" size={30} />
+          </View>
           <Text style={styles.customDrawerItemText}>Contact Us</Text>
         </TouchableOpacity>
+
+        {isTestData && (
+          <TouchableOpacity
+            onPress={() => setShowModal(true)}
+            style={styles.customDrawerItem}>
+            <View
+              style={{
+                flexBasis: '15%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <MaterialCommunityIcons name="logout" size={30} color="#666" />
+            </View>
+            <Text style={styles.customDrawerItemText}>Logout</Text>
+          </TouchableOpacity>
+        )}
       </DrawerContentScrollView>
 
       <Text
         onPress={() => Linking.openURL('https://codecrewinfotech.com')}
-        style={{
-          fontSize: 16,
-          textAlign: 'center',
-          color: 'black',
-          paddingBottom: 10,
-        }}>
+        style={styles.developer}>
         www.codecrewinfotech.com
       </Text>
 
@@ -149,6 +181,14 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: '500',
     color: '#666',
+  },
+
+  developer: {
+    fontSize: 15,
+    textAlign: 'center',
+    color: 'black',
+    paddingBottom: 10,
+    opacity: 0.6,
   },
 });
 

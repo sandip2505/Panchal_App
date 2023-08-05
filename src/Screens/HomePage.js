@@ -6,22 +6,25 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
-import Swiper from 'react-native-swiper';
 import {API_BASE_URL, API_KEY, IMAGE_URL} from '@env';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SwiperFlatList} from 'react-native-swiper-flatlist';
 
 console.log('API_BASE_URL', API_BASE_URL);
 
 const HomePage = ({navigation}) => {
   const [image, setImage] = useState([]);
+  const [isTestData, setIsTestData] = useState(false);
+
+  const {width, height} = Dimensions.get('window');
+  const sliderHeight = height * 0.32;
 
   useEffect(() => {
     fetchSliderImage();
   }, []);
-
-  const [isTestData, setIsTestData] = useState(false);
 
   const keyUpdate = () => {
     AsyncStorage.getItem('isTest', function (err, value) {
@@ -47,46 +50,56 @@ const HomePage = ({navigation}) => {
     }
   };
 
-  const handleAboutPress = () => {
-    navigation.navigate('AboutUs');
-  };
-
-  const handleDirectoryPress = () => {
-    navigation.navigate('Directory');
-  };
-
-  const handleVillagesPress = () => {
-    navigation.navigate('Villages');
-  };
-  const handleRegisterPress = () => {
-    navigation.navigate('FirstForm');
-  };
-  const handlePaymentPage = () => {
-    navigation.navigate('PaymentPage');
-  };
-
   return (
     <View style={styles.maindiv}>
       <ScrollView>
-        <View>
-          <Swiper
-            style={styles.swiperContainer}
-            showsPagination={true}
-            loop={true}>
-            {image.map((img, index) => (
-              <View key={index}>
-                <Image
-                  style={styles.image}
-                  source={{uri: `${IMAGE_URL}/${img.image}`}}
-                  alt={`image-${index}`}
-                />
-              </View>
-            ))}
-          </Swiper>
+        <View style={{height: sliderHeight, overflow: 'hidden'}}>
+          <SwiperFlatList
+            autoplay
+            autoplayDelay={3}
+            autoplayLoop
+            showPagination
+            autoplayLoopKeepAnimation
+            paginationStyle={{
+              padding: 10,
+              alignItems: 'center',
+            }}
+            paginationStyleItemActive={{
+              height: 8,
+              backgroundColor: '#129be0',
+            }}
+            paginationStyleItemInactive={{
+              width: 8,
+              height: 8,
+              backgroundColor: '#f9f9f9',
+            }}
+            data={image}
+            renderItem={({item, index}) =>
+              item ? (
+                <View key={index} style={{width, height: sliderHeight}}>
+                  <Image
+                    style={{width, height: sliderHeight}}
+                    source={{uri: `${IMAGE_URL}/${item.image}`}}
+                    alt={`image-${index}`}
+                  />
+                </View>
+              ) : (
+                <View style={{width, height: sliderHeight}}>
+                  <Image
+                    style={{width, height: sliderHeight}}
+                    source={require('../assets/slide.jpeg')}
+                    alt={`image`}
+                  />
+                </View>
+              )
+            }
+          />
         </View>
+
         <View style={styles.container}>
           <View style={styles.row}>
             <TouchableOpacity
+              activeOpacity={0.7}
               style={styles.box}
               onPress={() => navigation.navigate('AboutUs')}>
               <View style={styles.circle}>
@@ -100,6 +113,7 @@ const HomePage = ({navigation}) => {
             </TouchableOpacity>
 
             <TouchableOpacity
+              activeOpacity={0.7}
               style={styles.box}
               onPress={() => {
                 navigation.navigate('Directory');
@@ -114,11 +128,14 @@ const HomePage = ({navigation}) => {
               <Text style={styles.boxText}>Directory</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.box} onPress={handleVillagesPress}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.box}
+              onPress={() => navigation.navigate('Villages')}>
               <View style={styles.circle}>
                 <Image
                   style={styles.boxImage}
-                  source={require('../assets/villages.png')}
+                  source={require('../assets/village2.png')}
                   alt="villages"
                 />
               </View>
@@ -126,9 +143,58 @@ const HomePage = ({navigation}) => {
             </TouchableOpacity>
           </View>
 
+          {/* //////////////////////////////////////////////////////////////////////// */}
+
+          <View style={styles.row}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.box}
+              onPress={() => navigation.navigate('PragatiNews')}>
+              <View style={styles.circle}>
+                <Image
+                  style={styles.boxImage}
+                  source={require('../assets/pragatiNews.png')}
+                  alt="about"
+                />
+              </View>
+              <Text style={styles.boxText}>Pragati News</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.box}
+              onPress={() => navigation.navigate('job')}>
+              <View style={styles.circle}>
+                <Image
+                  style={styles.boxImage}
+                  source={require('../assets/job.png')}
+                  alt="directory"
+                />
+              </View>
+              <Text style={styles.boxText}>Job</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.box}
+              onPress={() => navigation.navigate('News')}>
+              <View style={styles.circle}>
+                <Image
+                  style={styles.boxImage}
+                  source={require('../assets/news.png')}
+                  alt="News"
+                />
+              </View>
+              <Text style={styles.boxText}>News</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* //////////////////////////////////////////////////////////////////////// */}
+
           <View style={styles.row}>
             {!isTestData && (
               <TouchableOpacity
+                activeOpacity={0.7}
                 style={styles.box}
                 onPress={() => navigation.navigate('FirstForm')}>
                 <View style={styles.circle}>
@@ -143,6 +209,7 @@ const HomePage = ({navigation}) => {
             )}
 
             <TouchableOpacity
+              activeOpacity={0.7}
               style={styles.box}
               onPress={() => navigation.navigate('SearchDirectory')}>
               <View style={styles.circle}>
@@ -167,10 +234,12 @@ const styles = StyleSheet.create({
   maindiv: {
     height: '100%',
     width: '100%',
+    backgroundColor: '#fff',
   },
 
-  swiperContainer: {
-    height: 270,
+  image: {
+    height: 'auto',
+    width: '100%',
   },
 
   container: {
@@ -185,21 +254,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 
-  image: {
-    height: 270,
-    width: '100%',
-  },
-
   box: {
     width: '28%',
     height: 135,
-    backgroundColor: 'white',
     margin: 8,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'black',
     elevation: 5,
+    backgroundColor: '#fff',
   },
 
   boxText: {

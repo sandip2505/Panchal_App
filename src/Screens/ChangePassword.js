@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,11 +12,11 @@ import {
   Pressable,
 } from 'react-native';
 import axios from 'axios';
-import { API_BASE_URL, API_KEY } from '@env';
-import { useNavigation } from '@react-navigation/native';
+import {API_BASE_URL, API_KEY} from '@env';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { showToast } from '../component/CustomToast';
+import {showToast} from '../component/CustomToast';
 
 const ChangePassword = () => {
   const navigation = useNavigation();
@@ -66,8 +66,10 @@ const ChangePassword = () => {
       setNewPassError('');
       setConfirmPassError('Confirm password is required');
       return false;
-    } else if(currentPassword === newPassword){
-      setConfirmPassError('New password must be different from the current password!')
+    } else if (currentPassword === newPassword) {
+      setConfirmPassError(
+        'New password must be different from the current password!',
+      );
       return false;
     } else {
       setCurrentPassError('');
@@ -126,18 +128,18 @@ const ChangePassword = () => {
           }}>
           <Image
             source={require('../assets/changepassword.png')}
-            alt='Change Password'
+            alt="Change Password"
             style={styles.image}
           />
         </View>
 
         <View style={styles.inputContainer}>
-          <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
             <TextInput
               style={[
                 styles.input,
-                { borderColor: currentPassError ? '#ff0000' : 'gray' },
-                { shadowColor: currentPassError ? '#ff0000' : 'black' },
+                {borderColor: currentPassError ? '#ff0000' : 'gray'},
+                {shadowColor: currentPassError ? '#ff0000' : 'black'},
               ]}
               placeholder="Current password"
               placeholderTextColor="gray"
@@ -160,12 +162,12 @@ const ChangePassword = () => {
             <Text style={styles.error}>{currentPassError}</Text>
           )}
 
-          <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
             <TextInput
               style={[
                 styles.input,
-                { borderColor: newPassError ? '#ff0000' : 'gray' },
-                { shadowColor: newPassError ? '#ff0000' : 'black' },
+                {borderColor: newPassError ? '#ff0000' : 'gray'},
+                {shadowColor: newPassError ? '#ff0000' : 'black'},
               ]}
               placeholder="New password"
               placeholderTextColor="gray"
@@ -188,8 +190,8 @@ const ChangePassword = () => {
           <TextInput
             style={[
               styles.input,
-              { borderColor: confirmPassError ? '#ff0000' : 'gray' },
-              { shadowColor: confirmPassError ? '#ff0000' : 'black' },
+              {borderColor: confirmPassError ? '#ff0000' : 'gray'},
+              {shadowColor: confirmPassError ? '#ff0000' : 'black'},
             ]}
             placeholder="Confirm password"
             placeholderTextColor="gray"
@@ -216,7 +218,7 @@ const ChangePassword = () => {
 export default ChangePassword;
 
 const styles = StyleSheet.create({
-  container: { height: '100%', width: '100%' },
+  container: {height: '100%', width: '100%'},
 
   bgImg: {
     height: '100%',
@@ -240,7 +242,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginVertical: 12,
-    borderRadius: 5,
+    borderRadius: 6,
     color: 'black',
     paddingHorizontal: 15,
     backgroundColor: '#fff',
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: '2%',
     top: '24%',
-    padding: 5
+    padding: 5,
   },
 
   forgot_button: {
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
   loginBtn: {
     height: 55,
     backgroundColor: '#00a9ff',
-    borderRadius: 5,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: '15%',

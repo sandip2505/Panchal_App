@@ -29,9 +29,7 @@ const CustomDateField = props => {
   );
 };
 
-const RegisterForm = ({route}) => {
-  const {locations_id} = route.params;
-  // console.log("locations_id", locations_id)
+const EditMainDetails = ({route}) => {
   const navigation = useNavigation();
 
   const [firstname, setFirstname] = useState('');
@@ -80,10 +78,7 @@ const RegisterForm = ({route}) => {
     return formattedDate.toLocaleDateString(undefined, options);
   };
 
-  const handleRegister = async text => {
-    const expectedPasswordPattern =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
-
+  const handleUpdate = async text => {
     let isValid = true;
     if (!firstname) {
       setfirstnameError('Please enter firstname.');
@@ -91,38 +86,28 @@ const RegisterForm = ({route}) => {
     } else {
       setfirstnameError('');
     }
+
     if (!lastname) {
       setlastnameError('Please enter lastname.');
       isValid = false;
     } else {
       setlastnameError('');
     }
+
     if (!middlename) {
       setmiddlenameError('Please enter middlename.');
       isValid = false;
     } else {
       setmiddlenameError('');
     }
-    if (!password) {
-      setPasswordError('Please enter password.');
-      isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError('Password must have at least 6 characters.');
-      isValid = false;
-    } else if (!expectedPasswordPattern.test(password)) {
-      setPasswordError(
-        'Password must have at least one letter, one number, and one special character.',
-      );
-      isValid = false;
-    } else {
-      setPasswordError('');
-    }
+
     if (!dob) {
       setdobError('Please enter dob.');
       isValid = false;
     } else {
       setdobError('');
     }
+
     if (!mobile_number) {
       setmobile_numberError('Please enter mobile number.');
       isValid = false;
@@ -132,18 +117,21 @@ const RegisterForm = ({route}) => {
     } else {
       setmobile_numberError('');
     }
+
     if (!state) {
       setstateError('Please enter state.');
       isValid = false;
     } else {
       setstateError('');
     }
+
     if (!city) {
       setcityError('Please enter city.');
       isValid = false;
     } else {
       setcityError('');
     }
+
     if (!pincode) {
       setpincodeError('Please enter pincode.');
       isValid = false;
@@ -153,30 +141,35 @@ const RegisterForm = ({route}) => {
     } else {
       setpincodeError('');
     }
+
     if (!education) {
       seteducationError('Please enter education.');
       isValid = false;
     } else {
       seteducationError('');
     }
+
     if (!address) {
       setaddressError('Please enter address.');
       isValid = false;
     } else {
       setaddressError('');
     }
+
     if (!job) {
       setjobError('Please enter job.');
       isValid = false;
     } else {
       setjobError('');
     }
+
     if (!gender) {
       setgenderError('Please enter gender.');
       isValid = false;
     } else {
       setgenderError('');
     }
+
     if (!marital_status) {
       setMaritalStatusError('Please choose marital status.');
       isValid = false;
@@ -185,75 +178,8 @@ const RegisterForm = ({route}) => {
     }
 
     if (isValid) {
-      const userData = new FormData();
-
-      userData.append('firstname', firstname);
-      userData.append('middlename', middlename);
-      userData.append('locations_id', locations_id);
-      userData.append('lastname', lastname);
-      userData.append('dob', dob);
-      userData.append('mobile_number', mobile_number);
-      userData.append('password', password);
-      userData.append('state', state);
-      userData.append('city', city);
-      userData.append('pincode', pincode);
-      userData.append('gender', gender);
-      userData.append('education', education);
-      userData.append('address', address);
-      userData.append('job', job);
-      userData.append('marital_status', marital_status);
-
       try {
-        const response = await axios
-          .post(`${API_BASE_URL}/user_register`, {
-            headers: {
-              Accept: 'application/json',
-            },
-            userData,
-          })
-          .then(res => {
-            const userId = res.data._id;
-            const PerentsData = res.data;
-            if (res.data.mobileError === 'Mobile number already register') {
-              console.log(res.data.mobileError);
-              showToast(
-                'error',
-                'Mobile number is already registered !',
-                'મોબાઈલ નંબર પહેલેથી જ રજીસ્ટર છે.',
-                2500,
-              );
-            } else {
-              AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
-              setFirstname('');
-              setMiddlename('');
-              setLastname('');
-              setPassword('');
-              setDob(null);
-              setShowPicker(false);
-              setMobileNumber('');
-              setState('');
-              setCity('');
-              setPincode('');
-              setGender('');
-              setEducation('');
-              setAddress('');
-              setJob('');
-              setMaritalStatus('');
-              navigation.navigate('PaymentPage');
-            }
-          })
-          .catch(err => {
-            console.log('i got error ouchhhh!!!   ::: ', err);
-          });
-      } catch (error) {
-        if (error.response) {
-          console.log('Status code:', error.response.status);
-          console.log('Response data:', error.response.data);
-          console.log('Response headers:', error.response.headers);
-        } else {
-          console.error('Error:', error.message);
-        }
-      }
+      } catch (error) {}
     } else {
       showToast(
         'error',
@@ -266,13 +192,6 @@ const RegisterForm = ({route}) => {
 
   useEffect(() => {
     const dataaa = AsyncStorage.getItem('userData');
-
-    showToast(
-      'info',
-      'Register the main member of the house.',
-      'ઘર ના મુખ્ય સભ્ય નું રજીસ્ટર કરો .',
-      6000,
-    );
   }, []);
 
   return (
@@ -322,19 +241,6 @@ const RegisterForm = ({route}) => {
             />
             {lastnameError && <Text style={styles.error}>{lastnameError}</Text>}
           </View>
-
-          <TextInput
-            style={[
-              styles.input,
-              {borderColor: passwordError ? '#ff0000' : 'gray'},
-            ]}
-            placeholder="Password / પાસવર્ડ"
-            placeholderTextColor="gray"
-            // secureTextEntry={true}
-            onChangeText={setPassword}
-            value={password}
-          />
-          {passwordError && <Text style={styles.error}>{passwordError}</Text>}
 
           <View>
             <Pressable onPress={() => setShowPicker(true)}>
@@ -523,12 +429,13 @@ const RegisterForm = ({route}) => {
             </View>
           </View>
           {genderError && <Text style={styles.error}>{genderError}</Text>}
-
-          <Pressable style={styles.button} onPress={handleRegister}>
-            <Text style={styles.btntext}> Save </Text>
-          </Pressable>
         </View>
       </ScrollView>
+      <View style={styles.btngroup}>
+        <Pressable style={styles.button} onPress={handleUpdate}>
+          <Text style={styles.btntext}>Update</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -536,57 +443,61 @@ const RegisterForm = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f1f1f1',
   },
-
-  childContainer: {
-    padding: 16,
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 5,
   },
-
-  title: {
+  mainTitle: {
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 16,
+    paddingVertical: 10,
     color: '#515151',
     textTransform: 'uppercase',
   },
 
-  image: {
-    flex: 1,
-    alignItems: 'center',
-    marginBottom: 10,
-    borderRadius: 6,
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'gray',
+    textTransform: 'uppercase',
+  },
+
+  bday: {
+    flexDirection: 'row',
+    padding: 10,
+    borderWidth: 1,
     borderColor: 'gray',
+    height: 40,
     borderWidth: 1,
-    paddingVertical: 1,
+    marginBottom: 16,
+    borderRadius: 6,
   },
 
-  input: {
-    borderWidth: 1,
-    marginTop: 16,
-    borderRadius: 6,
-    color: 'black',
-    paddingHorizontal: 8,
-    height: 50,
+  bdaypicker: {
+    flexBasis: '70%',
   },
 
-  inputContainer: {
-    height: 45,
-    borderWidth: 1,
-    borderRadius: 6,
-    marginTop: 16,
-    justifyContent: 'center',
+  bdayText: {
+    flexBasis: '30%',
+    color: 'gray',
   },
 
-  button: {
-    height: 50,
-    backgroundColor: '#00a9ff',
-    borderRadius: 6,
+  dobbtn: {
+    color: 'red',
+    backgroundColor: 'red',
+    marginBottom: 50,
+  },
+
+  header: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 10,
+    justifyContent: 'space-between',
+    marginVertical: 15,
   },
 
   btntext: {
@@ -595,15 +506,52 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
 
+  input: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 16,
+    borderRadius: 6,
+    color: 'black',
+    paddingHorizontal: 8,
+  },
+
+  btngroup: {
+    //   flex: 1,
+    //   width: '100%',
+    //   position: 'absolute',
+    //   bottom: 0,
+    //   paddingHorizontal: 16,
+  },
+
+  button: {
+    height: 50,
+    borderRadius: 6,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    backgroundColor: '#007bff',
+  },
+
+  inputContainer: {
+    height: 45,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 6,
+    marginTop: 16,
+    justifyContent: 'center',
+  },
+
   gender: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5,
-    marginTop: 16,
     borderWidth: 1,
     borderRadius: 6,
+    marginTop: 16,
   },
 
   radioContainer: {
@@ -612,16 +560,9 @@ const styles = StyleSheet.create({
   },
 
   radioLabel: {
-    marginLeft: 5,
+    marginLeft: 6,
     color: 'black',
-  },
-
-  error: {
-    color: '#ff0000',
-    fontSize: 15,
-    textAlign: 'justify',
-    paddingRight: 7,
   },
 });
 
-export default RegisterForm;
+export default EditMainDetails;

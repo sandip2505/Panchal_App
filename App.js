@@ -8,6 +8,8 @@ import {
   View,
   Linking,
   StyleSheet,
+  Modal,
+  Button,
 } from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -29,6 +31,7 @@ import CustomSidebarMenu from './CustomSidebarMenu';
 import HomePage from './src/Screens/HomePage';
 import AboutUs from './src/Screens/AboutUs';
 import ContactUs from './src/Screens/ContactUs';
+import CommitteeMembers from './src/Screens/CommitteeMembers';
 import TermsAndCondition from './src/Screens/TermsAndCondition';
 import RegisterForm from './src/Screens/RegisterForm';
 import FirstForm from './src/Screens/FirstForm';
@@ -46,6 +49,11 @@ import SearchDirectory from './src/Screens/SearchDirectory';
 import ChangePassword from './src/Screens/ChangePassword';
 import FamilyRegister from './src/Screens/FamilyRegister';
 import CheckConnection from './src/component/CheckConnection';
+import EditFamilyDetails from './src/Screens/EditFamilyDetails';
+import EditMainDetails from './src/Screens/EditMainDetails';
+import Job from './src/Screens/Job';
+import News from './src/Screens/News';
+import PragatiNews from './src/Screens/PragatiNews';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -60,7 +68,7 @@ function FirstScreenStack({navigation}) {
         headerTintColor: '#fff',
         headerTitleStyle: {
           fontWeight: 'bold',
-          fontSize: 25,
+          fontSize: 22,
         },
         headerStyle: {
           backgroundColor: '#00a9ff',
@@ -71,15 +79,15 @@ function FirstScreenStack({navigation}) {
         component={HomePage}
         options={{
           drawerLabel: 'Home',
-          title: 'Panchal Samaj',
+          title: 'શ્રી સવાસો ગોળ પંચાલ સમાજ, અમદાવાદ',
           headerShown: true,
           headerTintColor: '#000',
           headerStyle: {
             backgroundColor: '#fff',
           },
           headerTitleStyle: {
-            fontWeight: '600',
-            fontSize: 25,
+            fontSize: 19,
+            fontWeight: 'bold',
           },
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -89,7 +97,7 @@ function FirstScreenStack({navigation}) {
                 style={{
                   height: 28,
                   width: 30,
-                  marginRight: 25,
+                  marginRight: 12,
                   marginLeft: 2,
                 }}
               />
@@ -112,11 +120,6 @@ function FirstScreenStack({navigation}) {
         component={FirstForm}
         options={{title: 'Register'}}
       />
-      {/* <Stack.Screen
-        name="ChildRegisterForm"
-        component={ChildRegisterForm}
-        options={{title: 'Register'}}
-      /> */}
       <Stack.Screen
         name="Villages"
         component={Villages}
@@ -167,6 +170,13 @@ function FirstScreenStack({navigation}) {
         component={ContactUs}
         options={{title: 'Contact Us'}}
       />
+
+      <Stack.Screen
+        name="committeeMembers"
+        component={CommitteeMembers}
+        options={{title: 'Committee Members'}}
+      />
+
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
@@ -181,6 +191,26 @@ function FirstScreenStack({navigation}) {
         name="FamilyRegister"
         component={FamilyRegister}
         options={{title: 'Family Register'}}
+      />
+      <Stack.Screen
+        name="EditMainDetails"
+        component={EditMainDetails}
+        options={{title: 'Edit Details'}}
+      />
+      <Stack.Screen
+        name="EditFamilyDetails"
+        component={EditFamilyDetails}
+        options={{title: 'Edit Family Details'}}
+      />
+
+      <Stack.Screen name="job" component={Job} options={{title: 'Job'}} />
+
+      <Stack.Screen name="News" component={News} options={{title: 'News'}} />
+
+      <Stack.Screen
+        name="PragatiNews"
+        component={PragatiNews}
+        options={{title: 'Pragati News'}}
       />
     </Stack.Navigator>
   );
@@ -217,7 +247,7 @@ function App() {
         text2Style={{
           fontSize: 16,
           color: 'red',
-          opacity: 0.7
+          opacity: 0.7,
         }}
         text1={text1}
         text2={text2}
@@ -236,7 +266,7 @@ function App() {
         text2Style={{
           fontSize: 16,
           color: 'green',
-          opacity: 0.7
+          opacity: 0.7,
         }}
         text1={text1}
         text2={text2}
@@ -255,7 +285,7 @@ function App() {
         text2Style={{
           fontSize: 16,
           color: '#444',
-          opacity: 0.7
+          opacity: 0.7,
         }}
         text1={text1}
         text2={text2}
@@ -263,16 +293,42 @@ function App() {
     ),
   };
 
+  //////////////////////////////////////////////////////////////////////////////////////////
+
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  useEffect(() => {
+    checkAppLaunch();
+  }, []);
+
+  const checkAppLaunch = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@app_launched');
+      if (value === null) {
+        setShowInstructions(true);
+      }
+    } catch (error) {
+      // Error handling if AsyncStorage fails
+    }
+  };
+
+  const handleInstructionsDismiss = async () => {
+    try {
+      await AsyncStorage.setItem('@app_launched', 'true');
+      setShowInstructions(false);
+    } catch (error) {
+      // Error handling if AsyncStorage fails
+    }
+  };
+
+  //////////////////////////////////////////////////////////////////////////////////////////
+
   return (
     <NavigationContainer>
       {isConnected ? (
         <Drawer.Navigator
           screenOptions={{
-            headerTitleAlign: 'center',
-            headerTintColor: '#fff',
-            headerTitleStyle: {fontSize: 25},
-            headerStyle: {backgroundColor: '#00a9ff'},
-            drawerLabelStyle: {fontSize: 18},
+            drawerStyle: {width: '75%', paddingTop: 20},
           }}
           drawerContent={props => <CustomSidebarMenu {...props} />}>
           <Drawer.Screen
@@ -283,17 +339,26 @@ function App() {
               title: 'Login',
               drawerLabel: ({focused, color}) => (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <MaterialCommunityIcons
-                    name="home"
-                    color={focused ? color : '#666'}
-                    size={30}
-                  />
+                  <View
+                    style={{
+                      flexBasis: '15%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      paddingLeft: 8,
+                    }}>
+                    <MaterialCommunityIcons
+                      name="home"
+                      color={focused ? color : '#666'}
+                      size={30}
+                    />
+                  </View>
                   <Text
                     style={{
-                      marginLeft: 20,
+                      marginLeft: 23,
                       fontSize: 19,
-                      fontWeight: '500',
+                      fontWeight: '600',
                       color: focused ? color : '#666',
+                      flexBasis: '80%',
                     }}>
                     Home
                   </Text>
@@ -306,6 +371,64 @@ function App() {
         <CheckConnection />
       )}
       <Toast config={toastConfig} />
+
+      {showInstructions && (
+        <Modal visible={showInstructions} animationType="slide">
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+
+              padding: 20,
+              gap: 10,
+            }}>
+            <View style={{alignItems: 'center'}}>
+              <Image
+                source={require('./src/assets/panchal.png')}
+                style={{height: 100, width: 100}}
+              />
+            </View>
+
+            <View
+              style={{justifyContent: 'center', alignItems: 'flex-start', gap: 10}}>
+              <Text style={{color: 'black'}}>
+                શ્રી સવાસો ગોળ પંચાલ સમાજ, અમદાવાદમાં આપનું સ્વાગત છે
+              </Text>
+
+              <Text style={{color: 'red', fontSize : 18, fontWeight: "bold"}}>
+                એપ્લિકેશન નો ઉપયોગ કેવી રીતે કરવો ?
+              </Text>
+
+              <Text style={{color: 'black'}}>
+                સ્ટેપ 1 : ઘર ના મુખ્ય વ્યક્તિ નું રજીસ્ટ્રેશન કરો.
+              </Text>
+
+              <Text style={{color: 'black'}}>સ્ટેપ 2 : પેમેન્ટ પૂર્ણ કરો.</Text>
+
+              <Text style={{color: 'black'}}>
+                સ્ટેપ 3: ઉપર ડાબી બાજુએ ત્રણ લાઈન ઉપર ક્લિક કરો > લૉગિન ઉપર
+                ક્લિક કરો .
+              </Text>
+
+              <Text style={{color: 'black'}}>
+                સ્ટેપ 4 : તમારો નંબર અને પાસવર્ડ નાખીને લૉગિન કરો .
+              </Text>
+
+              <Text style={{color: 'black'}}>
+                લૉગિન કર્યા પછી તમારા પરિવારનું રજીસ્ટ્રેશન કરો .
+              </Text>
+
+              <Text style={{color: 'black'}}>
+                તમે અન્ય ફંકશનો નો પણ ઉપયોગ કરી શકશો .
+              </Text>
+
+              <Text style={{color: 'black'}}>આભાર. 🙏</Text>
+            </View>
+
+            <Button title="આગળ વધો. " onPress={handleInstructionsDismiss} />
+          </View>
+        </Modal>
+      )}
     </NavigationContainer>
   );
 }
