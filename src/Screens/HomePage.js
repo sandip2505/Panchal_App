@@ -65,13 +65,15 @@ const HomePage = ({navigation}) => {
               alignItems: 'center',
             }}
             paginationStyleItemActive={{
+              width: 15,
               height: 8,
-              backgroundColor: '#129be0',
+              backgroundColor: '#00ff',
             }}
             paginationStyleItemInactive={{
               width: 8,
               height: 8,
-              backgroundColor: '#f9f9f9',
+              backgroundColor: '#00ff',
+              opacity: 0.4
             }}
             data={image}
             renderItem={({item, index}) =>

@@ -11,6 +11,9 @@ import {FlatList} from 'react-native';
 import {API_BASE_URL, API_KEY} from '@env';
 console.log('API_BASE_URL village', API_BASE_URL);
 
+import Fontisto from 'react-native-vector-icons/dist/Fontisto';
+
+
 const Villages = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [villagesData, setVillagesData] = useState([]);
@@ -40,6 +43,7 @@ const Villages = ({navigation}) => {
     return (
       <View key={data.index}>
         <View style={styles.box}>
+        <Fontisto name="holiday-village" color="#333" size={17} />
           <Text style={styles.boxText}>
             {data.item.village} {/*  - ( {data.item.pincode} ) */}{' '}
           </Text>
@@ -87,6 +91,9 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     shadowColor: 'black',
     elevation: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15
   },
 
   boxText: {

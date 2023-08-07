@@ -303,7 +303,6 @@ const EditMainDetails = ({route}) => {
                 {borderColor: cityError ? '#ff0000' : 'gray'},
               ]}
               placeholder="City / શહેર"
-              placeholderTextColor="gray"
               value={city}
               onChangeText={setCity}
             />
