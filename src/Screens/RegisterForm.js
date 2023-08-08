@@ -31,7 +31,6 @@ const CustomDateField = props => {
 
 const RegisterForm = ({route}) => {
   const {locations_id} = route.params;
-  // console.log("locations_id", locations_id)
   const navigation = useNavigation();
 
   const [firstname, setFirstname] = useState('');
@@ -215,7 +214,6 @@ const RegisterForm = ({route}) => {
             const userId = res.data._id;
             const PerentsData = res.data;
             if (res.data.mobileError === 'Mobile number already register') {
-              console.log(res.data.mobileError);
               showToast(
                 'error',
                 'Mobile number is already registered !',
@@ -243,7 +241,6 @@ const RegisterForm = ({route}) => {
             }
           })
           .catch(err => {
-            console.log('i got error ouchhhh!!!   ::: ', err);
           });
       } catch (error) {
         if (error.response) {
@@ -397,7 +394,6 @@ const RegisterForm = ({route}) => {
                 {borderColor: cityError ? '#ff0000' : 'gray'},
               ]}
               placeholder="City / શહેર"
-              placeholderTextColor="gray"
               value={city}
               onChangeText={setCity}
             />

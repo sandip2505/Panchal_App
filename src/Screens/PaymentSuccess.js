@@ -26,7 +26,7 @@ const PaymentSuccess = ({navigation}) => {
       showToast(
         'success',
         'Registered successfully.',
-        'સફળતાપૂર્વક નોંધણી થઈ.',
+        'સફળતાપૂર્વક રજીસ્ટ્રેશન થઈ ગયું.',
         2500,
       );
       navigation.navigate('HomePage');

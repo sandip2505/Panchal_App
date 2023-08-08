@@ -30,7 +30,7 @@ const PaymentFail = ({ navigation }) => {
             showToast(
                 'error',
                 'Registration failed !',
-                'નોંધણી નિષ્ફળ થઈ.',
+                'રજીસ્ટર નિષ્ફળ થયું.',
                 2500,
               );
         }, 3000);

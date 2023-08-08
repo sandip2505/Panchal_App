@@ -89,7 +89,6 @@ const ProfilePage = () => {
           .then(response => {
             AsyncStorage.removeItem('userData').then(() => {
               setIsLoading(true);
-              console.log('remove');
               setParentsData('');
               const userData = JSON.stringify(response.data);
               AsyncStorage.setItem('userData', userData);

@@ -53,7 +53,6 @@ const Directory = ({navigation}) => {
           });
         } else {
           response = await axios.get(`${API_BASE_URL}/user-list`);
-          // console.log("full", response)
         }
 
         if (response.status === 200) {

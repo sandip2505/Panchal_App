@@ -32,34 +32,6 @@ const FamilyRegister = ({route}) => {
   const navigation = useNavigation();
 
   const _id = userId;
-  const [parentsData, setParentsData] = useState(null);
-  const [checkpayment, setCheckpayment] = useState(null);
-  // console.log(parentsData?.payment_id, 'parentsData');
-  // console.log(checkpayment?.payment_id, 'checkpayment');
-
-  useEffect(() => {
-    const final = AsyncStorage.getItem('userData')
-      .then(value => {
-        if (value) {
-          const userData = JSON.parse(value);
-          setParentsData(userData);
-        }
-      })
-      .catch(error => {
-        console.log('Error in profile page : ', error);
-      });
-
-    const PerentsData = AsyncStorage.getItem('PerentsData')
-      .then(value => {
-        if (value) {
-          const PerentsData = JSON.parse(value);
-          setCheckpayment(PerentsData);
-        }
-      })
-      .catch(error => {
-        console.log('Error in profile page : ', error);
-      });
-  }, []);
 
   const [forms, setForms] = useState([
     {
@@ -89,7 +61,7 @@ const FamilyRegister = ({route}) => {
   // validation
   const [formErrors, setFormErrors] = useState([]);
 
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   const isFormValid = form => {
     const errors = {};
@@ -166,11 +138,9 @@ const FamilyRegister = ({route}) => {
 
       const childData = JSON.parse(value);
 
-      console.log(childData.length);
 
       const maxFormsAllowed = Math.max(7 - childData.length);
-      console.log(maxFormsAllowed, '<- - - - - maxFormsAllowed');
-      console.log(forms.length, '<= = = = formsLength');
+   
       if (forms.length >= maxFormsAllowed) {
         showToast(
           'error',
@@ -252,12 +222,9 @@ const FamilyRegister = ({route}) => {
       axios
         .post(`${API_BASE_URL}/addchildUser/${_id}`, forms)
         .then(response => {
-          console.log('Registration successful:', response.data.familyData);
           AsyncStorage.removeItem('childData').then(() => {
-            console.log('child remove');
             const familyData = JSON.stringify(response.data.familyData);
             AsyncStorage.setItem('childData', familyData).then(() => {
-              console.log('new child store');
             });
           });
           showToast(

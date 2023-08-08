@@ -31,39 +31,25 @@ const CustomDateField = props => {
 
 const EditMainDetails = ({route}) => {
   const navigation = useNavigation();
+  const {childId} = route.params;
 
   const [firstname, setFirstname] = useState('');
   const [middlename, setMiddlename] = useState('');
   const [lastname, setLastname] = useState('');
-  const [password, setPassword] = useState('');
   const [dob, setDob] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
-  const [mobile_number, setMobileNumber] = useState('');
-  const [state, setState] = useState('');
-  const [city, setCity] = useState('');
-  const [pincode, setPincode] = useState('');
   const [gender, setGender] = useState('');
   const [education, setEducation] = useState('');
-  const [address, setAddress] = useState('');
   const [job, setJob] = useState('');
   const [marital_status, setMaritalStatus] = useState('');
-
   const [firstnameError, setfirstnameError] = useState('');
   const [middlenameError, setmiddlenameError] = useState('');
   const [lastnameError, setlastnameError] = useState('');
   const [dobError, setdobError] = useState('');
-  const [mobile_numberError, setmobile_numberError] = useState('');
-  const [stateError, setstateError] = useState('');
-  const [cityError, setcityError] = useState('');
-  const [pincodeError, setpincodeError] = useState('');
   const [educationError, seteducationError] = useState('');
-  const [addressError, setaddressError] = useState('');
   const [jobError, setjobError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   const [genderError, setgenderError] = useState('');
   const [maritalStatusError, setMaritalStatusError] = useState('');
-
-  const [userData, setUserData] = useState(null);
 
   const handleDateChange = (event, selectedDate) => {
     setShowPicker(false);
@@ -107,53 +93,11 @@ const EditMainDetails = ({route}) => {
     } else {
       setdobError('');
     }
-
-    if (!mobile_number) {
-      setmobile_numberError('Please enter mobile number.');
-      isValid = false;
-    } else if (isNaN(mobile_number) || mobile_number.length !== 10) {
-      setmobile_numberError('Please enter a valid mobile number');
-      isValid = false;
-    } else {
-      setmobile_numberError('');
-    }
-
-    if (!state) {
-      setstateError('Please enter state.');
-      isValid = false;
-    } else {
-      setstateError('');
-    }
-
-    if (!city) {
-      setcityError('Please enter city.');
-      isValid = false;
-    } else {
-      setcityError('');
-    }
-
-    if (!pincode) {
-      setpincodeError('Please enter pincode.');
-      isValid = false;
-    } else if (isNaN(pincode) || pincode.length !== 6) {
-      setpincodeError('Please enter a valid pincode number');
-      isValid = false;
-    } else {
-      setpincodeError('');
-    }
-
     if (!education) {
       seteducationError('Please enter education.');
       isValid = false;
     } else {
       seteducationError('');
-    }
-
-    if (!address) {
-      setaddressError('Please enter address.');
-      isValid = false;
-    } else {
-      setaddressError('');
     }
 
     if (!job) {
@@ -176,10 +120,55 @@ const EditMainDetails = ({route}) => {
     } else {
       setMaritalStatusError('');
     }
-
     if (isValid) {
+      const Updatedata = {
+        firstname,
+        middlename,
+        lastname,
+        dob,
+        gender,
+        education,
+        // relationship,
+        job,
+        marital_status,
+      };
+
       try {
-      } catch (error) {}
+        const response = await axios.post(
+          `${API_BASE_URL}/child_update/${childId}`,
+          Updatedata,
+        );
+        if (response.status === 200) {
+          const data = response.data;
+          setFirstname('');
+          setMiddlename('');
+          setLastname('');
+          setDob('');
+          setEducation('');
+          setJob('');
+          setGender('');
+          setMaritalStatus('');
+
+          AsyncStorage.removeItem('childData').then(() => {
+            const childData = JSON.stringify(response.data.childData);
+            AsyncStorage.setItem('childData', childData).then(() => {
+            });
+          });
+
+          showToast(
+            'success',
+            'Data updated successfully.',
+            'ડેટા સફળતાપૂર્વક અપડેટ થઈ ગયા.',
+            2500,
+          );
+          
+          navigation.navigate('ProfilePage');
+        } else {
+          console.log('Request failed with status:', response.status);
+        }
+      } catch (error) {
+        console.log(error)
+      }
     } else {
       showToast(
         'error',
@@ -191,13 +180,36 @@ const EditMainDetails = ({route}) => {
   };
 
   useEffect(() => {
-    const dataaa = AsyncStorage.getItem('userData');
+    fetchData();
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/childuser-edit/${childId}`,
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        if (data) {
+          // setEditData(data);
+          setFirstname(data.firstname);
+          setMiddlename(data.middlename);
+          setLastname(data.lastname);
+          setDob(new Date(data.dob));
+          setEducation(data.education);
+          setJob(data.job);
+          setGender(data.gender);
+          setMaritalStatus(data.marital_status);
+        }
+      } else {
+        console.log('Request failed with status:', response.status);
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.title}>Register Form</Text> */}
-
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={styles.childContainer}>
           <View>
@@ -267,72 +279,7 @@ const EditMainDetails = ({route}) => {
               />
             )}
           </View>
-
           <View>
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {borderColor: mobile_numberError ? '#ff0000' : 'gray'},
-              ]}
-              placeholder="Mobile Number / મોબાઇલ નંબર"
-              value={mobile_number}
-              onChangeText={setMobileNumber}
-              keyboardType="numeric"
-            />
-            {mobile_numberError && (
-              <Text style={styles.error}>{mobile_numberError}</Text>
-            )}
-
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {borderColor: addressError ? '#ff0000' : 'gray'},
-              ]}
-              placeholder="Address / સરનામું"
-              value={address}
-              onChangeText={setAddress}
-            />
-            {addressError && <Text style={styles.error}>{addressError}</Text>}
-
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {borderColor: cityError ? '#ff0000' : 'gray'},
-              ]}
-              placeholder="City / શહેર"
-              value={city}
-              onChangeText={setCity}
-            />
-            {cityError && <Text style={styles.error}>{cityError}</Text>}
-
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {borderColor: stateError ? '#ff0000' : 'gray'},
-              ]}
-              placeholder="State / રાજ્ય"
-              value={state}
-              onChangeText={setState}
-            />
-            {stateError && <Text style={styles.error}>{stateError}</Text>}
-
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {borderColor: pincodeError ? '#ff0000' : 'gray'},
-              ]}
-              placeholder="Pincode / પીન કોડ"
-              value={pincode}
-              onChangeText={setPincode}
-              keyboardType="numeric"
-            />
-            {pincodeError && <Text style={styles.error}>{pincodeError}</Text>}
-
             <TextInput
               placeholderTextColor="gray"
               style={[
@@ -376,12 +323,6 @@ const EditMainDetails = ({route}) => {
               defaultValue="Married"
               dropdownIconColor="gray">
               <Picker.Item
-                label="Marital status / વૈવાહિક સ્ટેટસ પસંદ કરો"
-                value=""
-                selectedValue
-                enabled={false}
-              />
-              <Picker.Item
                 label="Married / પરિણીત"
                 value="Married"
                 defaultValue
@@ -405,15 +346,24 @@ const EditMainDetails = ({route}) => {
               <Text style={styles.radioLabel}>Male / પુરૂષ</Text>
               <RadioButton
                 value="male"
-                status={gender === 'male' ? 'checked' : 'unchecked'}
+                status={
+                  gender === 'male'
+                    ? 'checked'
+                    : 'unchecked'
+                }
                 onPress={() => setGender('male')}
                 color="blue"
+                defaultValue
               />
 
               <Text style={styles.radioLabel}>Female / સ્ત્રી</Text>
               <RadioButton
                 value="female"
-                status={gender === 'female' ? 'checked' : 'unchecked'}
+                status={
+                  gender === 'female'
+                    ? 'checked'
+                    : 'unchecked'
+                }
                 onPress={() => setGender('female')}
                 color="blue"
               />
@@ -421,7 +371,11 @@ const EditMainDetails = ({route}) => {
               <Text style={styles.radioLabel}>Other / અન્ય</Text>
               <RadioButton
                 value="other"
-                status={gender === 'other' ? 'checked' : 'unchecked'}
+                status={
+                  gender === 'other'
+                    ? 'checked'
+                    : 'unchecked'
+                }
                 onPress={() => setGender('other')}
                 color="blue"
               />
@@ -429,12 +383,13 @@ const EditMainDetails = ({route}) => {
           </View>
           {genderError && <Text style={styles.error}>{genderError}</Text>}
         </View>
+
+        <View style={styles.btngroup}>
+          <Pressable style={styles.button} onPress={handleUpdate}>
+            <Text style={styles.btntext}>Update</Text>
+          </Pressable>
+        </View>
       </ScrollView>
-      <View style={styles.btngroup}>
-        <Pressable style={styles.button} onPress={handleUpdate}>
-          <Text style={styles.btntext}>Update</Text>
-        </Pressable>
-      </View>
     </View>
   );
 };
@@ -443,12 +398,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f1f1f1',
+    height: '100%',
+    flexDirection: 'column',
   },
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginBottom: 5,
+
+  childContainer: {
+    padding: 16,
   },
+
   mainTitle: {
     fontSize: 25,
     fontWeight: 'bold',
@@ -516,11 +473,7 @@ const styles = StyleSheet.create({
   },
 
   btngroup: {
-    //   flex: 1,
-    //   width: '100%',
-    //   position: 'absolute',
-    //   bottom: 0,
-    //   paddingHorizontal: 16,
+    paddingHorizontal: 16,
   },
 
   button: {
@@ -561,6 +514,12 @@ const styles = StyleSheet.create({
   radioLabel: {
     marginLeft: 6,
     color: 'black',
+  },
+
+  error: {
+    color: '#ff0000',
+    fontSize: 12,
+    marginBottom: 5,
   },
 });
 

@@ -31,16 +31,15 @@ const CustomDateField = props => {
 
 const EditMainDetails = ({route}) => {
   const {mainId} = route.params;
-  // console.log(mainId,"asasasasasasa")
+
   const navigation = useNavigation();
 
   const [firstname, setFirstname] = useState('');
   const [middlename, setMiddlename] = useState('');
   const [lastname, setLastname] = useState('');
-  const [password, setPassword] = useState('');
   const [dob, setDob] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
-  const [mobile_number, setMobileNumber] = useState('');
+  const [mobile_number, setMobile_number] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [pincode, setPincode] = useState('');
@@ -180,8 +179,46 @@ const EditMainDetails = ({route}) => {
     }
 
     if (isValid) {
+      const Updatedata = {
+        firstname,
+        middlename,
+        lastname,
+        dob,
+        mobile_number,
+        state,
+        city,
+        pincode,
+        address,
+        gender,
+        education,
+        job,
+        marital_status,
+      };
       try {
-      } catch (error) {}
+        const response = await axios.post(
+          `${API_BASE_URL}/user-update/${mainId}`,
+          Updatedata,
+        );
+        if (response.status === 200) {
+          const data = response.data;
+          AsyncStorage.removeItem('userData').then(() => {
+            const userData = JSON.stringify(response.data);
+            AsyncStorage.setItem('userData', userData);
+            navigation.navigate('HomePage');
+            navigation.navigate('ProfilePage');
+            showToast(
+              'success',
+              'Profile image updated successfully.',
+              'પ્રોફાઇલ  સફળતાપૂર્વક અપડેટ થઈ ગયો.',
+              2500,
+            );
+          });
+        } else {
+          console.log('Request failed with status:', response.status);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       showToast(
         'error',
@@ -193,8 +230,34 @@ const EditMainDetails = ({route}) => {
   };
 
   useEffect(() => {
-    const dataaa = AsyncStorage.getItem('userData');
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/user-edit/${mainId}`);
+      if (response.status === 200) {
+        const data = response.data;
+        setFirstname(data.firstname);
+        setMobile_number(data.mobile_number);
+        setMiddlename(data.middlename);
+        setLastname(data.lastname);
+        setState(data.state);
+        setCity(data.city);
+        setPincode(data.pincode);
+        setAddress(data.address);
+        setDob(new Date(data.dob));
+        setEducation(data.education);
+        setJob(data.job);
+        setGender(data.gender);
+        setMaritalStatus(data.marital_status);
+      } else {
+        console.log('Request failed with status:', response.status);
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -278,8 +341,8 @@ const EditMainDetails = ({route}) => {
                 {borderColor: mobile_numberError ? '#ff0000' : 'gray'},
               ]}
               placeholder="Mobile Number / મોબાઇલ નંબર"
-              value={mobile_number}
-              onChangeText={setMobileNumber}
+              value={`${mobile_number}`}
+              onChangeText={setMobile_number}
               keyboardType="numeric"
             />
             {mobile_numberError && (
@@ -305,7 +368,6 @@ const EditMainDetails = ({route}) => {
                 {borderColor: cityError ? '#ff0000' : 'gray'},
               ]}
               placeholder="City / શહેર"
-              placeholderTextColor="gray"
               value={city}
               onChangeText={setCity}
             />

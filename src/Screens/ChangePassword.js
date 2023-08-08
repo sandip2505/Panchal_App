@@ -24,7 +24,6 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [parentsData, setParentsData] = useState(null);
-  // console.log('parentsData profile', parentsData._id);
   const [isOldVisible, setIsOldVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 

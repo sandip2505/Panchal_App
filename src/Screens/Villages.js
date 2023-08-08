@@ -9,7 +9,6 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {FlatList} from 'react-native';
 import {API_BASE_URL, API_KEY} from '@env';
-console.log('API_BASE_URL village', API_BASE_URL);
 
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 

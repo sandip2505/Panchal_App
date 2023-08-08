@@ -6,10 +6,10 @@ import {
   Text,
   Image,
   View,
-  Linking,
   StyleSheet,
   Modal,
-  Button,
+  Pressable,
+  Dimensions,
 } from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import Toast, {BaseToast} from 'react-native-toast-message';
 
@@ -35,7 +36,6 @@ import CommitteeMembers from './src/Screens/CommitteeMembers';
 import TermsAndCondition from './src/Screens/TermsAndCondition';
 import RegisterForm from './src/Screens/RegisterForm';
 import FirstForm from './src/Screens/FirstForm';
-// import ChildRegisterForm from './src/Screens/ChildRegisterForm';
 import Villages from './src/Screens/Villages';
 import PaymentPage from './src/Screens/PaymentPage';
 import Directory from './src/Screens/Directory';
@@ -374,58 +374,65 @@ function App() {
 
       {showInstructions && (
         <Modal visible={showInstructions} animationType="slide">
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-
-              padding: 20,
-              gap: 10,
-            }}>
-            <View style={{alignItems: 'center'}}>
+          <View style={styles.container}>
+            <View style={styles.imageContainer}>
               <Image
                 source={require('./src/assets/panchal.png')}
-                style={{height: 100, width: 100}}
+                style={{height: 150, width: 150}}
               />
+
+              <Text style={[styles.text, {fontWeight: 'bold'}]}>
+                શ્રી સવાસો ગોળ પંચાલ સમાજ, અમદાવાદ
+              </Text>
             </View>
 
-            <View
-              style={{justifyContent: 'center', alignItems: 'flex-start', gap: 10}}>
-              <Text style={{color: 'black'}}>
-                શ્રી સવાસો ગોળ પંચાલ સમાજ, અમદાવાદમાં આપનું સ્વાગત છે
-              </Text>
-
-              <Text style={{color: 'red', fontSize : 18, fontWeight: "bold"}}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>
                 એપ્લિકેશન નો ઉપયોગ કેવી રીતે કરવો ?
               </Text>
 
-              <Text style={{color: 'black'}}>
-                સ્ટેપ 1 : ઘર ના મુખ્ય વ્યક્તિ નું રજીસ્ટ્રેશન કરો.
-              </Text>
+              <View>
+                <Text style={styles.text}>
+                  <Text style={styles.stepText}>સ્ટેપ 1 :</Text> ઘર ના મુખ્ય
+                  વ્યક્તિ નું રજીસ્ટ્રેશન કરો.
+                </Text>
 
-              <Text style={{color: 'black'}}>સ્ટેપ 2 : પેમેન્ટ પૂર્ણ કરો.</Text>
+                <Text style={styles.text}>
+                  <Text style={styles.stepText}>સ્ટેપ 1 :</Text> પેમેન્ટ પૂર્ણ
+                  કરો.
+                </Text>
 
-              <Text style={{color: 'black'}}>
-                સ્ટેપ 3: ઉપર ડાબી બાજુએ ત્રણ લાઈન ઉપર ક્લિક કરો > લૉગિન ઉપર
-                ક્લિક કરો .
-              </Text>
+                <Text style={styles.text}>
+                  <Text style={styles.stepText}>સ્ટેપ 3 :</Text> ત્યારબાદ ઉપર
+                  ડાબી બાજુએ ત્રણ લાઈન ઉપર ક્લિક કરો પછી લૉગિન ઉપર ક્લિક કરો .
+                </Text>
 
-              <Text style={{color: 'black'}}>
-                સ્ટેપ 4 : તમારો નંબર અને પાસવર્ડ નાખીને લૉગિન કરો .
-              </Text>
+                <Text style={styles.text}>
+                  <Text style={styles.stepText}>સ્ટેપ 4 :</Text> તમારો નંબર અને
+                  પાસવર્ડ નાખીને લૉગિન કરો .
+                </Text>
 
-              <Text style={{color: 'black'}}>
-                લૉગિન કર્યા પછી તમારા પરિવારનું રજીસ્ટ્રેશન કરો .
-              </Text>
+                <Text style={styles.text}>
+                  <Text style={styles.stepText}>સ્ટેપ 5 :</Text> ત્યારબાદ ફરી
+                  ત્રણ લાઈન ઉપર ક્લિક કરી ને પ્રોફાઈલ ઉપર ક્લિક કરો.
+                </Text>
 
-              <Text style={{color: 'black'}}>
-                તમે અન્ય ફંકશનો નો પણ ઉપયોગ કરી શકશો .
-              </Text>
+                <Text style={styles.text}>
+                  <Text style={styles.stepText}>સ્ટેપ 6 :</Text> ત્યારબાદ નીચે "
+                  Family Members " ઉપર ક્લિક કરી ને પરિવાર ના સભ્યો નું
+                  રજિસ્ટ્રેશન કરો.
+                </Text>
 
-              <Text style={{color: 'black'}}>આભાર. 🙏</Text>
+                <Text style={styles.text}></Text>
+
+                <Text style={styles.text}>આભાર. 🙏</Text>
+              </View>
             </View>
-
-            <Button title="આગળ વધો. " onPress={handleInstructionsDismiss} />
+            <View style={styles.btn}>
+              <Pressable onPress={handleInstructionsDismiss}>
+                <Text style={styles.btnText}> આગળ વધો. </Text>
+              </Pressable>
+            </View>
           </View>
         </Modal>
       )}
@@ -436,15 +443,45 @@ function App() {
 export default App;
 
 const styles = StyleSheet.create({
-  noInternetContainer: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
+    padding: 20,
+    gap: 10,
+    width: '100%',
+  },
+
+  imageContainer: {
+    paddingVertical: 20,
     alignItems: 'center',
-    backgroundColor: '#fff',
   },
-  noInternetText: {
-    fontSize: 20,
+
+  textContainer: {
+    justifyContent: 'center',
+    gap: 10,
+    paddingVertical: 10,
+  },
+
+  title: {color: 'red', fontSize: 18, fontWeight: 'bold'},
+
+  stepText: {
     fontWeight: 'bold',
-    color: 'red',
   },
+
+  text: {
+    color: 'black',
+    fontSize: 15,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+  },
+
+  btn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2196F3',
+    height: 45,
+    marginVertical: 20,
+  },
+
+  btnText: {color: 'white', fontSize: 16, fontWeight: 'bold'},
 });

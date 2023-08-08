@@ -13,7 +13,6 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 
-console.log('API_BASE_URL', API_BASE_URL);
 
 const HomePage = ({navigation}) => {
   const [image, setImage] = useState([]);
@@ -73,7 +72,7 @@ const HomePage = ({navigation}) => {
               width: 8,
               height: 8,
               backgroundColor: '#00ff',
-              opacity: 0.4
+              opacity: 0.4,
             }}
             data={image}
             renderItem={({item, index}) =>
@@ -145,24 +144,8 @@ const HomePage = ({navigation}) => {
             </TouchableOpacity>
           </View>
 
-          {/* //////////////////////////////////////////////////////////////////////// */}
-
           <View style={styles.row}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('PragatiNews')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/pragatiNews.png')}
-                  alt="about"
-                />
-              </View>
-              <Text style={styles.boxText}>Pragati News</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
+            {/* <TouchableOpacity
               activeOpacity={0.7}
               style={styles.box}
               onPress={() => navigation.navigate('job')}>
@@ -188,12 +171,8 @@ const HomePage = ({navigation}) => {
                 />
               </View>
               <Text style={styles.boxText}>News</Text>
-            </TouchableOpacity>
-          </View>
+            </TouchableOpacity> */}
 
-          {/* //////////////////////////////////////////////////////////////////////// */}
-
-          <View style={styles.row}>
             {!isTestData && (
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -224,6 +203,8 @@ const HomePage = ({navigation}) => {
               <Text style={styles.boxText}> Search </Text>
             </TouchableOpacity>
           </View>
+
+          <View style={styles.row}></View>
         </View>
       </ScrollView>
     </View>

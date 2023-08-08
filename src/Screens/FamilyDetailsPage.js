@@ -18,7 +18,6 @@ const FamilyDetailsPage = () => {
         if (value) {
           const parentsData = JSON.parse(value);
           setParentsData(parentsData);
-          console.log('userData data retrieved successfully:');
         } else {
           console.log('No user data found');
         }
@@ -33,7 +32,6 @@ const FamilyDetailsPage = () => {
         if (value) {
           const childData = JSON.parse(value);
           setChildData(childData);
-          console.log('childData data retrieved successfully:');
         } else {
           console.log('No child data found');
         }

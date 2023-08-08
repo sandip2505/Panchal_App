@@ -23,7 +23,6 @@ const PaymentPage = ({ navigation }) => {
   const [amount, setamount] = useState(null);
   const [razorpay_key, setrazorpay_key] = useState(null);
   const [PerentsData, setPerentsData] = useState(null);
-console.log(razorpay_key)
 
   useEffect(() => {
     if (PaymentamoutData !== null) {
@@ -53,7 +52,7 @@ console.log(razorpay_key)
     showToast(
       'info',
       'Do payment for successfull registration.',
-      'સફળ નોંધણી માટે ચુકવણી કરો.',
+      'સફળ રજીસ્ટ્રેશન માટે પેમેન્ટ કરો.',
       5000,
     );
   }, []);
@@ -107,7 +106,6 @@ console.log(razorpay_key)
             user_id: PerentsData && PerentsData?._id,
           });
           AsyncStorage.removeItem('PerentsData').then(() => {
-            console.log("remove")
           });
           navigation.navigate('PaymentSuccess');
         } catch (error) {
