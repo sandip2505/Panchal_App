@@ -1,4 +1,4 @@
-package com.panchal_app;
+package com.panchal_application;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

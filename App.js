@@ -51,9 +51,6 @@ import FamilyRegister from './src/Screens/FamilyRegister';
 import CheckConnection from './src/component/CheckConnection';
 import EditFamilyDetails from './src/Screens/EditFamilyDetails';
 import EditMainDetails from './src/Screens/EditMainDetails';
-import Job from './src/Screens/Job';
-import News from './src/Screens/News';
-import PragatiNews from './src/Screens/PragatiNews';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -201,16 +198,6 @@ function FirstScreenStack({navigation}) {
         name="EditFamilyDetails"
         component={EditFamilyDetails}
         options={{title: 'Edit Family Details'}}
-      />
-
-      <Stack.Screen name="job" component={Job} options={{title: 'Job'}} />
-
-      <Stack.Screen name="News" component={News} options={{title: 'News'}} />
-
-      <Stack.Screen
-        name="PragatiNews"
-        component={PragatiNews}
-        options={{title: 'Pragati News'}}
       />
     </Stack.Navigator>
   );

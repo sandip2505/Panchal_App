@@ -8,11 +8,10 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {API_BASE_URL, API_KEY, IMAGE_URL} from '@env';
+import {API_BASE_URL, IMAGE_URL} from '@env';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
-
 
 const HomePage = ({navigation}) => {
   const [image, setImage] = useState([]);
@@ -71,7 +70,7 @@ const HomePage = ({navigation}) => {
             paginationStyleItemInactive={{
               width: 8,
               height: 8,
-              backgroundColor: '#00ff',
+              backgroundColor: '#f5f5f5',
               opacity: 0.4,
             }}
             data={image}
@@ -145,34 +144,6 @@ const HomePage = ({navigation}) => {
           </View>
 
           <View style={styles.row}>
-            {/* <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('job')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/job.png')}
-                  alt="directory"
-                />
-              </View>
-              <Text style={styles.boxText}>Job</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('News')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/news.png')}
-                  alt="News"
-                />
-              </View>
-              <Text style={styles.boxText}>News</Text>
-            </TouchableOpacity> */}
-
             {!isTestData && (
               <TouchableOpacity
                 activeOpacity={0.7}

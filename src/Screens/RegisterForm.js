@@ -240,13 +240,10 @@ const RegisterForm = ({route}) => {
               navigation.navigate('PaymentPage');
             }
           })
-          .catch(err => {
-          });
+          .catch(err => {});
       } catch (error) {
         if (error.response) {
-          console.log('Status code:', error.response.status);
-          console.log('Response data:', error.response.data);
-          console.log('Response headers:', error.response.headers);
+          console.log('Status code:', error.response);
         } else {
           console.error('Error:', error.message);
         }

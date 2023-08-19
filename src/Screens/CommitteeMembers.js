@@ -2,77 +2,21 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
   Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import axios from 'axios';
-import {API_BASE_URL, API_KEY} from '@env';
+import {API_BASE_URL} from '@env';
 
 const CommitteeMembers = () => {
   const [CommitteeData, setCommitteeData] = useState([]);
 
-  // const CommitteeData = [
-  //   {
-  //     name: 'પંચાલ ત્રિકમભાઈ શિવાભાઈ - પ્રમુખશ્રી',
-  //     village: 'નિરમાલી',
-  //     contact: '9898135661',
-  //   },
-  //   {
-  //     name: 'પંચાલ ભરતભાઈ કાંતીભાઈ - ઉપ પ્રમુખશ્રી',
-  //     village: 'દેરોલી',
-  //     contact: '9913813203',
-  //   },
-  //   {
-  //     name: 'પંચાલ મનીષ અંબાલાલ - મંત્રીશ્રી',
-  //     village: 'દેરોલી',
-  //     contact: '9427624676',
-  //   },
-  //   {
-  //     name: 'પંચાલ રમેશભાઈ કાળીદાસ - સહ મંત્રીશ્રી',
-  //     village: 'સુલતાનપુર',
-  //     contact: '9426952621',
-  //   },
-  //   {
-  //     name: 'પંચાલ મનુભાઈ શિવાભાઈ - ખજાનચી',
-  //     village: 'ડેમાઈ',
-  //     contact: '9426633737',
-  //   },
-  //   {
-  //     name: 'પંચાલ રમણભાઈ ડાહ્યાભાઈ - કારોબારી સભ્ય',
-  //     village: 'સોનીપુરા',
-  //     contact: '9974158794',
-  //   },
-  //   {
-  //     name: 'પંચાલ બાબુભાઈ કાંહ્યાભાઈ - કારોબારી સભ્ય',
-  //     village: 'વઘાસ',
-  //     contact: '9909706357',
-  //   },
-  //   {
-  //     name: 'પંચાલ કીરીટભાઈ જયંતિભાઈ - કારોબારી સભ્ય',
-  //     village: 'શિહોરા',
-  //     contact: '8160052840',
-  //   },
-  //   {
-  //     name: 'પંચાલ મુકુન્દ ચંદુભાઈ - કારોબારી સભ્ય',
-  //     village: 'ઝંડા',
-  //     contact: '7874103503',
-  //   },
-  //   {
-  //     name: 'પંચાલ દિપક મુકુન્દલાલ - કારોબારી સભ્ય',
-  //     village: 'સેલગઢ',
-  //     contact: '9924381985',
-  //   },
-  //   {
-  //     name: 'પંચાલ જશવંતલાલ મંગળદાસ - કારોબારી સભ્ય',
-  //     village: 'બોરોલ',
-  //     contact: '9377251563',
-  //   },
-  // ];
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchAboutUs();
@@ -80,17 +24,23 @@ const CommitteeMembers = () => {
 
   const fetchAboutUs = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/CommitteeMembers`);
+      setIsLoading(true);
+      const response = await axios.get(`${API_BASE_URL}/committee_members`);
       if (response.status === 200) {
+        setIsLoading(true);
         const data = response.data;
         if (data) {
           setCommitteeData(data);
         }
+        setIsLoading(false);
       } else {
         console.log('Request failed with status:', response.status);
+        setIsLoading(false);
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('An error occurred:', error);
+      setIsLoading(false);
     }
   };
 
@@ -104,11 +54,13 @@ const CommitteeMembers = () => {
         <View>
           <Text style={styles.memberName}>{item?.fullname}</Text>
         </View>
+
         <View style={styles.detailsContainer}>
           <View style={[styles.innerContainer, {flexBasis: '35%'}]}>
             <Fontisto name="holiday-village" color="#333" size={17} />
             <Text style={styles.memberVillage}>{item?.village}</Text>
           </View>
+
           <View>
             <TouchableOpacity
               style={styles.innerContainer}
@@ -125,11 +77,17 @@ const CommitteeMembers = () => {
 
   return (
     <View style={styles.container}>
-    <FlatList
-      data={CommitteeData}
-      renderItem={renderCommitteeMembers}
-      keyExtractor={(item, index) => index.toString()}
-    />
+      {isLoading ? (
+        <View>
+          <ActivityIndicator size="large" color="#00a9ff" />
+        </View>
+      ) : (
+        <FlatList
+          data={CommitteeData}
+          renderItem={renderCommitteeMembers}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };
@@ -140,7 +98,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     width: '100%',
-    height: "100%",
+    height: '100%',
     backgroundColor: '#FFFFFF',
     padding: 15,
   },
@@ -148,7 +106,7 @@ const styles = StyleSheet.create({
   MemberContainer: {
     backgroundColor: '#edf9ff',
     padding: 8,
-    marginVertical: 6,
+    margin: 6,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',

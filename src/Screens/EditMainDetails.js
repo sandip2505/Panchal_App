@@ -39,7 +39,7 @@ const EditMainDetails = ({route}) => {
   const [lastname, setLastname] = useState('');
   const [dob, setDob] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
-  const [mobile_number, setMobile_number] = useState('');
+  // const [mobile_number, setMobile_number] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [pincode, setPincode] = useState('');
@@ -53,18 +53,15 @@ const EditMainDetails = ({route}) => {
   const [middlenameError, setmiddlenameError] = useState('');
   const [lastnameError, setlastnameError] = useState('');
   const [dobError, setdobError] = useState('');
-  const [mobile_numberError, setmobile_numberError] = useState('');
+  // const [mobile_numberError, setmobile_numberError] = useState('');
   const [stateError, setstateError] = useState('');
   const [cityError, setcityError] = useState('');
   const [pincodeError, setpincodeError] = useState('');
   const [educationError, seteducationError] = useState('');
   const [addressError, setaddressError] = useState('');
   const [jobError, setjobError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   const [genderError, setgenderError] = useState('');
   const [maritalStatusError, setMaritalStatusError] = useState('');
-
-  const [userData, setUserData] = useState(null);
 
   const handleDateChange = (event, selectedDate) => {
     setShowPicker(false);
@@ -79,7 +76,7 @@ const EditMainDetails = ({route}) => {
     return formattedDate.toLocaleDateString(undefined, options);
   };
 
-  const handleUpdate = async text => {
+  const handleUpdate = async () => {
     let isValid = true;
     if (!firstname) {
       setfirstnameError('Please enter firstname.');
@@ -109,15 +106,15 @@ const EditMainDetails = ({route}) => {
       setdobError('');
     }
 
-    if (!mobile_number) {
-      setmobile_numberError('Please enter mobile number.');
-      isValid = false;
-    } else if (isNaN(mobile_number) || mobile_number.length !== 10) {
-      setmobile_numberError('Please enter a valid mobile number');
-      isValid = false;
-    } else {
-      setmobile_numberError('');
-    }
+    // if (!mobile_number) {
+    //   setmobile_numberError('Please enter mobile number.');
+    //   isValid = false;
+    // } else if (isNaN(mobile_number) || mobile_number.length !== 10) {
+    //   setmobile_numberError('Please enter a valid mobile number');
+    //   isValid = false;
+    // } else {
+    //   setmobile_numberError('');
+    // }
 
     if (!state) {
       setstateError('Please enter state.');
@@ -184,7 +181,7 @@ const EditMainDetails = ({route}) => {
         middlename,
         lastname,
         dob,
-        mobile_number,
+        // mobile_number,
         state,
         city,
         pincode,
@@ -239,7 +236,7 @@ const EditMainDetails = ({route}) => {
       if (response.status === 200) {
         const data = response.data;
         setFirstname(data.firstname);
-        setMobile_number(data.mobile_number);
+        // setMobile_number(data.mobile_number);
         setMiddlename(data.middlename);
         setLastname(data.lastname);
         setState(data.state);
@@ -334,7 +331,7 @@ const EditMainDetails = ({route}) => {
           </View>
 
           <View>
-            <TextInput
+            {/* <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
@@ -347,7 +344,7 @@ const EditMainDetails = ({route}) => {
             />
             {mobile_numberError && (
               <Text style={styles.error}>{mobile_numberError}</Text>
-            )}
+            )} */}
 
             <TextInput
               placeholderTextColor="gray"

@@ -29,7 +29,6 @@ const Directory = ({navigation}) => {
     try {
       setIsLoading(true);
       const response = await fetch(`${API_BASE_URL}/location`);
-
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -46,6 +45,7 @@ const Directory = ({navigation}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         let response;
         if (searchValue) {
           response = await axios.post(`${API_BASE_URL}/villagebyuser`, {
@@ -56,14 +56,18 @@ const Directory = ({navigation}) => {
         }
 
         if (response.status === 200) {
+          setIsLoading(true);
           const data = response.data;
           setUsers(data);
           setIsLoading(false);
         } else {
           console.log('Request failed with status:', response.status);
+          setIsLoading(false);
         }
+        setIsLoading(false);
       } catch (error) {
         console.error('An error occurred:', error);
+        setIsLoading(false);
       }
     };
 
@@ -75,44 +79,46 @@ const Directory = ({navigation}) => {
   };
 
   const renderUserItem = ({item}) => (
-    <Pressable onPress={() => handleUserSelect(item._id)}>
-      <View style={styles.userItem}>
-        <View style={styles.userImageContainer}>
-          {item?.photo ? (
-            <Image
-              source={{uri: `${IMAGE_URL}/${item?.photo}`}}
-              alt="Profile"
-              style={styles.userImage}
-              resizeMode="cover"
+    <>
+      <Pressable onPress={() => handleUserSelect(item._id)}>
+        <View style={styles.userItem}>
+          <View style={styles.userImageContainer}>
+            {item?.photo ? (
+              <Image
+                source={{uri: `${IMAGE_URL}/${item?.photo}`}}
+                alt="Profile"
+                style={styles.userImage}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image
+                style={styles.userImage}
+                source={require('../assets/3135715.png')}
+                alt="profile"
+                resizeMode="cover"
+              />
+            )}
+          </View>
+          <View style={styles.userInfoContainer}>
+            <Text
+              style={
+                styles.userName
+              }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
+            <Text style={styles.userMobile}>
+              <Text style={{fontWeight: 'bold'}}>Mo.</Text> {item.mobile_number}
+            </Text>
+          </View>
+          <View>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={30}
+              color="#666"
             />
-          ) : (
-            <Image
-              style={styles.userImage}
-              source={require('../assets/3135715.png')}
-              alt="profile"
-              resizeMode="cover"
-            />
-          )}
+          </View>
         </View>
-        <View style={styles.userInfoContainer}>
-          <Text
-            style={
-              styles.userName
-            }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
-          <Text style={styles.userMobile}>
-            <Text style={{fontWeight: 'bold'}}>Mo.</Text> {item.mobile_number}
-          </Text>
-        </View>
-        <View>
-          <MaterialCommunityIcons name="chevron-right" size={30} color="#666" />
-        </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </>
   );
-
-  const handleSearch = () => {
-    console.log('Performing search:', searchValue);
-  };
 
   return (
     <View style={styles.container}>
@@ -240,6 +246,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500',
     width: '90%',
+    fontWeight: 'bold',
     textTransform: 'capitalize',
   },
 });

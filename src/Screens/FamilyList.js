@@ -62,7 +62,7 @@ const FamilyList = ({navigation, route}) => {
       {mainData.length > 0 && (
         <View style={styles.MainContainer}>
           <View style={styles.mainItem}>
-            <Image
+            {/* <Image
               source={
                 mainData[0]?.photo
                   ? {uri: `${IMAGE_URL}/${mainData[0]?.photo}`}
@@ -71,7 +71,7 @@ const FamilyList = ({navigation, route}) => {
               alt="Profile"
               style={styles.mainImage}
               resizeMode="cover"
-            />
+            /> */}
             <View style={styles.mainDetailsContainer}>
               <Text style={styles.mainName}>
                 {mainData[0]?.firstname} {mainData[0]?.lastname}
@@ -234,15 +234,14 @@ const styles = StyleSheet.create({
 
   mainItem: {
     backgroundColor: '#edf9ff',
-    padding: 10,
+    padding: 16,
+    marginVertical: 8,
     borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 5,
+    elevation: 4,
   },
 
   mainImage: {
@@ -271,16 +270,16 @@ const styles = StyleSheet.create({
 
   Mainlabel: {
     alignItems: 'flex-start',
-    flexBasis: '33%',
+    flexBasis: '50%',
     fontSize: 15,
     color: '#333',
     fontWeight: '600',
   },
 
   mainDetails: {
+    flexBasis: '45%',
     fontSize: 14,
     color: '#444',
-    flexBasis: '33%',
     textTransform: 'capitalize',
   },
 
@@ -332,12 +331,11 @@ const styles = StyleSheet.create({
   },
 
   dropdownContent: {
-    // backgroundColor:'#AAC7B9'
     paddingVertical: 10,
   },
 
   familyDetailsContainer: {
-    flex: 1, // Take remaining horizontal space
+    flex: 1,
   },
 
   blankcontainer: {
@@ -353,7 +351,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     width: '90%',
-    // textTransform: "capitalize"
   },
 });
 

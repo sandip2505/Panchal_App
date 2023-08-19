@@ -1,4 +1,4 @@
-package com.panchal_app;
+package com.panchal_application;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

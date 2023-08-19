@@ -12,7 +12,6 @@ import {API_BASE_URL, API_KEY} from '@env';
 
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 
-
 const Villages = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [villagesData, setVillagesData] = useState([]);
@@ -23,6 +22,7 @@ const Villages = ({navigation}) => {
 
   const fetchVillagesData = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(`${API_BASE_URL}/location`);
       if (response.status === 200) {
         setIsLoading(true);
@@ -33,6 +33,7 @@ const Villages = ({navigation}) => {
         setIsLoading(false);
         console.log('Request failed with status:', response.status);
       }
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.error('An error occurred:', error);
@@ -42,10 +43,8 @@ const Villages = ({navigation}) => {
     return (
       <View key={data.index}>
         <View style={styles.box}>
-        <Fontisto name="holiday-village" color="#333" size={17} />
-          <Text style={styles.boxText}>
-            {data.item.village} {/*  - ( {data.item.pincode} ) */}{' '}
-          </Text>
+          <Fontisto name="holiday-village" color="#333" size={17} />
+          <Text style={styles.boxText}>{data.item.village}</Text>
         </View>
       </View>
     );
@@ -90,9 +89,9 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     shadowColor: 'black',
     elevation: 5,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 15
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15,
   },
 
   boxText: {

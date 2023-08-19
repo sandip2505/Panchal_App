@@ -17,7 +17,7 @@ import {ActivityIndicator} from 'react-native-paper';
 
 const SearchDirectory = ({navigation}) => {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
@@ -30,7 +30,6 @@ const SearchDirectory = ({navigation}) => {
             searchValue: searchValue,
           });
         } else {
-          setIsLoading(true);
           response = await axios.get(`${API_BASE_URL}/user-list`);
         }
 
@@ -116,7 +115,7 @@ const SearchDirectory = ({navigation}) => {
         </View>
       </View>
       {isLoading ? (
-        <ActivityIndicator size="large" color="#00a9ff" />
+        <ActivityIndicator size="small" color="#00a9ff" />
       ) : users.searchData ? (
         <FlatList
           data={users.searchData}
@@ -168,7 +167,6 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#000',
     height: 45,
-
   },
 
   iconcontainer: {
