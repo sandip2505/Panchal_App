@@ -1,9 +1,8 @@
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import {API_BASE_URL} from '@env';
 import {WebView} from 'react-native-webview';
-
+import LoadingPage from './LoadingPage';
+import api from './api';
 const AboutUs = ({navigation}) => {
   const [aboutUs, setaboutUs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,14 +14,14 @@ const AboutUs = ({navigation}) => {
   const fetchAboutUs = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/aboutus`);
+      const response = await api.get('/aboutus');
       if (response.status === 200) {
         setIsLoading(true);
         const data = response.data;
         setaboutUs(data);
         setIsLoading(false);
       } else {
-        console.log('Request failed with status:', response.status);
+        console.log('aboutus Request failed with status:', response.status);
         setIsLoading(false);
       }
       setIsLoading(false);
@@ -45,9 +44,7 @@ const AboutUs = ({navigation}) => {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <View style={{paddingTop: 20}}>
-          <ActivityIndicator size="large" color="#00a9ff" />
-        </View>
+       <LoadingPage />
       ) : (
         aboutUs.map(item => (
           <WebView

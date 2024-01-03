@@ -26,7 +26,7 @@ const CustomModal = ({showModal, setShowModal, onConfirm, Title, Message}) => {
                   setShowModal(false);
                   onConfirm();
                 }}>
-                <Text style={styles.textStyle}>Logout</Text>
+                <Text style={styles.textStyle}>Yes</Text>
               </TouchableOpacity>
             </View>
           </View>

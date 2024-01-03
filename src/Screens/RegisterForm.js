@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,17 +9,15 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import axios from 'axios';
-import {useNavigation} from '@react-navigation/native';
-import {API_BASE_URL, API_KEY} from '@env';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-
-import {RadioButton} from 'react-native-paper';
-import {showToast} from '../component/CustomToast';
+import api from './api';
+import { RadioButton } from 'react-native-paper';
+import { showToast } from '../component/CustomToast';
 
 const CustomDateField = props => {
   return (
@@ -29,13 +27,12 @@ const CustomDateField = props => {
   );
 };
 
-const RegisterForm = ({route}) => {
-  const {locations_id} = route.params;
+const RegisterForm = ({ route }) => {
+  const { locations_id } = route.params;
   const navigation = useNavigation();
 
   const [firstname, setFirstname] = useState('');
   const [middlename, setMiddlename] = useState('');
-  const [lastname, setLastname] = useState('');
   const [password, setPassword] = useState('');
   const [dob, setDob] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
@@ -51,7 +48,6 @@ const RegisterForm = ({route}) => {
 
   const [firstnameError, setfirstnameError] = useState('');
   const [middlenameError, setmiddlenameError] = useState('');
-  const [lastnameError, setlastnameError] = useState('');
   const [dobError, setdobError] = useState('');
   const [mobile_numberError, setmobile_numberError] = useState('');
   const [stateError, setstateError] = useState('');
@@ -75,7 +71,7 @@ const RegisterForm = ({route}) => {
 
   const formatDate = date => {
     const formattedDate = new Date(date);
-    const options = {year: 'numeric', month: 'long', day: 'numeric'};
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return formattedDate.toLocaleDateString(undefined, options);
   };
 
@@ -90,12 +86,7 @@ const RegisterForm = ({route}) => {
     } else {
       setfirstnameError('');
     }
-    if (!lastname) {
-      setlastnameError('Please enter lastname.');
-      isValid = false;
-    } else {
-      setlastnameError('');
-    }
+   
     if (!middlename) {
       setmiddlenameError('Please enter middlename.');
       isValid = false;
@@ -189,7 +180,6 @@ const RegisterForm = ({route}) => {
       userData.append('firstname', firstname);
       userData.append('middlename', middlename);
       userData.append('locations_id', locations_id);
-      userData.append('lastname', lastname);
       userData.append('dob', dob);
       userData.append('mobile_number', mobile_number);
       userData.append('password', password);
@@ -203,16 +193,20 @@ const RegisterForm = ({route}) => {
       userData.append('marital_status', marital_status);
 
       try {
-        const response = await axios
-          .post(`${API_BASE_URL}/user_register`, {
+        const response = await api
+          .post(`/user_register`, {
             headers: {
               Accept: 'application/json',
             },
             userData,
           })
           .then(res => {
+            
             const userId = res.data._id;
             const PerentsData = res.data;
+            // if (PerentsData) {
+            //   order(PerentsData);
+            // }
             if (res.data.mobileError === 'Mobile number already register') {
               showToast(
                 'error',
@@ -224,7 +218,6 @@ const RegisterForm = ({route}) => {
               AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
               setFirstname('');
               setMiddlename('');
-              setLastname('');
               setPassword('');
               setDob(null);
               setShowPicker(false);
@@ -240,7 +233,7 @@ const RegisterForm = ({route}) => {
               navigation.navigate('PaymentPage');
             }
           })
-          .catch(err => {});
+          .catch(err => { });
       } catch (error) {
         if (error.response) {
           console.log('Status code:', error.response);
@@ -269,6 +262,7 @@ const RegisterForm = ({route}) => {
     );
   }, []);
 
+
   return (
     <View style={styles.container}>
       {/* <Text style={styles.title}>Register Form</Text> */}
@@ -280,7 +274,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: firstnameError ? '#ff0000' : 'gray'},
+                { borderColor: firstnameError ? '#ff0000' : 'gray' },
               ]}
               placeholder="First Name / પોતાનું નામ"
               value={firstname}
@@ -294,7 +288,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: middlenameError ? '#ff0000' : 'gray'},
+                { borderColor: middlenameError ? '#ff0000' : 'gray' },
               ]}
               placeholder="Middle Name / પિતાનું નામ"
               value={middlename}
@@ -304,23 +298,12 @@ const RegisterForm = ({route}) => {
               <Text style={styles.error}>{middlenameError}</Text>
             )}
 
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {borderColor: lastnameError ? '#ff0000' : 'gray'},
-              ]}
-              placeholder="Last Name / અટક"
-              value={lastname}
-              onChangeText={setLastname}
-            />
-            {lastnameError && <Text style={styles.error}>{lastnameError}</Text>}
           </View>
 
           <TextInput
             style={[
               styles.input,
-              {borderColor: passwordError ? '#ff0000' : 'gray'},
+              { borderColor: passwordError ? '#ff0000' : 'gray' },
             ]}
             placeholder="Password / પાસવર્ડ"
             placeholderTextColor="gray"
@@ -335,7 +318,7 @@ const RegisterForm = ({route}) => {
               <TextInput
                 style={[
                   styles.input,
-                  {borderColor: dobError ? '#ff0000' : 'gray'},
+                  { borderColor: dobError ? '#ff0000' : 'gray' },
                 ]}
                 placeholderTextColor="gray"
                 placeholder="Date of birth / જન્મ તારીખ"
@@ -361,7 +344,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: mobile_numberError ? '#ff0000' : 'gray'},
+                { borderColor: mobile_numberError ? '#ff0000' : 'gray' },
               ]}
               placeholder="Mobile Number / મોબાઇલ નંબર"
               value={mobile_number}
@@ -376,7 +359,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: addressError ? '#ff0000' : 'gray'},
+                { borderColor: addressError ? '#ff0000' : 'gray' },
               ]}
               placeholder="Address / સરનામું"
               value={address}
@@ -388,7 +371,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: cityError ? '#ff0000' : 'gray'},
+                { borderColor: cityError ? '#ff0000' : 'gray' },
               ]}
               placeholder="City / શહેર"
               value={city}
@@ -400,7 +383,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: stateError ? '#ff0000' : 'gray'},
+                { borderColor: stateError ? '#ff0000' : 'gray' },
               ]}
               placeholder="State / રાજ્ય"
               value={state}
@@ -412,7 +395,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: pincodeError ? '#ff0000' : 'gray'},
+                { borderColor: pincodeError ? '#ff0000' : 'gray' },
               ]}
               placeholder="Pincode / પીન કોડ"
               value={pincode}
@@ -425,7 +408,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: educationError ? '#ff0000' : 'gray'},
+                { borderColor: educationError ? '#ff0000' : 'gray' },
               ]}
               placeholder="Education / ભણતર"
               value={education}
@@ -439,7 +422,7 @@ const RegisterForm = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: jobError ? '#ff0000' : 'gray'},
+                { borderColor: jobError ? '#ff0000' : 'gray' },
               ]}
               placeholder="Profession / વ્યવસાય"
               value={job}
@@ -457,7 +440,7 @@ const RegisterForm = ({route}) => {
               },
             ]}>
             <Picker
-              style={[styles.input, {marginTop: maritalStatusError ? 16 : 0}]}
+              style={[styles.input, { marginTop: maritalStatusError ? 16 : 0 }]}
               selectedValue={marital_status}
               onValueChange={itemValue => setMaritalStatus(itemValue)}
               mode="dropdown"
@@ -487,7 +470,7 @@ const RegisterForm = ({route}) => {
           <View
             style={[
               styles.gender,
-              {borderColor: genderError ? '#ff0000' : 'gray'},
+              { borderColor: genderError ? '#ff0000' : 'gray' },
             ]}>
             <View style={styles.radioContainer}>
               <Text style={styles.radioLabel}>Male / પુરૂષ</Text>

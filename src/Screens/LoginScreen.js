@@ -11,8 +11,8 @@ import {
   Linking,
   Pressable,
 } from 'react-native';
-import axios from 'axios';
-import {API_BASE_URL, API_KEY} from '@env';
+import api from './api';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showToast} from '../component/CustomToast';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
@@ -26,7 +26,7 @@ export default function LoginScreen({navigation}) {
 
   const [mobileError, setMobileError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-
+  
   const handleLogin = async () => {
     if (mobile_no.length == '') {
       setMobileError('Mobile number is required');
@@ -39,11 +39,11 @@ export default function LoginScreen({navigation}) {
       setMobileError('');
       setPasswordError('');
       try {
-        const response = await axios.post(`${API_BASE_URL}/userlogin`, {
+        const response = await api.post(`/userlogin`, {
           mobile_number: mobile_no,
           password: password,
         });
-        console.log('login response form api', response.data);
+        
         const userData = JSON.stringify(response.data.user);
         const childData = JSON.stringify(response.data.childData);
         const villageData = JSON.stringify(response.data.villageData);

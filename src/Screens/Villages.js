@@ -5,14 +5,16 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import {FlatList} from 'react-native';
-import {API_BASE_URL, API_KEY} from '@env';
+import React, { useState, useEffect } from 'react';
+import { FlatList } from 'react-native';
+import api from './api';
 
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
+import LoadingPage from './LoadingPage';
+import MaintenanceScreen from './MaintenanceScreen';
 
-const Villages = ({navigation}) => {
+const Villages = ({ navigation }) => {
+
   const [isLoading, setIsLoading] = useState(false);
   const [villagesData, setVillagesData] = useState([]);
 
@@ -20,23 +22,32 @@ const Villages = ({navigation}) => {
     fetchVillagesData();
   }, []);
 
+  
   const fetchVillagesData = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/location`);
-      if (response.status === 200) {
-        setIsLoading(true);
-        const data = response.data;
-        setVillagesData(data);
+      api.get('/location')
+      .then((response) => {
+        if (response.status === 200) {
+          setIsLoading(true);
+          const data = response.data;
+          setVillagesData(data);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+          console.log('location Request failed with status:', response.status);
+         
+        }
         setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        console.log('Request failed with status:', response.status);
-      }
-      setIsLoading(false);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error(error,'Handle error');
+      });
+
     } catch (error) {
       setIsLoading(false);
-      console.error('An error occurred:', error);
+      console.error('An error occurred in location:', error);
     }
   };
   const renderItem = data => {
@@ -53,11 +64,9 @@ const Villages = ({navigation}) => {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <View style={{marginTop: 10}}>
-          <ActivityIndicator size="large" color="#00a9ff" />
-        </View>
+        <LoadingPage />
       ) : villagesData && villagesData.length ? (
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <FlatList
             data={villagesData}
             renderItem={renderItem}

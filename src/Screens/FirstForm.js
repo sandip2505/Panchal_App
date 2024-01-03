@@ -12,10 +12,9 @@ import {
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE_URL, API_KEY} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import {showToast} from '../component/CustomToast';
+import api from './api';
 
 const FirstForm = () => {
   const navigation = useNavigation();
@@ -28,13 +27,14 @@ const FirstForm = () => {
 
   const fetchVillagesData = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/location`);
+      const response = await api.get(`/location`);
+      
       if (response.status === 200) {
         const data = response.data;
         setOptions(data);
         // setIsLoading(false);
       } else {
-        console.log('Request failed with status:', response.status);
+        console.log('location Request failed with status:', response.status);
       }
     } catch (error) {
       console.error('An error occurred:', error);

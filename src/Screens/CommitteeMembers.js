@@ -10,8 +10,8 @@ import {
 import React, {useEffect, useState} from 'react';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import axios from 'axios';
-import {API_BASE_URL} from '@env';
+import api from './api';
+import LoadingPage from './LoadingPage';
 
 const CommitteeMembers = () => {
   const [CommitteeData, setCommitteeData] = useState([]);
@@ -25,7 +25,7 @@ const CommitteeMembers = () => {
   const fetchAboutUs = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/committee_members`);
+      const response = await api.get('/committee_members');
       if (response.status === 200) {
         setIsLoading(true);
         const data = response.data;
@@ -34,7 +34,7 @@ const CommitteeMembers = () => {
         }
         setIsLoading(false);
       } else {
-        console.log('Request failed with status:', response.status);
+        console.log('committee_members Request failed with status:', response.status);
         setIsLoading(false);
       }
       setIsLoading(false);
@@ -78,9 +78,7 @@ const CommitteeMembers = () => {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <View>
-          <ActivityIndicator size="large" color="#00a9ff" />
-        </View>
+          <LoadingPage />
       ) : (
         <FlatList
           data={CommitteeData}

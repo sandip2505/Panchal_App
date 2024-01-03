@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TouchableOpacity,
   Text,
@@ -12,9 +12,9 @@ import {
   Dimensions,
 } from 'react-native';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -23,7 +23,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
-import Toast, {BaseToast} from 'react-native-toast-message';
+import Toast, { BaseToast } from 'react-native-toast-message';
 
 import NetInfo from '@react-native-community/netinfo';
 
@@ -51,11 +51,16 @@ import FamilyRegister from './src/Screens/FamilyRegister';
 import CheckConnection from './src/component/CheckConnection';
 import EditFamilyDetails from './src/Screens/EditFamilyDetails';
 import EditMainDetails from './src/Screens/EditMainDetails';
+import TestPage from './src/Screens/TestPage';
+import MaintenanceScreen from './src/Screens/MaintenanceScreen';
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function FirstScreenStack({navigation}) {
+function FirstScreenStack({ navigation }) {
+
+  
   return (
     <Stack.Navigator
       initialRouteName="HomePage"
@@ -105,100 +110,110 @@ function FirstScreenStack({navigation}) {
       <Stack.Screen
         name="AboutUs"
         component={AboutUs}
-        options={{title: 'About us'}}
+        options={{ title: 'About us' }}
       />
       <Stack.Screen
         name="RegisterForm"
         component={RegisterForm}
-        options={{title: 'Register'}}
+        options={{ title: 'Register' }}
       />
       <Stack.Screen
         name="FirstForm"
         component={FirstForm}
-        options={{title: 'Register'}}
+        options={{ title: 'Register' }}
       />
       <Stack.Screen
         name="Villages"
         component={Villages}
-        options={{title: 'Villages'}}
+        options={{ title: 'Villages' }}
       />
       <Stack.Screen
         name="PaymentPage"
         component={PaymentPage}
-        options={{title: 'Payment'}}
+        options={{ title: 'Payment' }}
       />
       <Stack.Screen
         name="Directory"
         component={Directory}
-        options={{title: 'Directory'}}
+        options={{ title: 'Directory' }}
       />
       <Stack.Screen
         name="FamilyList"
         component={FamilyList}
-        options={{title: 'Directory'}}
+        options={{ title: 'Directory' }}
       />
       <Stack.Screen
         name="PaymentSuccess"
         component={PaymentSuccess}
-        options={{title: 'Payment'}}
+        options={{ title: 'Payment' }}
       />
       <Stack.Screen
         name="PaymentFail"
         component={PaymentFail}
-        options={{title: 'Payment'}}
+        options={{ title: 'Payment' }}
       />
       <Stack.Screen
         name="FamilyDetailsPage"
         component={FamilyDetailsPage}
-        options={{title: 'Family Members'}}
+        options={{ title: 'Family Members' }}
       />
       <Stack.Screen
         name="SearchDirectory"
         component={SearchDirectory}
-        options={{title: 'Search'}}
+        options={{ title: 'Search' }}
       />
       <Stack.Screen
         name="ProfilePage"
         component={ProfilePage}
-        options={{title: 'Profile'}}
+        options={{ title: 'Profile' }}
       />
       <Stack.Screen
         name="ContactUs"
         component={ContactUs}
-        options={{title: 'Contact Us'}}
+        options={{ title: 'Contact Us' }}
       />
 
       <Stack.Screen
         name="committeeMembers"
         component={CommitteeMembers}
-        options={{title: 'Committee Members'}}
+        options={{ title: 'Committee Members' }}
       />
 
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
-        options={{title: 'Login'}}
+        options={{ title: 'Login' }}
       />
       <Stack.Screen
         name="ChangePassword"
         component={ChangePassword}
-        options={{title: 'Change Password'}}
+        options={{ title: 'Change Password' }}
       />
       <Stack.Screen
         name="FamilyRegister"
         component={FamilyRegister}
-        options={{title: 'Family Register'}}
+        options={{ title: 'Family Register' }}
       />
       <Stack.Screen
         name="EditMainDetails"
         component={EditMainDetails}
-        options={{title: 'Edit Details'}}
+        options={{ title: 'Edit Details' }}
       />
       <Stack.Screen
         name="EditFamilyDetails"
         component={EditFamilyDetails}
-        options={{title: 'Edit Family Details'}}
+        options={{ title: 'Edit Family Details' }}
       />
+      <Stack.Screen
+        name="TestPage"
+        component={TestPage}
+        options={{ title: 'Its a Testing Page' }}
+      />
+      {/* <Stack.Screen
+        name="MaintenanceScreen"
+        component={MaintenanceScreen}
+        options={{ title: 'Its a MaintenanceScreen' }}
+      /> */}
     </Stack.Navigator>
   );
 }
@@ -221,11 +236,11 @@ function App() {
   }, []);
 
   const toastConfig = {
-    error: ({text1, text2, ...rest}) => (
+    error: ({ text1, text2, ...rest }) => (
       <BaseToast
         {...rest}
-        style={{borderLeftColor: 'red', width: '90%', top: '5%'}}
-        contentContainerStyle={{paddingHorizontal: 15}}
+        style={{ borderLeftColor: 'red', width: '90%', top: '5%' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
         text1Style={{
           fontSize: 19,
           fontWeight: 'semibold',
@@ -240,11 +255,11 @@ function App() {
         text2={text2}
       />
     ),
-    success: ({text1, text2, ...rest}) => (
+    success: ({ text1, text2, ...rest }) => (
       <BaseToast
         {...rest}
-        style={{borderLeftColor: 'green', width: '90%', top: '5%'}}
-        contentContainerStyle={{paddingHorizontal: 15}}
+        style={{ borderLeftColor: 'green', width: '90%', top: '5%' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
         text1Style={{
           fontSize: 18,
           fontWeight: 'semibold',
@@ -259,11 +274,11 @@ function App() {
         text2={text2}
       />
     ),
-    info: ({text1, text2, ...rest}) => (
+    info: ({ text1, text2, ...rest }) => (
       <BaseToast
         {...rest}
-        style={{borderLeftColor: '#0000ff', width: '90%', top: '5%'}}
-        contentContainerStyle={{paddingHorizontal: 15}}
+        style={{ borderLeftColor: '#0000ff', width: '90%', top: '5%' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
         text1Style={{
           fontSize: 18,
           fontWeight: 'semibold',
@@ -315,7 +330,7 @@ function App() {
       {isConnected ? (
         <Drawer.Navigator
           screenOptions={{
-            drawerStyle: {width: '75%', paddingTop: 20},
+            drawerStyle: { width: '75%', paddingTop: 20 },
           }}
           drawerContent={props => <CustomSidebarMenu {...props} />}>
           <Drawer.Screen
@@ -324,8 +339,8 @@ function App() {
             options={{
               headerShown: false,
               title: 'Login',
-              drawerLabel: ({focused, color}) => (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              drawerLabel: ({ focused, color }) => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View
                     style={{
                       flexBasis: '15%',
@@ -365,10 +380,10 @@ function App() {
             <View style={styles.imageContainer}>
               <Image
                 source={require('./src/assets/panchal.png')}
-                style={{height: 150, width: 150}}
+                style={{ height: 150, width: 150 }}
               />
 
-              <Text style={[styles.text, {fontWeight: 'bold'}]}>
+              <Text style={[styles.text, { fontWeight: 'bold' }]}>
                 શ્રી સવાસો ગોળ પંચાલ સમાજ, અમદાવાદ
               </Text>
             </View>
@@ -448,7 +463,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 
-  title: {color: 'red', fontSize: 18, fontWeight: 'bold'},
+  title: { color: 'red', fontSize: 18, fontWeight: 'bold' },
 
   stepText: {
     fontWeight: 'bold',
@@ -470,5 +485,5 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 
-  btnText: {color: 'white', fontSize: 16, fontWeight: 'bold'},
+  btnText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
 });

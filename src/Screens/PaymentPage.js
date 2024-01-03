@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Button,
-  Alert,
-  StyleSheet,
-  Pressable,
-  Text,
   Image,
+  Pressable,
   ScrollView,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
-import { API_BASE_URL, RAZORPAY_KEY } from '@env';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { showToast } from '../component/CustomToast';
+import api from './api';
 
-// import RNFS from 'react-native-fs';
 const PaymentPage = ({ navigation }) => {
-  const [userData1, setUserData1] = useState(null);
-  const [ChildData, setChildData] = useState(null);
+
   const [PaymentamoutData, setpaymentamoutData] = useState(null);
   const [amount, setamount] = useState(null);
   const [razorpay_key, setrazorpay_key] = useState(null);
@@ -42,8 +37,9 @@ const PaymentPage = ({ navigation }) => {
         }
       })
       .catch(error => {
-        console.log('Error retrieving user data:', error);
+        console.log('Error  retrieving user data:', error);
       });
+
   }, [PaymentamoutData]);
 
   useEffect(() => {
@@ -59,12 +55,11 @@ const PaymentPage = ({ navigation }) => {
 
   const paymentamout = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/listsettings`);
+      const response = await api.get(`/listsettings`);
+      
       if (response.status === 200) {
         const data = response.data;
         const amountObject = data.find(item => item.key === 'amount');
-        const razorpay_key = data.find(item => item.key === 'RAZORPAY_KEY');
-        setrazorpay_key( razorpay_key.value );
         let amountValue = null;
         if (amountObject) {
           amountValue = amountObject.value;
@@ -72,21 +67,45 @@ const PaymentPage = ({ navigation }) => {
 
         setpaymentamoutData({ amountObject });
       } else {
-        console.log('Request failed with status:', response.status);
+        console.log('listsettings Request failed with status:', response.status);
+      }
+    } catch (error) {
+      console.error('this An error occurred:', error);
+    }
+  };
+  const handlePayment = async () => {
+    try {
+      const response = await api.post(`/order`, {
+        headers: {
+          Accept: 'application/json',
+        },
+        firstname: PerentsData && PerentsData?.firstname,
+        personal_id: PerentsData && PerentsData?.personal_id,
+        mobile_number: PerentsData && PerentsData?.mobile_number,
+      });
+  
+      const orderId = response.data.order;
+      const razorpay_key_id = response.data.razorpay_key_id;
+      console.log("razorpay_key_id",razorpay_key_id)
+        if (orderId) {
+
+        await paynow(orderId ,razorpay_key_id); 
       }
     } catch (error) {
       console.error('An error occurred:', error);
     }
   };
 
-  const handlePayment = async () => {
+  const paynow = async (orderId,razorpay_key_id) => {
+    console.log("razorpay_key_id in the paynow", razorpay_key_id)
     const options = {
       description: 'Pay to Panchal Samaj',
       image:
         'https://samajapp.codecrewinfotech.com/uploads/appstore.png',
-      currency: 'INR',
-      key: razorpay_key?razorpay_key:RAZORPAY_KEY,
-      amount: amount * 100,
+      currency: orderId.currency,
+      order_id: orderId.id,
+      key: razorpay_key_id,
+      amount: orderId.amount,
       name: 'Pay to Panchal Samaj',
       prefill: {
         name: PerentsData && PerentsData?.firstname,
@@ -95,16 +114,18 @@ const PaymentPage = ({ navigation }) => {
       },
       theme: { color: '#0D5ADD' },
     };
+    console.log("final options",options)
 
     RazorpayCheckout.open(options)
       .then(data => {
         try {
           // AsyncStorage.removeItem('PerentsData');
-          const response = axios.post(`${API_BASE_URL}/payment`, {
+          const response = api.post(`/payment`, {
             razorpay_payment_id: data.razorpay_payment_id,
             status_code: data.status_code,
             user_id: PerentsData && PerentsData?._id,
           });
+          
           AsyncStorage.removeItem('PerentsData').then(() => {
           });
           navigation.navigate('PaymentSuccess');

@@ -11,12 +11,11 @@ import {
   Linking,
   Pressable,
 } from 'react-native';
-import axios from 'axios';
-import {API_BASE_URL, API_KEY} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import {showToast} from '../component/CustomToast';
+import api from './api';
 
 const ChangePassword = () => {
   const navigation = useNavigation();
@@ -75,13 +74,14 @@ const ChangePassword = () => {
       setNewPassError('');
       setConfirmPassError('');
       try {
-        const response = await axios.post(`${API_BASE_URL}/password_change`, {
+
+        const response = await api.post('/password_change',{
           id: parentsData?._id,
           old_password: currentPassword,
           password: newPassword,
           cpassword: confirmPassword,
         });
-
+        
         if (response.data.message == 'incorrect current password') {
           setCurrentPassError('Incorrect current password');
         } else if (response.data.message == 'confirm password not matched') {

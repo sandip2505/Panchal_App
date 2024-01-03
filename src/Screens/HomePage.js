@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,17 +8,22 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {API_BASE_URL, IMAGE_URL} from '@env';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import { IMAGE_URL} from '@env';
+import api from './api';
 
-const HomePage = ({navigation}) => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import MaintenanceScreen from './MaintenanceScreen';
+
+const HomePage = ({ navigation }) => {
+
+
   const [image, setImage] = useState([]);
   const [isTestData, setIsTestData] = useState(false);
 
-  const {width, height} = Dimensions.get('window');
+  const { width, height } = Dimensions.get('window');
   const sliderHeight = height * 0.32;
+
 
   useEffect(() => {
     fetchSliderImage();
@@ -36,22 +41,24 @@ const HomePage = ({navigation}) => {
 
   const fetchSliderImage = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/slider`);
+      const response = await api.get(`/slider`);
       if (response.status === 200) {
         const data = response.data;
         setImage(data);
+        
       } else {
-        console.log('Request failed with status:', response.status);
+        return response.status
+        console.log('slider Request failed with status:', response.status);
       }
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error('slider Request failed:', error.message);
     }
   };
-
+ 
   return (
     <View style={styles.maindiv}>
       <ScrollView>
-        <View style={{height: sliderHeight, overflow: 'hidden'}}>
+        <View style={{ height: sliderHeight, overflow: 'hidden' }}>
           <SwiperFlatList
             autoplay
             autoplayDelay={3}
@@ -74,19 +81,19 @@ const HomePage = ({navigation}) => {
               opacity: 0.4,
             }}
             data={image}
-            renderItem={({item, index}) =>
+            renderItem={({ item, index }) =>
               item ? (
-                <View key={index} style={{width, height: sliderHeight}}>
+                <View key={index} style={{ width, height: sliderHeight }}>
                   <Image
-                    style={{width, height: sliderHeight}}
-                    source={{uri: `${IMAGE_URL}/${item.image}`}}
+                    style={{ width, height: sliderHeight }}
+                    source={{ uri: `${IMAGE_URL}/${item.image}` }}
                     alt={`image-${index}`}
                   />
                 </View>
               ) : (
-                <View style={{width, height: sliderHeight}}>
+                <View style={{ width, height: sliderHeight }}>
                   <Image
-                    style={{width, height: sliderHeight}}
+                    style={{ width, height: sliderHeight }}
                     source={require('../assets/slide.jpeg')}
                     alt={`image`}
                   />
@@ -173,6 +180,7 @@ const HomePage = ({navigation}) => {
               </View>
               <Text style={styles.boxText}> Search </Text>
             </TouchableOpacity>
+
           </View>
 
           <View style={styles.row}></View>

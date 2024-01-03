@@ -10,11 +10,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import {API_BASE_URL, IMAGE_URL} from '@env';
+import { IMAGE_URL} from '@env';
 import AgeCount from '../component/AgeCount';
 import moment from 'moment';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import api from './api';
 
 const FamilyList = ({navigation, route}) => {
   const {userId} = route.params;
@@ -37,7 +37,8 @@ const FamilyList = ({navigation, route}) => {
   const fetchVillagesData = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/viewUser/${userId}`);
+      const response = await api.get(`/viewUser/${userId}`);
+      
       if (response.status === 200) {
         setIsLoading(true);
         const data = response.data;
@@ -47,7 +48,7 @@ const FamilyList = ({navigation, route}) => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        console.log('Request failed with status:', response.status);
+        console.log('viewUser id Request failed with status:', response.status);
       }
     } catch (error) {
       setIsLoading(false);

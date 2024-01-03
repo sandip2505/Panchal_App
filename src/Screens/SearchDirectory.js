@@ -8,13 +8,13 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import LoadingPage from './LoadingPage';
 
-import {API_BASE_URL, IMAGE_URL} from '@env';
+import { IMAGE_URL} from '@env';
 import {ActivityIndicator} from 'react-native-paper';
-
+import api from './api';
 const SearchDirectory = ({navigation}) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,11 +26,9 @@ const SearchDirectory = ({navigation}) => {
         setIsLoading(true);
         let response;
         if (searchValue) {
-          response = await axios.post(`${API_BASE_URL}/search`, {
-            searchValue: searchValue,
-          });
+          response = await api.post('/search',{searchValue: searchValue,})
         } else {
-          response = await axios.get(`${API_BASE_URL}/user-list`);
+          response = await api.get('/user-list');
         }
 
         if (response.status === 200) {
@@ -40,7 +38,7 @@ const SearchDirectory = ({navigation}) => {
           setIsLoading(false);
         } else {
           setIsLoading(false);
-          console.log('Request failed with status:', response.status);
+          console.log('user-list Request failed with status:', response.status);
         }
         setIsLoading(false);
       } catch (error) {
@@ -115,7 +113,7 @@ const SearchDirectory = ({navigation}) => {
         </View>
       </View>
       {isLoading ? (
-        <ActivityIndicator size="small" color="#00a9ff" />
+        <LoadingPage />
       ) : users.searchData ? (
         <FlatList
           data={users.searchData}

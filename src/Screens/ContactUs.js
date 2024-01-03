@@ -10,9 +10,8 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import {API_BASE_URL, API_KEY} from '@env';
 import {Divider} from 'native-base';
-import axios from 'axios';
+import api from './api';
 
 const ContactUs = ({navigation}) => {
   const [contact1, setcontact1] = useState('');
@@ -27,7 +26,7 @@ const ContactUs = ({navigation}) => {
 
   const paymentamout = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/listsettings`);
+      const response = await api.get('/listsettings');
       if (response.status === 200) {
         const data = response.data;
         const contact1 = data.find(item => item.key === 'contact1');
@@ -44,7 +43,7 @@ const ContactUs = ({navigation}) => {
         setfacebook(facebook?.value);
         settelegram(telegram?.value);
       } else {
-        console.log('Request failed with status:', response.status);
+        console.log('listsettings Request failed with status:', response.status);
       }
     } catch (error) {
       console.error('An error occurred:', error);

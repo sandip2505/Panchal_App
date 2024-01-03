@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,18 +8,22 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Alert,
+  PermissionsAndroid,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AppState} from 'react-native';
+import { AppState } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import AgeCount from '../component/AgeCount';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import axios from 'axios';
-import {API_BASE_URL, API_KEY, IMAGE_URL} from '@env';
+import { API_BASE_URL, IMAGE_URL } from '@env';
 import moment from 'moment';
-import {showToast} from '../component/CustomToast';
+import { showToast } from '../component/CustomToast';
+import RNFetchBlob from 'rn-fetch-blob';
+import api from './api';
 
+console.log(IMAGE_URL)
 const ProfilePage = () => {
   const navigation = useNavigation();
   const [parentsData, setParentsData] = useState(null);
@@ -38,7 +42,7 @@ const ProfilePage = () => {
         }
       })
       .catch(error => {
-        console.log('Error in profile page : ', error);
+        console.error('Error in profile page : ', error);
       });
 
     // Get village data
@@ -50,7 +54,7 @@ const ProfilePage = () => {
         }
       })
       .catch(error => {
-        console.log('Error in profile page : ', error);
+        console.error('Error in profile page : ', error);
       });
   }, []);
 
@@ -79,8 +83,8 @@ const ProfilePage = () => {
 
       try {
         setIsLoading(true);
-        const response = await axios
-          .post(`${API_BASE_URL}/profile_image/${parentsData?._id}`, userData, {
+        const response = await api
+          .post(`/profile_image/${parentsData?._id}`, userData, {
             headers: {
               'Content-Type': 'multipart/form-data',
               Accept: 'application/json',
@@ -94,21 +98,76 @@ const ProfilePage = () => {
               AsyncStorage.setItem('userData', userData);
               navigation.navigate('HomePage');
               navigation.navigate('ProfilePage');
-              showToast('success', 'Profile image updated successfully.','પ્રોફાઇલ ફોટો સફળતાપૂર્વક અપડેટ થઈ ગયો.', 2500);
+              showToast('success', 'Profile image updated successfully.', 'પ્રોફાઇલ ફોટો સફળતાપૂર્વક અપડેટ થઈ ગયો.', 2500);
               setIsLoading(false);
             });
           });
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        console.log('Error sending image to API:', err);
+        console.error('Error sending image to API:', err);
       }
     } catch (error) {
       setIsLoading(false);
-      console.log('ImagePicker Error:', error);
+      console.error('ImagePicker Error:', error);
     }
   };
 
+  const requestStoragePermission = async (id) => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Downloader App Storage Permission',
+          message:
+            'Downloader App needs access to your storage' +
+            'so you can download files',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        downloadFile(id);
+      } else {
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  
+  const downloadFile = (id) => {
+    const {config, fs} = RNFetchBlob;
+    const date = new Date();
+    const fileDir = fs.dirs.DownloadDir;
+    config({
+  
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        path:
+          fileDir +
+          '/download_' +
+          Math.floor(date.getDate() + date.getSeconds() / 2) +
+          '.pdf',
+        description: 'file download',
+      },
+    })
+    // api.get(`/paymentReceipt/${id}`)
+      .fetch('GET', `${API_BASE_URL}/paymentReceipt/${id}`, {
+        //some headers ..
+      })
+      .then(res => {
+        // the temp file path
+        showToast(
+          'success',
+          'Download successfully.',
+          'ડાઉનલોડ સફળતાપૂર્વક.',
+          2000,
+        );
+      });
+  };
   return (
     <View style={styles.maincontainer}>
       <View style={styles.container}>
@@ -122,7 +181,7 @@ const ProfilePage = () => {
               ) : parentsData?.photo ? (
                 <View style={styles.imageIconContainer}>
                   <Image
-                    source={{uri: `${IMAGE_URL}/${parentsData?.photo}`}}
+                    source={{ uri: `${IMAGE_URL}/${parentsData?.photo}` }}
                     alt="profile"
                     style={styles.image}
                   />
@@ -226,6 +285,17 @@ const ProfilePage = () => {
               </Text>
             </View>
           </View>
+          <View style={styles.details}>
+            <View style={styles.row}>
+              <Text style={styles.label}>Invoice :</Text>
+              <TouchableOpacity
+                style={styles.dlfamilybtn}
+                onPress={() => requestStoragePermission(parentsData?._id)}
+                activeOpacity={0.6}>
+                <Text style={styles.dlbtntext}>Download</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </ScrollView>
 
         <View style={styles.btncontainer}>
@@ -275,7 +345,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     overflow: 'hidden',
     // borderWidth: 1,
-    elevation: 10, 
+    elevation: 10,
     shadowColor: '#000',
   },
 
@@ -316,7 +386,6 @@ const styles = StyleSheet.create({
   personal_id: {
     fontSize: 17,
     color: 'black',
-    textTransform: 'capitalize',
   },
 
   details: {
@@ -373,6 +442,16 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: '48%',
   },
+  dlfamilybtn: {
+    height: 35,
+    backgroundColor: '#68b300',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'gray',
+    elevation: 3,
+    width: '48%',
+  },
 
   logoutbtn: {
     height: 50,
@@ -386,6 +465,12 @@ const styles = StyleSheet.create({
   },
 
   btntext: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    // textTransform: 'uppercase',
+  },
+  dlbtntext: {
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',

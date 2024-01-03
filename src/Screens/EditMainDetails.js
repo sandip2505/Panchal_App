@@ -10,14 +10,12 @@ import {
   Pressable,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE_URL, API_KEY} from '@env';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-
+import api from './api';
 import {RadioButton} from 'react-native-paper';
 import {showToast} from '../component/CustomToast';
 
@@ -192,10 +190,9 @@ const EditMainDetails = ({route}) => {
         marital_status,
       };
       try {
-        const response = await axios.post(
-          `${API_BASE_URL}/user-update/${mainId}`,
-          Updatedata,
-        );
+
+        const response = await api.post(`user-update/${mainId}`,Updatedata);
+
         if (response.status === 200) {
           const data = response.data;
           AsyncStorage.removeItem('userData').then(() => {
@@ -211,7 +208,7 @@ const EditMainDetails = ({route}) => {
             );
           });
         } else {
-          console.log('Request failed with status:', response.status);
+          console.log('user-update Request failed with status:', response.status);
         }
       } catch (error) {
         console.log(error);
@@ -232,7 +229,9 @@ const EditMainDetails = ({route}) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/user-edit/${mainId}`);
+
+      const response = await api.get(`user-edit/${mainId}`);
+
       if (response.status === 200) {
         const data = response.data;
         setFirstname(data.firstname);
@@ -249,7 +248,7 @@ const EditMainDetails = ({route}) => {
         setGender(data.gender);
         setMaritalStatus(data.marital_status);
       } else {
-        console.log('Request failed with status:', response.status);
+        console.log('user-edit Request failed with status:', response.status);
       }
     } catch (error) {
       console.error('An error occurred:', error);

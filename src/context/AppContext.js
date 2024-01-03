@@ -9,7 +9,6 @@
 //   const [childData, setChildData] = useState([]);
 //   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-//   {console.log("isLoggedIn in context = = = = =>", isLoggedIn)}
 
 //   const value = {
 //     parentsData,

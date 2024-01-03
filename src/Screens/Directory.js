@@ -10,10 +10,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import LoadingPage from './LoadingPage';
 
-import {API_BASE_URL, IMAGE_URL, API_KEY} from '@env';
+import { IMAGE_URL} from '@env';
+import api from './api';
 
 const Directory = ({navigation}) => {
   const [users, setUsers] = useState([]);
@@ -28,13 +29,9 @@ const Directory = ({navigation}) => {
   const fetchOptions = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/location`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      setOptions(data);
+      const response = await api.get('/location');
+      setOptions(response.data);
+    
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -48,11 +45,10 @@ const Directory = ({navigation}) => {
         setIsLoading(true);
         let response;
         if (searchValue) {
-          response = await axios.post(`${API_BASE_URL}/villagebyuser`, {
-            searchValue: searchValue,
-          });
+          response = await api.post('/villagebyuser',{searchValue: searchValue});
         } else {
-          response = await axios.get(`${API_BASE_URL}/user-list`);
+          response = await api.get('/user-list');
+
         }
 
         if (response.status === 200) {
@@ -61,7 +57,7 @@ const Directory = ({navigation}) => {
           setUsers(data);
           setIsLoading(false);
         } else {
-          console.log('Request failed with status:', response.status);
+          console.log('user-list Request failed with status:', response.status);
           setIsLoading(false);
         }
         setIsLoading(false);
@@ -141,9 +137,7 @@ const Directory = ({navigation}) => {
         </Picker>
       </View>
       {isLoading ? (
-        <View>
-          <ActivityIndicator size="large" color="#00a9ff" />
-        </View>
+       <LoadingPage />
       ) : users && users.length ? (
         <FlatList
           data={users}

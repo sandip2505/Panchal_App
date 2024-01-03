@@ -1,15 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, Pressable} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AgeCount from '../component/AgeCount';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-
+import AgeCount from '../component/AgeCount';
+import CustomModal from '../component/CustomModal';
+import { showToast } from '../component/CustomToast';
+import api from './api';
 const FamilyDetailsPage = () => {
   const [parentsData, setParentsData] = useState(null);
   const [childData, setChildData] = useState([]);
   const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -44,6 +47,30 @@ const FamilyDetailsPage = () => {
     getChildData();
   }, []);
 
+  const DeleteFamilyMember = async (id) => {
+    try {
+      const response = await api.post(`/user-delete/${id}`);
+      if (response.status === 200) {
+        AsyncStorage.removeItem('childData').then(() => {
+
+          const familyData = JSON.stringify(response.data.familyData);
+          AsyncStorage.setItem('childData', familyData).then(() => {
+          });
+        });
+        showToast(
+          'error',
+          'Data deleted successfully.',
+          'ડેટા  કાઢી નાખ્યું.',
+          2500,
+        );
+        navigation.navigate('ProfilePage');
+      } else {
+        console.log('user-delete Request failed with status:', response.status);
+      }
+    } catch (error) {
+      console.error(error, "error")
+    }
+  }
   const renderParentDetails = () => {
     if (!parentsData) {
       return null;
@@ -53,7 +80,7 @@ const FamilyDetailsPage = () => {
 
     return (
       <>
-        <View style={[styles.MainContainer, {marginBottom: 30}]}>
+        <View style={[styles.MainContainer, { marginBottom: 30 }]}>
           <View style={styles.familyItem}>
             <Pressable
               style={styles.EditIcon}
@@ -80,8 +107,8 @@ const FamilyDetailsPage = () => {
             <View style={styles.row}>
               <Text style={styles.familylabel}>Name : </Text>
               <Text style={styles.familyDetails}>
-                {parentsData?.firstname} {parentsData?.middlename}{' '}
-                {parentsData?.lastname}
+                {parentsData?.lastname} {parentsData?.firstname} {parentsData?.middlename}{' '}
+
               </Text>
             </View>
 
@@ -144,6 +171,7 @@ const FamilyDetailsPage = () => {
                 />
               </Pressable>
 
+
               <View style={styles.dropdownContent}>
                 <View style={styles.headingRelation}>
                   <Text style={styles.FamilyName}>
@@ -157,10 +185,10 @@ const FamilyDetailsPage = () => {
                 <Text style={styles.familyDetails}>
                   {child &&
                     child?.lastname +
-                      ' ' +
-                      child?.firstname +
-                      ' ' +
-                      child?.middlename}
+                    ' ' +
+                    child?.firstname +
+                    ' ' +
+                    child?.middlename}
                 </Text>
               </View>
 
@@ -192,8 +220,29 @@ const FamilyDetailsPage = () => {
                 <Text style={styles.familylabel}>Profession :</Text>
                 <Text style={styles.familyDetails}>{child && child?.job}</Text>
               </View>
+              <View style={styles.DeleteIcon}>
+                <Pressable
+                  // onPress={() => DeleteFamilyMember(child && child?._id)}
+                  onPress={() => setShowModal(true)}>
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={30}
+                    color="#ff0000"
+                  />
+                </Pressable>
+              </View>
             </View>
+            {showModal && (
+              <CustomModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                onConfirm={() => DeleteFamilyMember(child && child?._id)}
+                Title={`Confirm Delete ?`}
+                Message={`Are you sure you want to delete ?`}
+              />
+            )}
           </View>
+
         );
       })
     ) : (
@@ -220,6 +269,7 @@ const FamilyDetailsPage = () => {
             <Text style={styles.btnText}> Add new family Members</Text>
           </Pressable>
         )}
+
       </ScrollView>
     </View>
   );
@@ -235,7 +285,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
@@ -253,6 +303,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 7,
     top: 7,
+  },
+  DeleteIcon: {
+    //  : 'absolute',
+    // display: "flex",
+    // justifyContent: "end",
+    right: 7,
+    top: 7,
+    left: 280,
   },
 
   FamilyName: {

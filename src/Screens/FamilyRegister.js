@@ -9,12 +9,10 @@ import {
   Pressable,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE_URL, API_KEY} from '@env';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import api from './api';
 import {RadioButton} from 'react-native-paper';
 import {showToast} from '../component/CustomToast';
 
@@ -37,7 +35,6 @@ const FamilyRegister = ({route}) => {
     {
       firstname: '',
       middlename: '',
-      lastname: '',
       dob: null,
       gender: '',
       education: '',
@@ -50,7 +47,6 @@ const FamilyRegister = ({route}) => {
 
   const [firstname, setFirstname] = useState('');
   const [middlename, setMiddlename] = useState('');
-  const [lastname, setLastname] = useState('');
   const [dob, setDob] = useState('');
   // const [showPicker, setShowPicker] = useState(false);
   const [gender, setGender] = useState('');
@@ -74,9 +70,6 @@ const FamilyRegister = ({route}) => {
       errors.middlename = 'Please enter middlename';
     }
 
-    if (form.lastname.length <= 0) {
-      errors.lastname = 'Please enter lastname';
-    }
 
     if (form.dob === null) {
       errors.dob = 'Please select date of birth';
@@ -111,12 +104,6 @@ const FamilyRegister = ({route}) => {
     return errorsList.every(errors => Object.keys(errors).length === 0);
   };
 
-  // const handleDateChange = (event, selectedDate) => {
-  //   setShowPicker(false);
-  //   if (selectedDate) {
-  //     setDob(selectedDate);
-  //   }
-  // };
 
   const handleToggleDatePicker = index => {
     const updatedForms = [...forms];
@@ -155,7 +142,6 @@ const FamilyRegister = ({route}) => {
       const newForm = {
         firstname: '',
         middlename: '',
-        lastname: '',
         dob: null,
         gender: '',
         education: '',
@@ -210,7 +196,6 @@ const FamilyRegister = ({route}) => {
       const newForm = {
         firstname,
         middlename,
-        lastname,
         dob,
         gender,
         education,
@@ -219,10 +204,10 @@ const FamilyRegister = ({route}) => {
         maritalStatus,
       };
       setForms([newForm]);
-      axios
-        .post(`${API_BASE_URL}/addchildUser/${_id}`, forms)
+      api.post(`/addchildUser/${_id}`, forms)
         .then(response => {
           AsyncStorage.removeItem('childData').then(() => {
+      
             const familyData = JSON.stringify(response.data.familyData);
             AsyncStorage.setItem('childData', familyData).then(() => {
             });
@@ -237,7 +222,6 @@ const FamilyRegister = ({route}) => {
           navigation.navigate('ProfilePage');
           setFirstname('');
           setMiddlename('');
-          setLastname('');
           setDob('');
           setGender('');
           setEducation('');
@@ -323,22 +307,6 @@ const FamilyRegister = ({route}) => {
               <Text style={styles.errorText}>
                 {formErrors[index].middlename}
               </Text>
-            )}
-
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {borderColor: formErrors[index]?.lastname ? '#ff0000' : 'gray'},
-              ]}
-              placeholder="Last Name / અટક"
-              value={form.lastname}
-              onChangeText={value =>
-                handleInputChange(index, 'lastname', value)
-              }
-            />
-            {formErrors[index]?.lastname && (
-              <Text style={styles.errorText}>{formErrors[index].lastname}</Text>
             )}
 
             <View>
