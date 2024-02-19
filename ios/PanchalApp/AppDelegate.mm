@@ -1,4 +1,5 @@
 #import "AppDelegate.h"
+#import "RNFBMessagingModule.h"
 
 #import <React/RCTBundleURLProvider.h>
 

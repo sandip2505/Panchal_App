@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import api from './api';
 import {RadioButton} from 'react-native-paper';
 import {showToast} from '../component/CustomToast';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const CustomDateField = props => {
   return (
@@ -60,6 +61,13 @@ const EditMainDetails = ({route}) => {
   const [jobError, setjobError] = useState('');
   const [genderError, setgenderError] = useState('');
   const [maritalStatusError, setMaritalStatusError] = useState('');
+  const { t } = useTranslation();
+  const initialLabel = t('maritalstatus');
+  const married = t('married');
+  const unmarried = t('unmarried');
+  const widower = t('widower');
+  const widow = t('widow');
+  const divorcee = t('divorcee');
 
   const handleDateChange = (event, selectedDate) => {
     setShowPicker(false);
@@ -77,28 +85,28 @@ const EditMainDetails = ({route}) => {
   const handleUpdate = async () => {
     let isValid = true;
     if (!firstname) {
-      setfirstnameError('Please enter firstname.');
+      setfirstnameError(t('pleaseenterfirstname'));
       isValid = false;
     } else {
       setfirstnameError('');
     }
 
     if (!lastname) {
-      setlastnameError('Please enter lastname.');
+      setlastnameError(t('pleaseenterlastname'));
       isValid = false;
     } else {
       setlastnameError('');
     }
 
     if (!middlename) {
-      setmiddlenameError('Please enter middlename.');
+      setmiddlenameError(t('pleaseentermiddlename'));
       isValid = false;
     } else {
       setmiddlenameError('');
     }
 
     if (!dob) {
-      setdobError('Please enter dob.');
+      setdobError(t('pleaseenterdob'));
       isValid = false;
     } else {
       setdobError('');
@@ -115,59 +123,59 @@ const EditMainDetails = ({route}) => {
     // }
 
     if (!state) {
-      setstateError('Please enter state.');
+      setstateError(t('pleaseenterstate'));
       isValid = false;
     } else {
       setstateError('');
     }
 
     if (!city) {
-      setcityError('Please enter city.');
+      setcityError(t('pleaseentercity'));
       isValid = false;
     } else {
       setcityError('');
     }
 
     if (!pincode) {
-      setpincodeError('Please enter pincode.');
+      setpincodeError(t('pleaseenterpincode'));
       isValid = false;
     } else if (isNaN(pincode) || pincode.length !== 6) {
-      setpincodeError('Please enter a valid pincode number');
+      setpincodeError(t('pleaseenteravalidpincodenumber'));
       isValid = false;
     } else {
       setpincodeError('');
     }
 
     if (!education) {
-      seteducationError('Please enter education.');
+      seteducationError(t('pleaseentereducation'));
       isValid = false;
     } else {
       seteducationError('');
     }
 
     if (!address) {
-      setaddressError('Please enter address.');
+      setaddressError(t('pleaseenteraddress'));
       isValid = false;
     } else {
       setaddressError('');
     }
 
     if (!job) {
-      setjobError('Please enter job.');
+      setjobError(t('pleaseenterjob'));
       isValid = false;
     } else {
       setjobError('');
     }
 
     if (!gender) {
-      setgenderError('Please enter gender.');
+      setgenderError(t('pleaseentergender'));
       isValid = false;
     } else {
       setgenderError('');
     }
 
     if (!marital_status) {
-      setMaritalStatusError('Please choose marital status.');
+      setMaritalStatusError(t('pleasechoosemaritalstatus'));
       isValid = false;
     } else {
       setMaritalStatusError('');
@@ -202,8 +210,7 @@ const EditMainDetails = ({route}) => {
             navigation.navigate('ProfilePage');
             showToast(
               'success',
-              'Profile image updated successfully.',
-              'પ્રોફાઇલ  સફળતાપૂર્વક અપડેટ થઈ ગયો.',
+              t('dataupdatedsuccessfully'),
               2500,
             );
           });
@@ -216,8 +223,7 @@ const EditMainDetails = ({route}) => {
     } else {
       showToast(
         'error',
-        'Please fill all the required fields !',
-        'કૃપા કરીને તમામ જરૂરી માહિતી ભરો.',
+        t('pleasefillalltherequiredfields'),
         2500,
       );
     }
@@ -268,7 +274,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: firstnameError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="First Name / પોતાનું નામ"
+              placeholder={t('firstname')}
               value={firstname}
               onChangeText={setFirstname}
             />
@@ -282,7 +288,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: middlenameError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="Middle Name / પિતાનું નામ"
+              placeholder={t('middlename')}
               value={middlename}
               onChangeText={setMiddlename}
             />
@@ -296,7 +302,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: lastnameError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="Last Name / અટક"
+              placeholder={t('lastname')}
               value={lastname}
               onChangeText={setLastname}
             />
@@ -311,7 +317,7 @@ const EditMainDetails = ({route}) => {
                   {borderColor: dobError ? '#ff0000' : 'gray'},
                 ]}
                 placeholderTextColor="gray"
-                placeholder="Date of birth / જન્મ તારીખ"
+                placeholder={t('dateofbirth')}
                 editable={false}
                 value={dob ? formatDate(dob) : ''}
               />
@@ -351,7 +357,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: addressError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="Address / સરનામું"
+              placeholder={t('address')}
               value={address}
               onChangeText={setAddress}
             />
@@ -363,7 +369,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: cityError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="City / શહેર"
+              placeholder={t('city')}
               value={city}
               onChangeText={setCity}
             />
@@ -375,7 +381,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: stateError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="State / રાજ્ય"
+              placeholder={t('state')}
               value={state}
               onChangeText={setState}
             />
@@ -387,7 +393,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: pincodeError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="Pincode / પીન કોડ"
+              placeholder={t('pincode')}
               value={pincode}
               onChangeText={setPincode}
               keyboardType="numeric"
@@ -400,7 +406,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: educationError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="Education / ભણતર"
+              placeholder={t('education')}
               value={education}
               onChangeText={setEducation}
             />
@@ -414,7 +420,7 @@ const EditMainDetails = ({route}) => {
                 styles.input,
                 {borderColor: jobError ? '#ff0000' : 'gray'},
               ]}
-              placeholder="Profession / વ્યવસાય"
+              placeholder={t('profession')}
               value={job}
               onChangeText={setJob}
             />
@@ -437,20 +443,20 @@ const EditMainDetails = ({route}) => {
               defaultValue="Married"
               dropdownIconColor="gray">
               <Picker.Item
-                label="Marital status / વૈવાહિક સ્ટેટસ પસંદ કરો"
+                label={initialLabel}
                 value=""
                 selectedValue
                 enabled={false}
               />
               <Picker.Item
-                label="Married / પરિણીત"
+                label={married}
                 value="Married"
                 defaultValue
               />
-              <Picker.Item label="Unmarried / અપરિણીત" value="Unmarried" />
-              <Picker.Item label="widower / વિધુર" value="widower" />
-              <Picker.Item label="Widow / વિધવા" value="Widow" />
-              <Picker.Item label="Divorcee / છૂટાછેડા લેનાર" value="Divorcee" />
+              <Picker.Item label={unmarried} value="Unmarried" />
+              <Picker.Item label={widower} value="Widower" />
+              <Picker.Item label={widow} value="Widow" />
+              <Picker.Item label={widow} value="Widow" />
             </Picker>
             {maritalStatusError && (
               <Text style={styles.error}>{maritalStatusError}</Text>
@@ -462,8 +468,10 @@ const EditMainDetails = ({route}) => {
               styles.gender,
               {borderColor: genderError ? '#ff0000' : 'gray'},
             ]}>
+              <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
+
             <View style={styles.radioContainer}>
-              <Text style={styles.radioLabel}>Male / પુરૂષ</Text>
+              <Text style={styles.radioLabel}>{t('male')}</Text>
               <RadioButton
                 value="male"
                 status={gender === 'male' ? 'checked' : 'unchecked'}
@@ -471,7 +479,7 @@ const EditMainDetails = ({route}) => {
                 color="blue"
               />
 
-              <Text style={styles.radioLabel}>Female / સ્ત્રી</Text>
+              <Text style={styles.radioLabel}>{t('female')}</Text>
               <RadioButton
                 value="female"
                 status={gender === 'female' ? 'checked' : 'unchecked'}
@@ -479,7 +487,7 @@ const EditMainDetails = ({route}) => {
                 color="blue"
               />
 
-              <Text style={styles.radioLabel}>Other / અન્ય</Text>
+              <Text style={styles.radioLabel}>{t('other')}</Text>
               <RadioButton
                 value="other"
                 status={gender === 'other' ? 'checked' : 'unchecked'}
@@ -491,7 +499,7 @@ const EditMainDetails = ({route}) => {
           {genderError && <Text style={styles.error}>{genderError}</Text>}
 
           <Pressable style={styles.button} onPress={handleUpdate}>
-            <Text style={styles.btntext}> Update </Text>
+            <Text style={styles.btntext}> {t('update')} </Text>
           </Pressable>
         </View>
       </ScrollView>

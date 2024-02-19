@@ -1,114 +1,313 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-  StyleSheet,
-  Text,
   View,
-  ScrollView,
-  Alert,
+  Text,
+  Pressable,
+  FlatList,
+  StyleSheet,
+  Button,
   Image,
-  TouchableOpacity,
+  ActivityIndicator,
+  TextInput,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Card } from 'react-native-elements';
-import RNExitApp from 'react-native-exit-app';
+import {Picker} from '@react-native-picker/picker';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import LoadingPage from './LoadingPage';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+
+
+
+
+import { IMAGE_URL} from '@env';
 import api from './api';
 
-const TestPage = () => {
+const TestPage = ({navigation}) => {
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [Villages, setOptions] = useState([]);
+
+
+ 
+
   useEffect(() => {
-    // Make a request using the Axios instance
-    api.get('/user-list')
-      .then((response) => {
-        // Handle successful response
-        // console.log(response.data,'response.data');
-      })
-      .catch((error) => {
-        // Handle error
-        console.error(error, 'sasas');
-      });
-
-
-
+    fetchOptions();
   }, []);
 
-  const createTwoButtonAlert = () =>
-  Alert.alert('Under Maintenance', "Sorry for the inconvenience, but we're performing some maintenance at the moment. We'll be back online shortly. Thank you for your patience.", [
-    {
-      text: 'Cancel',
-      onPress: () => console.log('Cancel Pressed'),
-      style: 'cancel',
-    },
-    { text: 'OK', onPress: () => handleExit() },
-  ]);
-  const handleExit = () => {
-
-    RNExitApp.exitApp();
+  const fetchOptions = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get('/location');
+      setOptions(response.data);
+    
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error fetching options:', error);
+    }
   };
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        let response;
+        if (searchValue) {
+          response = await api.post('/villagebyuser',{searchValue: searchValue});
+        } else {
+          response = await api.get('/user-list');
+
+        }
+
+        if (response.status === 200) {
+          setIsLoading(true);
+          const data = response.data;
+          setUsers(data);
+          setIsLoading(false);
+        } else {
+          console.log('user-list Request failed with status:', response.status);
+          setIsLoading(false);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.error('An error occurred:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [searchValue]);
+
+  const handleUserSelect = userId => {
+    navigation.navigate('FamilyList', {userId: userId});
+  };
+
+  const renderSuggestionItem = ({ item }) => (
+    <Text>{item}</Text>
+  );
+  
+  const renderUserItem = ({item}) => (
+    <>
+      <Pressable onPress={() => handleUserSelect(item._id)}>
+        <View style={styles.userItem}>
+          <View style={styles.userImageContainer}>
+            {item?.photo ? (
+              <Image
+                source={{uri: `${IMAGE_URL}/${item?.photo}`}}
+                alt="Profile"
+                style={styles.userImage}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image
+                style={styles.userImage}
+                source={require('../assets/3135715.png')}
+                alt="profile"
+                resizeMode="cover"
+              />
+            )}
+            
+          </View>
+          
+          <View style={styles.userInfoContainer}>
+            <Text
+              style={
+                styles.userName
+              }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
+            <Text style={styles.userMobile}>
+              <Text style={{fontWeight: 'bold'}}>Mo.</Text> {item.mobile_number}
+            </Text>
+          </View>
+          <View>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={30}
+              color="#666"
+            />
+          </View>
+        </View>
+      </Pressable>
+    </>
+  );
 
   return (
     <View style={styles.container}>
-      {/* <Card containerStyle={styles.cardContainer}>
-        <Image
-          style={styles.image}
-          source={require('../assets/maintenance1.png')}
-          resizeMode="contain"
+      {/* <View style={styles.inputContainer}>
+        <Picker
+          selectedValue={searchValue}
+          onValueChange={itemValue => setSearchValue(itemValue)}
+          style={styles.input}
+          dropdownIconColor="gray"
+          mode="dropdown">
+          <Picker.Item label="All villages / બધા ગામો" value="" />
+
+          {options.map(option => (
+            <Picker.Item
+              key={option._id}
+              label={option.village}
+              value={option._id}
+            />
+          ))}
+        </Picker>
+      </View> */}
+
+      <View style={styles.searchContainer}>
+        <TextInput
+          value={searchValue}
+          placeholder="Search here..."
+          placeholderTextColor="gray"
+          style={styles.searchInput}
+          onChangeText={setSearchValue}
         />
-        <Text style={styles.title}>Server Under Maintenance</Text>
-        <Text style={styles.message}>
-          We apologize for the inconvenience. Our server is currently undergoing maintenance.
-        </Text>
-        <TouchableOpacity style={styles.okButton} onPress={handleExit}>
-          <Text style={styles.okButtonText}>OK</Text>
-        </TouchableOpacity>
-      </Card> */}
+        <View style={styles.iconcontainer}>
+          <Ionicons name="search" size={20} style={styles.searchicon} />
+        </View>
+      </View>
+      {isLoading ? (
+        <LoadingPage />
+      ) : users.searchData ? (
+        <FlatList
+          data={users.searchData}
+          renderItem={renderUserItem}
+          keyExtractor={(item, index) => item._id + index.toString()}
+          contentContainerStyle={styles.userList}
+        />
+      ) : users && users.length ? (
+        <FlatList
+          data={users}
+          renderItem={renderUserItem}
+          keyExtractor={(item, index) => item._id + index.toString()}
+          contentContainerStyle={styles.userList}
+        />
+      ) : (
+        <View style={styles.blankcontainer}>
+          <Image
+            source={require('../assets/EmptySearch.png')}
+            alt="Empty"
+            style={styles.EmptySearchImage}
+          />
+          <Text style={styles.blank}>No search data found...</Text>
+        </View>
+      )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+export default TestPage;
 
+const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    backgroundColor: '#fff',
+    height: '100%',
+  },
+
+  input: {
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 6,
+    color: 'black',
+    paddingHorizontal: 8,
+  },
+
+  inputContainer: {
+    height: 55,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 6,
+    marginBottom: 16,
     justifyContent: 'center',
+    marginVertical: 20,
+    marginHorizontal: 15,
+  },
+
+  userList: {
+    paddingHorizontal: '4%',
+    paddingBottom: 30,
+  },
+
+  userImageContainer: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    overflow: 'hidden',
+    marginRight: 10,
+  },
+
+  userImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 100,
+  },
+
+  userInfoContainer: {
+    flex: 1,
+  },
+
+  userItem: {
+    backgroundColor: '#edf9ff',
+    padding: 8,
+    marginVertical: 6,
+    borderRadius: 8,
+    flexDirection: 'row',
     alignItems: 'center',
-    // backgroundColor: '#FF00',
+    paddingVertical: 10,
+    shadowColor: 'black',
+    elevation: 5,
   },
-  cardContainer: {
-    width: '80%',
-    padding: 20,
-    alignItems: 'center',
-  },
-  image: {
-    width: 150,
-    height: 150,
-    left: 20,
-  },
-  title: {
-    fontSize: 20,
+
+  userName: {
+    fontSize: 16,
     fontWeight: 'bold',
-    marginTop: 15,
-    color: '#3498db',
+    color: 'black',
+  },
+
+  userMobile: {
+    fontSize: 14,
+    color: '#666',
+  },
+
+  blankcontainer: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 20,
+  },
+
+  blank: {
+    color: 'black',
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: '500',
+    width: '90%',
+    fontWeight: 'bold',
     textTransform: 'capitalize',
   },
-  message: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 10,
+  searchContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    margin: '6%',
+    borderWidth: 1,
+    borderColor: '#00a9ff',
+    paddingHorizontal: 5,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  iconcontainer: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#00a9ff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+  },
+  searchInput: {
+    flex: 1,
     color: '#000',
+    height: 45,
   },
-  okButton: {
-    backgroundColor: '#3498db',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  okButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+
 });
-
-
-export default TestPage;

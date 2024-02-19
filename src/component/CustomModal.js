@@ -1,7 +1,10 @@
 import React from 'react';
 import {View, Modal, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const CustomModal = ({showModal, setShowModal, onConfirm, Title, Message}) => {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -18,7 +21,7 @@ const CustomModal = ({showModal, setShowModal, onConfirm, Title, Message}) => {
               <TouchableOpacity
                 style={[styles.button, styles.buttonCancel]}
                 onPress={() => setShowModal(false)}>
-                <Text style={styles.textStyle}>Cancel</Text>
+                <Text style={styles.textStyle}>{t('cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.buttonConfirm]}
@@ -26,7 +29,7 @@ const CustomModal = ({showModal, setShowModal, onConfirm, Title, Message}) => {
                   setShowModal(false);
                   onConfirm();
                 }}>
-                <Text style={styles.textStyle}>Yes</Text>
+                <Text style={styles.textStyle}>{t('yes')}</Text>
               </TouchableOpacity>
             </View>
           </View>

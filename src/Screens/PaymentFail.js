@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { showToast } from "../component/CustomToast";
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const PaymentFail = ({ navigation }) => {
     const [typedText, setTypedText] = useState('');
+    const { t } = useTranslation();
 
     useEffect(() => {
-        const text = "Payment Failed";
+        const text = t('paymentFailed');
         let currentIndex = 0;
 
         const timer = setInterval(() => {
@@ -22,22 +24,22 @@ const PaymentFail = ({ navigation }) => {
     }, []);
 
 
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         navigation.navigate('HomePage');
+    //         showToast(
+    //             'error',
+    //             t('registrationfailed'),
+    //             2500,
+    //         );
+    //     }, 3000);
 
+    //     return () => clearTimeout(timer);
+    // }, [navigation]);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            navigation.navigate('HomePage');
-            showToast(
-                'error',
-                'Registration failed !',
-                'રજીસ્ટર નિષ્ફળ થયું.',
-                2500,
-              );
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [navigation]);
-
+    const gotoRegister = () => {
+        navigation.navigate('FirstForm');
+      };
     return (
         <View style={styles.container}>
             <View style={styles.content}>
@@ -45,8 +47,8 @@ const PaymentFail = ({ navigation }) => {
                     <Image style={styles.boxImage} source={require("../assets/payfail.png")} alt="Fail" />
                 </View>
                 <Text style={styles.thanks}>{typedText}</Text>
-                <Text style={styles.payment}>Please Try Again</Text>
-                <Pressable style={styles.button}><Text style={styles.btntext}>GO TO HOME</Text></Pressable>
+                <Text style={styles.payment}>{t('pleaseTryAgain')}</Text>
+                <Pressable style={styles.button} onPress={gotoRegister}><Text style={styles.btntext}>{t('gotoregister')}</Text></Pressable>
             </View>
         </View>
     );
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
     },
     button: {
         height: 40,
-        width: 150,
+        width: 290,
         backgroundColor: '#18bd5b',
         borderRadius: 10,
         alignItems: 'center',

@@ -12,11 +12,13 @@ import api from './api';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import LoadingPage from './LoadingPage';
 import MaintenanceScreen from './MaintenanceScreen';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const Villages = ({ navigation }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [villagesData, setVillagesData] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchVillagesData();
@@ -75,7 +77,7 @@ const Villages = ({ navigation }) => {
         </View>
       ) : (
         <View style={styles.blankcontainer}>
-          <Text style={styles.blank}>No data found...</Text>
+          <Text style={styles.blank}>{t('nosearchdatafound')}</Text>
         </View>
       )}
     </View>

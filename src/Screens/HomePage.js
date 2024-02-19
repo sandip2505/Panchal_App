@@ -14,19 +14,41 @@ import api from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import MaintenanceScreen from './MaintenanceScreen';
+import { useTranslation, initReactI18next } from 'react-i18next';
+import i18n from '../context/i18n';
 
 const HomePage = ({ navigation }) => {
 
 
   const [image, setImage] = useState([]);
   const [isTestData, setIsTestData] = useState(false);
+  const [language, setLanguage] = useState('');
 
   const { width, height } = Dimensions.get('window');
   const sliderHeight = height * 0.32;
+  const { t } = useTranslation();
 
 
   useEffect(() => {
     fetchSliderImage();
+  }, []);
+
+  useEffect(() => {
+    const getSelectedLanguage = async () => {
+      try {
+        const storedLanguage = await AsyncStorage.getItem('selectedLanguage');
+        if (storedLanguage) {
+          i18n.changeLanguage(storedLanguage).catch((error) => {
+            console.error('Error changing language:', error);
+          });
+          setLanguage(storedLanguage);
+        }
+      } catch (error) {
+        console.error('Error retrieving language:', error);
+      }
+    };
+
+    getSelectedLanguage();
   }, []);
 
   const keyUpdate = () => {
@@ -116,7 +138,7 @@ const HomePage = ({ navigation }) => {
                   alt="about"
                 />
               </View>
-              <Text style={styles.boxText}>About Us</Text>
+              <Text style={styles.boxText}>{t('aboutUs')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -132,7 +154,7 @@ const HomePage = ({ navigation }) => {
                   alt="directory"
                 />
               </View>
-              <Text style={styles.boxText}>Directory</Text>
+              <Text style={styles.boxText}>{t('directory')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -146,7 +168,7 @@ const HomePage = ({ navigation }) => {
                   alt="villages"
                 />
               </View>
-              <Text style={styles.boxText}>Villages</Text>
+              <Text style={styles.boxText}>{t('villages')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -163,7 +185,7 @@ const HomePage = ({ navigation }) => {
                     alt="register"
                   />
                 </View>
-                <Text style={styles.boxText}>Register</Text>
+                <Text style={styles.boxText}>{t('register')}</Text>
               </TouchableOpacity>
             )}
 
@@ -178,12 +200,25 @@ const HomePage = ({ navigation }) => {
                   alt="search"
                 />
               </View>
-              <Text style={styles.boxText}> Search </Text>
+              <Text style={styles.boxText}> {t('search')} </Text>
             </TouchableOpacity>
-
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.box}
+              onPress={() => navigation.navigate('NewsPage')}>
+              <View style={styles.circle}>
+                <Image
+                  style={styles.boxImage}
+                  source={require('../assets/news.png')}
+                  alt="search"
+                />
+              </View>
+              <Text style={styles.boxText}> {t('news')} </Text>
+            </TouchableOpacity>
+           
+        
           </View>
-
-          <View style={styles.row}></View>
+          
         </View>
       </ScrollView>
     </View>

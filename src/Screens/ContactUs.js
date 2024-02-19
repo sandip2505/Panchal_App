@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import {Divider} from 'native-base';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
+
 
 const ContactUs = ({navigation}) => {
   const [contact1, setcontact1] = useState('');
@@ -23,6 +25,8 @@ const ContactUs = ({navigation}) => {
   useEffect(() => {
     paymentamout();
   }, []);
+  const { t } = useTranslation();
+
 
   const paymentamout = async () => {
     try {
@@ -93,10 +97,8 @@ const ContactUs = ({navigation}) => {
         style={styles.img}>
         <View style={styles.details}>
           <View style={styles.upperdetails}>
-            <Text style={styles.upperdetailstext}>
-              સમાજની એપમાં કોઈ ક્ષતિ હોય, જાહેરાત મુકવી હોય વગેરે માટે નીચે આપેલ
-              નંબર પર સંપર્ક કરો
-            </Text>
+            <Text style={styles.upperdetailstext}>{t('contactusheading')}</Text>
+
 
             <View>
               <Text style={styles.contact}>
@@ -131,7 +133,7 @@ const ContactUs = ({navigation}) => {
 
           <View style={styles.lowerdetails}>
             <Text style={styles.lowerdetailstext}>
-              વેબસાઇટ / મોબાઈલ એપ ડેવલોપર સંપર્ક :–
+              {t('developercontact')}
             </Text>
 
             <View style={styles.developer}>
@@ -148,7 +150,7 @@ const ContactUs = ({navigation}) => {
               </Text>
             </View>
 
-            <Text style={styles.developertext}>Developed by</Text>
+            <Text style={styles.developertext}>{t('developeby')}</Text>
 
             <Pressable
               style={styles.image}
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
   },
 
   upperdetails: {
-    padding: 15,
+    padding: 25,
     gap: 15,
     flexBasis: '55%',
   },

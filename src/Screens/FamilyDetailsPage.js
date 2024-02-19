@@ -8,11 +8,15 @@ import AgeCount from '../component/AgeCount';
 import CustomModal from '../component/CustomModal';
 import { showToast } from '../component/CustomToast';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
+
+
 const FamilyDetailsPage = () => {
   const [parentsData, setParentsData] = useState(null);
   const [childData, setChildData] = useState([]);
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const getData = async () => {
@@ -59,8 +63,7 @@ const FamilyDetailsPage = () => {
         });
         showToast(
           'error',
-          'Data deleted successfully.',
-          'ડેટા  કાઢી નાખ્યું.',
+          t('datadeletedsuccessfully'),
           2500,
         );
         navigation.navigate('ProfilePage');
@@ -105,7 +108,7 @@ const FamilyDetailsPage = () => {
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.familylabel}>Name : </Text>
+              <Text style={styles.familylabel}>{t('name')} : </Text>
               <Text style={styles.familyDetails}>
                 {parentsData?.lastname} {parentsData?.firstname} {parentsData?.middlename}{' '}
 
@@ -113,34 +116,34 @@ const FamilyDetailsPage = () => {
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.familylabel}>Personal ID : </Text>
+              <Text style={styles.familylabel}>{t('personalid')} : </Text>
               <Text style={styles.familyDetails}>
                 {parentsData?.personal_id}
               </Text>
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.familylabel}>Date of birth : </Text>
+              <Text style={styles.familylabel}>{t('dateofbirth')} : </Text>
               <Text style={styles.familyDetails}>{formattedDate}</Text>
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.familylabel}>Age : </Text>
+              <Text style={styles.familylabel}>{t('age')} : </Text>
               <Text style={styles.familyDetails}>{parentsAge} years</Text>
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.familylabel}>Gender :</Text>
+              <Text style={styles.familylabel}>{t('gender')} :</Text>
               <Text style={styles.familyDetails}>{parentsData?.gender}</Text>
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.familylabel}>Education : </Text>
+              <Text style={styles.familylabel}>{t('education')} : </Text>
               <Text style={styles.familyDetails}>{parentsData?.education}</Text>
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.familylabel}>Profession :</Text>
+              <Text style={styles.familylabel}>{t('profession')} :</Text>
               <Text style={styles.familyDetails}>{parentsData?.job}</Text>
             </View>
           </View>
@@ -181,7 +184,7 @@ const FamilyDetailsPage = () => {
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.familylabel}>Name : </Text>
+                <Text style={styles.familylabel}>{t('name')} : </Text>
                 <Text style={styles.familyDetails}>
                   {child &&
                     child?.lastname +
@@ -193,31 +196,31 @@ const FamilyDetailsPage = () => {
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.familylabel}>Date of birth : </Text>
+                <Text style={styles.familylabel}>{t('dateofbirth')} : </Text>
                 <Text style={styles.familyDetails}>{formattedDate}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.familylabel}>Age : </Text>
+                <Text style={styles.familylabel}>{t('age')} : </Text>
                 <Text style={styles.familyDetails}>{childAge} years</Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.familylabel}>Gender :</Text>
+                <Text style={styles.familylabel}>{t('gender')} :</Text>
                 <Text style={styles.familyDetails}>
                   {child && child?.gender}
                 </Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.familylabel}>Education : </Text>
+                <Text style={styles.familylabel}>{t('education')} : </Text>
                 <Text style={styles.familyDetails}>
                   {child && child?.education}
                 </Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.familylabel}>Profession :</Text>
+                <Text style={styles.familylabel}>{t('profession')} :</Text>
                 <Text style={styles.familyDetails}>{child && child?.job}</Text>
               </View>
               <View style={styles.DeleteIcon}>
@@ -237,8 +240,8 @@ const FamilyDetailsPage = () => {
                 showModal={showModal}
                 setShowModal={setShowModal}
                 onConfirm={() => DeleteFamilyMember(child && child?._id)}
-                Title={`Confirm Delete ?`}
-                Message={`Are you sure you want to delete ?`}
+                Title={t('confirm')}
+                Message={t('deleteconfirm')}
               />
             )}
           </View>
@@ -247,7 +250,7 @@ const FamilyDetailsPage = () => {
       })
     ) : (
       <View style={styles.blankcontainer}>
-        <Text style={styles.blank}>Family members are not available...</Text>
+        <Text style={styles.blank}>{t('familymembersarenotavailable')}</Text>
       </View>
     );
   };
@@ -266,7 +269,7 @@ const FamilyDetailsPage = () => {
               })
             }>
             <MaterialCommunityIcons name="plus" size={25} color="#fff" />
-            <Text style={styles.btnText}> Add new family Members</Text>
+            <Text style={styles.btnText}> {t('addnewfamilymembers')}</Text>
           </Pressable>
         )}
 

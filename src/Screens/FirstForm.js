@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Pressable} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Pressable } from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -10,16 +10,21 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {useNavigation} from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {showToast} from '../component/CustomToast';
+import { showToast } from '../component/CustomToast';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const FirstForm = () => {
   const navigation = useNavigation();
   const [locations, setLocations] = useState('');
   const [options, setOptions] = useState([]);
+  const { t } = useTranslation();
+
+  const initialLabel = t('select_your_village');
+
 
   useEffect(() => {
     fetchVillagesData();
@@ -28,7 +33,7 @@ const FirstForm = () => {
   const fetchVillagesData = async () => {
     try {
       const response = await api.get(`/location`);
-      
+
       if (response.status === 200) {
         const data = response.data;
         setOptions(data);
@@ -44,9 +49,9 @@ const FirstForm = () => {
   const handleRegister = () => {
     setLocations('');
     if (locations === '') {
-      showToast('error', 'Select your village.', 'તમારું ગામ પસંદ કરો.', 2500);
+      showToast('error', t('selectyourvillage'), 2500);
     } else {
-      navigation.navigate('RegisterForm', {locations_id: locations});
+      navigation.navigate('RegisterForm', { locations_id: locations });
     }
   };
 
@@ -61,7 +66,7 @@ const FirstForm = () => {
             dropdownIconColor="gray"
             mode="dropdown">
             <Picker.Item
-              label="Select your village / તમારું ગામ પસંદ કરો."
+              label={initialLabel}
               value=""
               selectedValue
               enabled={false}
@@ -77,7 +82,7 @@ const FirstForm = () => {
         </View>
         <View>
           <Pressable style={styles.button} onPress={handleRegister}>
-            <Text style={styles.btntext}>Next</Text>
+            <Text style={styles.btntext}>{t('next')}</Text>
           </Pressable>
         </View>
       </ScrollView>

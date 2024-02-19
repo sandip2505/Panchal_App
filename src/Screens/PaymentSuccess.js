@@ -1,9 +1,11 @@
-import {StyleSheet, Text, View, Pressable, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {showToast} from '../component/CustomToast';
+import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { showToast } from '../component/CustomToast';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
-const PaymentSuccess = ({navigation}) => {
+const PaymentSuccess = ({ navigation }) => {
   const [typedText, setTypedText] = useState('');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const text = 'Thank You!';
@@ -23,17 +25,20 @@ const PaymentSuccess = ({navigation}) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      showToast(
-        'success',
-        'Registered successfully.',
-        'સફળતાપૂર્વક રજીસ્ટ્રેશન થઈ ગયું.',
-        2500,
-      );
-      navigation.navigate('HomePage');
-    }, 3000);
-
+ 
+      // navigation.navigate('HomePage');
+    }, 1000);
+    showToast(
+      'success',
+      t('registeredsuccessfully'),
+      2500,
+    );
     return () => clearTimeout(timer);
   }, [navigation]);
+
+  const OnpressHanddle = () => {
+    navigation.navigate('LoginScreen');
+  };
 
   return (
     <View style={styles.container}>
@@ -46,9 +51,9 @@ const PaymentSuccess = ({navigation}) => {
           />
         </View>
         <Text style={styles.thanks}>{typedText}</Text>
-        <Text style={styles.payment}>Payment Done Successfully</Text>
-        <Pressable style={styles.button}>
-          <Text style={styles.btntext}>GO TO HOME</Text>
+        <Text style={styles.payment}>{t('paymentDoneSuccessfully')}</Text>
+        <Pressable style={styles.button} onPress={OnpressHanddle}>
+          <Text style={styles.btntext}>GO TO LOGIN PAGE</Text>
         </Pressable>
       </View>
     </View>
@@ -61,7 +66,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // alignItems: 'center',
-    // justifyContent: 'center',
+    justifyContent: 'center',
   },
   content: {
     alignItems: 'center',
@@ -69,7 +74,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 40,
-    width: 150,
+    width: 290,
     backgroundColor: '#18bd5b',
     borderRadius: 10,
     alignItems: 'center',

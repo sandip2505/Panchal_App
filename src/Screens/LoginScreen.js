@@ -17,23 +17,48 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showToast} from '../component/CustomToast';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 export default function LoginScreen({navigation}) {
   const [mobile_no, setmobile_no] = useState('');
   const [password, setPassword] = useState('');
+  const [fcmtoken, setFcmtoken] = useState('');
 
   const [isVisible, setIsVisible] = useState(false);
 
   const [mobileError, setMobileError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    GetFCMToken();
+  })
   
+  const GetFCMToken = async () => {
+    try {
+      let fcmtoken = await AsyncStorage.getItem("fcmtoken");
+      setFcmtoken(fcmtoken)
+      console.log(fcmtoken, "old token");
+      if (!fcmtoken) {
+        const femtoken = await messaging().getToken();
+        if (femtoken) {
+          console.log(femtoken, "new token");
+          setFcmtoken(fcmtoken)
+          await AsyncStorage.setItem("fcmtoken", femtoken);
+        }
+      }
+    } catch (error) {
+      console.log(error, "error in GetFCMToken");
+    }
+  };
+
   const handleLogin = async () => {
     if (mobile_no.length == '') {
-      setMobileError('Mobile number is required');
+      setMobileError(t('mobilenumberisrequired'));
       return false;
     } else if (password.length == '') {
       setMobileError('');
-      setPasswordError('Password is required');
+      setPasswordError(t('passwordisrequired'));
       return false;
     } else {
       setMobileError('');
@@ -42,16 +67,17 @@ export default function LoginScreen({navigation}) {
         const response = await api.post(`/userlogin`, {
           mobile_number: mobile_no,
           password: password,
+          device_token: fcmtoken,
         });
         
         const userData = JSON.stringify(response.data.user);
         const childData = JSON.stringify(response.data.childData);
         const villageData = JSON.stringify(response.data.villageData);
         if (response.data.mobileError == 'Invalid mobile number') {
-          setMobileError('Invalid mobile number');
+          setMobileError(t('invalidmobilenumber'));
         } else if (response.data.passwordError == 'Incorrect Password') {
           setMobileError('');
-          setPasswordError('Incorrect Password');
+          setPasswordError(t('incorrectPassword'));
         } else {
           setmobile_no('');
           setPassword('');
@@ -64,8 +90,7 @@ export default function LoginScreen({navigation}) {
           navigation.navigate('HomePage');
           showToast(
             'success',
-            'Login successfully.',
-            'લૉગિન સફળતાપૂર્વક થઈ ગયું.',
+            t('loginsuccessfully'),
             2000,
           );
         }
@@ -98,7 +123,7 @@ export default function LoginScreen({navigation}) {
                 {borderColor: mobileError ? '#ff0000' : 'gray'},
                 {shadowColor: mobileError ? '#ff0000' : 'black'},
               ]}
-              placeholder="Mobile Number"
+              placeholder={t('mobile')}
               placeholderTextColor="gray"
               onChangeText={setmobile_no}
               keyboardType="numeric"
@@ -117,7 +142,7 @@ export default function LoginScreen({navigation}) {
                     shadowColor: passwordError ? '#ff0000' : 'black',
                   },
                 ]}
-                placeholder="Password"
+                placeholder={t('password')}
                 placeholderTextColor="gray"
                 onChangeText={setPassword}
                 value={password}

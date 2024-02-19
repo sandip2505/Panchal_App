@@ -22,6 +22,7 @@ import moment from 'moment';
 import { showToast } from '../component/CustomToast';
 import RNFetchBlob from 'rn-fetch-blob';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 console.log(IMAGE_URL)
 const ProfilePage = () => {
@@ -30,6 +31,7 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [villageData, setVillageData] = useState([]);
   const [image, setImage] = useState(null);
+  const { t } = useTranslation();
 
   // Get items from asyncStorage
   useEffect(() => {
@@ -98,7 +100,7 @@ const ProfilePage = () => {
               AsyncStorage.setItem('userData', userData);
               navigation.navigate('HomePage');
               navigation.navigate('ProfilePage');
-              showToast('success', 'Profile image updated successfully.', 'પ્રોફાઇલ ફોટો સફળતાપૂર્વક અપડેટ થઈ ગયો.', 2500);
+              showToast('success', t('profileimageupdatedsuccessfully'), 2500);
               setIsLoading(false);
             });
           });
@@ -162,8 +164,7 @@ const ProfilePage = () => {
         // the temp file path
         showToast(
           'success',
-          'Download successfully.',
-          'ડાઉનલોડ સફળતાપૂર્વક.',
+         t('downloadsuccessfully'),
           2000,
         );
       });
@@ -226,7 +227,7 @@ const ProfilePage = () => {
         <ScrollView>
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Date of birth :</Text>
+              <Text style={styles.label}>{t('dateofbirth')} :</Text>
               <Text style={styles.userInfo}>
                 {formattedDate} ( {age} years )
               </Text>
@@ -235,7 +236,7 @@ const ProfilePage = () => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Mobile No. :</Text>
+              <Text style={styles.label}>{t('mobile')} :</Text>
               <Text style={styles.userInfo}>
                 {parentsData && parentsData?.mobile_number}
               </Text>
@@ -244,7 +245,7 @@ const ProfilePage = () => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Education :</Text>
+              <Text style={styles.label}>{t('education')} :</Text>
               <Text style={styles.userInfo}>
                 {parentsData && parentsData?.education}
               </Text>
@@ -253,7 +254,7 @@ const ProfilePage = () => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Gender :</Text>
+              <Text style={styles.label}>{t('gender')} :</Text>
               <Text style={styles.userInfo}>
                 {parentsData && parentsData?.gender}
               </Text>
@@ -262,7 +263,7 @@ const ProfilePage = () => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Profession :</Text>
+              <Text style={styles.label}>{t('profession')} :</Text>
               <Text style={styles.userInfo}>
                 {parentsData && parentsData?.job}
               </Text>
@@ -271,7 +272,7 @@ const ProfilePage = () => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Village :</Text>
+              <Text style={styles.label}>{t('village')} :</Text>
               <Text style={styles.userInfo}>
                 {villageData ? villageData[0]?.village : '-'}
               </Text>
@@ -279,7 +280,7 @@ const ProfilePage = () => {
           </View>
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Address :</Text>
+              <Text style={styles.label}>{t('address')} :</Text>
               <Text style={styles.userInfo}>
                 {parentsData && parentsData?.address}
               </Text>
@@ -287,12 +288,12 @@ const ProfilePage = () => {
           </View>
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Invoice :</Text>
+              <Text style={styles.label}>{t('invoice')} :</Text>
               <TouchableOpacity
                 style={styles.dlfamilybtn}
                 onPress={() => requestStoragePermission(parentsData?._id)}
                 activeOpacity={0.6}>
-                <Text style={styles.dlbtntext}>Download</Text>
+                <Text style={styles.dlbtntext}>{t('download')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -303,14 +304,14 @@ const ProfilePage = () => {
             style={styles.familybtn}
             onPress={() => navigation.navigate('FamilyDetailsPage')}
             activeOpacity={0.6}>
-            <Text style={styles.btntext}>Family Members</Text>
+            <Text style={styles.btntext}>{t('familyMembers')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.logoutbtn}
             onPress={() => navigation.navigate('ChangePassword')}
             activeOpacity={0.6}>
-            <Text style={styles.btntext}>Change Password</Text>
+            <Text style={styles.btntext}>{t('changePassword')}</Text>
           </TouchableOpacity>
         </View>
       </View>

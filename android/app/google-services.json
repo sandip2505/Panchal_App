@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "373508144903",
+    "project_id": "samaj-ca6ec",
+    "storage_bucket": "samaj-ca6ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373508144903:android:ee56e6eaca31130e2acfa2",
+        "android_client_info": {
+          "package_name": "com.panchal_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm-tg9jG-7WchUyLjkIIKXGMrWUgwGkMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

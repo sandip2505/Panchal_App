@@ -15,10 +15,13 @@ import LoadingPage from './LoadingPage';
 import { IMAGE_URL} from '@env';
 import {ActivityIndicator} from 'react-native-paper';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
+
 const SearchDirectory = ({navigation}) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,7 +106,7 @@ const SearchDirectory = ({navigation}) => {
       <View style={styles.searchContainer}>
         <TextInput
           value={searchValue}
-          placeholder="Search here..."
+          placeholder={t('searchhere')}
           placeholderTextColor="gray"
           style={styles.searchInput}
           onChangeText={setSearchValue}
@@ -135,7 +138,7 @@ const SearchDirectory = ({navigation}) => {
             alt="Empty"
             style={styles.EmptySearchImage}
           />
-          <Text style={styles.blank}>No search data found...</Text>
+          <Text style={styles.blank}>{t('nosearchdatafound')}</Text>
         </View>
       )}
     </View>

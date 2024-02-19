@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import api from './api';
 import { RadioButton } from 'react-native-paper';
 import { showToast } from '../component/CustomToast';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const CustomDateField = props => {
   return (
@@ -59,8 +60,17 @@ const RegisterForm = ({ route }) => {
   const [passwordError, setPasswordError] = useState('');
   const [genderError, setgenderError] = useState('');
   const [maritalStatusError, setMaritalStatusError] = useState('');
+  const [fcmtoken, setFcmtoken] = useState('');
 
   const [userData, setUserData] = useState(null);
+  const { t } = useTranslation();
+
+  const initialLabel = t('maritalstatus');
+  const married = t('married');
+  const unmarried = t('unmarried');
+  const widower = t('widower');
+  const widow = t('widow');
+  const divorcee = t('divorcee');
 
   const handleDateChange = (event, selectedDate) => {
     setShowPicker(false);
@@ -81,94 +91,94 @@ const RegisterForm = ({ route }) => {
 
     let isValid = true;
     if (!firstname) {
-      setfirstnameError('Please enter firstname.');
+      setfirstnameError(t('pleaseenterfirstname'));
       isValid = false;
     } else {
       setfirstnameError('');
     }
-   
+
     if (!middlename) {
-      setmiddlenameError('Please enter middlename.');
+      setmiddlenameError(t('pleaseentermiddlename'));
       isValid = false;
     } else {
       setmiddlenameError('');
     }
     if (!password) {
-      setPasswordError('Please enter password.');
+      setPasswordError(t('pleaseenterpassword'));
       isValid = false;
     } else if (password.length < 6) {
-      setPasswordError('Password must have at least 6 characters.');
+      setPasswordError(t('passwordmusthaveatleastcharacters'));
       isValid = false;
     } else if (!expectedPasswordPattern.test(password)) {
       setPasswordError(
-        'Password must have at least one letter, one number, and one special character.',
+        t('passwordmusthaveatleastoneletteronenumberandonespecialcharacter'),
       );
       isValid = false;
     } else {
       setPasswordError('');
     }
     if (!dob) {
-      setdobError('Please enter dob.');
+      setdobError(t('pleaseenterdob'));
       isValid = false;
     } else {
       setdobError('');
     }
     if (!mobile_number) {
-      setmobile_numberError('Please enter mobile number.');
+      setmobile_numberError(t('pleaseentermobilenumber'));
       isValid = false;
     } else if (isNaN(mobile_number) || mobile_number.length !== 10) {
-      setmobile_numberError('Please enter a valid mobile number');
+      setmobile_numberError(t('pleaseenteravalidmobilenumber'));
       isValid = false;
     } else {
       setmobile_numberError('');
     }
     if (!state) {
-      setstateError('Please enter state.');
+      setstateError(t('pleaseenterstate'));
       isValid = false;
     } else {
       setstateError('');
     }
     if (!city) {
-      setcityError('Please enter city.');
+      setcityError(t('pleaseentercity'));
       isValid = false;
     } else {
       setcityError('');
     }
     if (!pincode) {
-      setpincodeError('Please enter pincode.');
+      setpincodeError(t('pleaseenterpincode'));
       isValid = false;
     } else if (isNaN(pincode) || pincode.length !== 6) {
-      setpincodeError('Please enter a valid pincode number');
+      setpincodeError(t('pleaseenteravalidpincodenumber'));
       isValid = false;
     } else {
       setpincodeError('');
     }
     if (!education) {
-      seteducationError('Please enter education.');
+      seteducationError(t('pleaseentereducation'));
       isValid = false;
     } else {
       seteducationError('');
     }
     if (!address) {
-      setaddressError('Please enter address.');
+      setaddressError(t('pleaseenteraddress'));
       isValid = false;
     } else {
       setaddressError('');
     }
     if (!job) {
-      setjobError('Please enter job.');
+      setjobError(t('pleaseenterjob'));
       isValid = false;
     } else {
       setjobError('');
     }
     if (!gender) {
-      setgenderError('Please enter gender.');
+      setgenderError(t('pleaseentergender'));
       isValid = false;
     } else {
       setgenderError('');
     }
     if (!marital_status) {
-      setMaritalStatusError('Please choose marital status.');
+      setMaritalStatusError(t('pleasechoosemaritalstatus'));
       isValid = false;
     } else {
       setMaritalStatusError('');
@@ -191,6 +201,7 @@ const RegisterForm = ({ route }) => {
       userData.append('address', address);
       userData.append('job', job);
       userData.append('marital_status', marital_status);
+      userData.append('fcmtoken', fcmtoken);
 
       try {
         const response = await api
@@ -201,7 +212,7 @@ const RegisterForm = ({ route }) => {
             userData,
           })
           .then(res => {
-            
+
             const userId = res.data._id;
             const PerentsData = res.data;
             // if (PerentsData) {
@@ -210,8 +221,7 @@ const RegisterForm = ({ route }) => {
             if (res.data.mobileError === 'Mobile number already register') {
               showToast(
                 'error',
-                'Mobile number is already registered !',
-                'મોબાઈલ નંબર પહેલેથી જ રજીસ્ટર છે.',
+                t('mobilenumberisalreadyregistered'),
                 2500,
               );
             } else {
@@ -244,8 +254,7 @@ const RegisterForm = ({ route }) => {
     } else {
       showToast(
         'error',
-        'Please fill all the required fields !',
-        'કૃપા કરીને તમામ જરૂરી માહિતી ભરો.',
+        t('pleasefillalltherequiredfields'),
         2500,
       );
     }
@@ -253,15 +262,30 @@ const RegisterForm = ({ route }) => {
 
   useEffect(() => {
     const dataaa = AsyncStorage.getItem('userData');
-
+    GetFCMToken()
     showToast(
       'info',
-      'Register the main member of the house.',
-      'ઘર ના મુખ્ય સભ્ય નું રજીસ્ટર કરો .',
+      t('registerthemainmemberofthehouse'),
       6000,
     );
   }, []);
-
+  const GetFCMToken = async () => {
+    try {
+      let fcmtoken = await AsyncStorage.getItem("fcmtoken");
+      setFcmtoken(fcmtoken)
+      console.log(fcmtoken, "old token");
+      if (!fcmtoken) {
+        const femtoken = await messaging().getToken();
+        if (femtoken) {
+          console.log(femtoken, "new token");
+          setFcmtoken(fcmtoken)
+          await AsyncStorage.setItem("fcmtoken", femtoken);
+        }
+      }
+    } catch (error) {
+      console.log(error, "error in GetFCMToken");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -276,7 +300,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: firstnameError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="First Name / પોતાનું નામ"
+              placeholder={t('firstname')}
               value={firstname}
               onChangeText={setFirstname}
             />
@@ -290,7 +314,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: middlenameError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="Middle Name / પિતાનું નામ"
+              placeholder={t('middlename')}
               value={middlename}
               onChangeText={setMiddlename}
             />
@@ -305,7 +329,7 @@ const RegisterForm = ({ route }) => {
               styles.input,
               { borderColor: passwordError ? '#ff0000' : 'gray' },
             ]}
-            placeholder="Password / પાસવર્ડ"
+            placeholder={t('password')}
             placeholderTextColor="gray"
             // secureTextEntry={true}
             onChangeText={setPassword}
@@ -321,7 +345,7 @@ const RegisterForm = ({ route }) => {
                   { borderColor: dobError ? '#ff0000' : 'gray' },
                 ]}
                 placeholderTextColor="gray"
-                placeholder="Date of birth / જન્મ તારીખ"
+                placeholder={t('dateofbirth')}
                 editable={false}
                 value={dob ? formatDate(dob) : ''}
               />
@@ -346,7 +370,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: mobile_numberError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="Mobile Number / મોબાઇલ નંબર"
+              placeholder={t('mobile')}
               value={mobile_number}
               onChangeText={setMobileNumber}
               keyboardType="numeric"
@@ -361,7 +385,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: addressError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="Address / સરનામું"
+              placeholder={t('address')}
               value={address}
               onChangeText={setAddress}
             />
@@ -373,7 +397,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: cityError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="City / શહેર"
+              placeholder={t('city')}
               value={city}
               onChangeText={setCity}
             />
@@ -385,7 +409,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: stateError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="State / રાજ્ય"
+              placeholder={t('state')}
               value={state}
               onChangeText={setState}
             />
@@ -397,7 +421,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: pincodeError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="Pincode / પીન કોડ"
+              placeholder={t('pincode')}
               value={pincode}
               onChangeText={setPincode}
               keyboardType="numeric"
@@ -410,7 +434,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: educationError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="Education / ભણતર"
+              placeholder={t('education')}
               value={education}
               onChangeText={setEducation}
             />
@@ -424,7 +448,7 @@ const RegisterForm = ({ route }) => {
                 styles.input,
                 { borderColor: jobError ? '#ff0000' : 'gray' },
               ]}
-              placeholder="Profession / વ્યવસાય"
+              placeholder={t('profession')}
               value={job}
               onChangeText={setJob}
             />
@@ -447,20 +471,21 @@ const RegisterForm = ({ route }) => {
               defaultValue="Married"
               dropdownIconColor="gray">
               <Picker.Item
-                label="Marital status / વૈવાહિક સ્ટેટસ પસંદ કરો"
+                label={initialLabel}
                 value=""
                 selectedValue
                 enabled={false}
               />
               <Picker.Item
-                label="Married / પરિણીત"
+                label={married}
                 value="Married"
                 defaultValue
               />
-              <Picker.Item label="Unmarried / અપરિણીત" value="Unmarried" />
-              <Picker.Item label="widower / વિધુર" value="widower" />
-              <Picker.Item label="Widow / વિધવા" value="Widow" />
-              <Picker.Item label="Divorcee / છૂટાછેડા લેનાર" value="Divorcee" />
+
+              <Picker.Item label={unmarried} value="Unmarried" />
+              <Picker.Item label={widower} value="widower" />
+              <Picker.Item label={widow} value="Widow" />
+              <Picker.Item label={divorcee} value="Divorcee" />
             </Picker>
             {maritalStatusError && (
               <Text style={styles.error}>{maritalStatusError}</Text>
@@ -472,8 +497,10 @@ const RegisterForm = ({ route }) => {
               styles.gender,
               { borderColor: genderError ? '#ff0000' : 'gray' },
             ]}>
+              <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
+
             <View style={styles.radioContainer}>
-              <Text style={styles.radioLabel}>Male / પુરૂષ</Text>
+              <Text style={styles.radioLabel}>{t('male')}</Text>
               <RadioButton
                 value="male"
                 status={gender === 'male' ? 'checked' : 'unchecked'}
@@ -481,7 +508,7 @@ const RegisterForm = ({ route }) => {
                 color="blue"
               />
 
-              <Text style={styles.radioLabel}>Female / સ્ત્રી</Text>
+              <Text style={styles.radioLabel}>{t('female')}</Text>
               <RadioButton
                 value="female"
                 status={gender === 'female' ? 'checked' : 'unchecked'}
@@ -489,7 +516,7 @@ const RegisterForm = ({ route }) => {
                 color="blue"
               />
 
-              <Text style={styles.radioLabel}>Other / અન્ય</Text>
+              <Text style={styles.radioLabel}>{t('other')}</Text>
               <RadioButton
                 value="other"
                 status={gender === 'other' ? 'checked' : 'unchecked'}

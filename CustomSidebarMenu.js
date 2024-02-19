@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -16,18 +16,21 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation, initReactI18next } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import CustomModal from './src/component/CustomModal';
-import {showToast} from './src/component/CustomToast';
+import { showToast } from './src/component/CustomToast';
+import {Picker} from '@react-native-picker/picker';
+
 
 const CustomSidebarMenu = props => {
   const navigation = useNavigation();
   const [parentsData, setParentsData] = useState(null);
   const [isTestData, setIsTestData] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const { t } = useTranslation();
 
   const keyUpdate = () => {
     AsyncStorage.getItem('isTest', function (err, value) {
@@ -55,7 +58,7 @@ const CustomSidebarMenu = props => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff', width: '100%'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', width: '100%' }}>
       <Image
         source={require('./src/assets/panchal.png')}
         alt="panchalImage"
@@ -77,7 +80,7 @@ const CustomSidebarMenu = props => {
               }}>
               <FontAwesome name="user-circle-o" color="#666" size={30} />
             </View>
-            <Text style={styles.customDrawerItemText}>Profile</Text>
+            <Text style={styles.customDrawerItemText}>{t('profile')}</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -91,7 +94,7 @@ const CustomSidebarMenu = props => {
               }}>
               <MaterialCommunityIcons name="login" color="#666" size={30} />
             </View>
-            <Text style={styles.customDrawerItemText}>Login</Text>
+            <Text style={styles.customDrawerItemText}>{t('login')}</Text>
           </TouchableOpacity>
         )}
 
@@ -106,7 +109,7 @@ const CustomSidebarMenu = props => {
             }}>
             <FontAwesome name="users" color="#666" size={28} />
           </View>
-          <Text style={styles.customDrawerItemText}>Committee Members </Text>
+          <Text style={styles.customDrawerItemText}>{t('committeeMember')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -120,9 +123,24 @@ const CustomSidebarMenu = props => {
             }}>
             <MaterialCommunityIcons name="email" color="#666" size={30} />
           </View>
-          <Text style={styles.customDrawerItemText}>Contact Us</Text>
+          <Text style={styles.customDrawerItemText}>{t('contactUs')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SettingsScreen')}
+          style={styles.customDrawerItem}>
+          <View
+            style={{
+              flexBasis: '15%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              {/* name="cog" size={30} color="black" */}
+            <MaterialCommunityIcons name="cog" color="#666" size={30} />
+          </View>
+          <Text style={styles.customDrawerItemText}>{t('settings')}</Text>
         </TouchableOpacity>
 
+       
         {isTestData && (
           <TouchableOpacity
             onPress={() => setShowModal(true)}
@@ -135,7 +153,7 @@ const CustomSidebarMenu = props => {
               }}>
               <MaterialCommunityIcons name="logout" size={30} color="#666" />
             </View>
-            <Text style={styles.customDrawerItemText}>Logout</Text>
+            <Text style={styles.customDrawerItemText}>{t('logout')}</Text>
           </TouchableOpacity>
         )}
       </DrawerContentScrollView>
@@ -151,8 +169,8 @@ const CustomSidebarMenu = props => {
           showModal={showModal}
           setShowModal={setShowModal}
           onConfirm={removeData}
-          Title={`Confirm Logout ?`}
-          Message={`Are you sure you want to logout ?`}
+          Title={t('confirm')}
+          Message={t('confirmlogout')}
         />
       )}
     </SafeAreaView>

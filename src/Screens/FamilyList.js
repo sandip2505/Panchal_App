@@ -15,6 +15,7 @@ import AgeCount from '../component/AgeCount';
 import moment from 'moment';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const FamilyList = ({navigation, route}) => {
   const {userId} = route.params;
@@ -24,6 +25,7 @@ const FamilyList = ({navigation, route}) => {
   const [villageData, setVillageData] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchVillagesData();
@@ -79,50 +81,56 @@ const FamilyList = ({navigation, route}) => {
               </Text>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>Mobile No. : </Text>
+                <Text style={styles.Mainlabel}>{t('mobile')} : </Text>
                 <Text style={styles.mainDetails}>
                   {mainData[0]?.mobile_number}
                 </Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>Date of birth : </Text>
+                <Text style={styles.Mainlabel}>{t('dateofbirth')} : </Text>
                 <Text style={styles.mainDetails}>{formattedDate} </Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>Age : </Text>
+                <Text style={styles.Mainlabel}>{t('age')} : </Text>
                 <Text style={styles.mainDetails}>{parentsAge} years </Text>
               </View>
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>Gender : </Text>
+                <Text style={styles.Mainlabel}>{t('gender')} : </Text>
                 <Text style={styles.mainDetails}>{mainData[0]?.gender}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>Education : </Text>
+                <Text style={styles.Mainlabel}>{t('education')} : </Text>
                 <Text style={styles.mainDetails}>{mainData[0]?.education}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>City : </Text>
+                <Text style={styles.Mainlabel}>{t('city')} : </Text>
                 <Text style={styles.mainDetails}>{mainData[0]?.city}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>State : </Text>
+                <Text style={styles.Mainlabel}>{t('state')} : </Text>
                 <Text style={styles.mainDetails}>{mainData[0]?.state}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>Pincode : </Text>
+                <Text style={styles.Mainlabel}>{t('pincode')} : </Text>
                 <Text style={styles.mainDetails}>{mainData[0]?.pincode}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text style={styles.Mainlabel}>Village : </Text>
+                <Text style={styles.Mainlabel}>{t('village')} : </Text>
                 <Text style={styles.mainDetails}>
                   {villageData ? villageData[0]?.village : '-'}
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.Mainlabel}>{t('address')} : </Text>
+                <Text style={styles.mainDetails}>
+                  {villageData ? mainData[0]?.address : '-'}
                 </Text>
               </View>
             </View>
@@ -136,7 +144,7 @@ const FamilyList = ({navigation, route}) => {
         </View>
       ) : ChildData.length > 0 ? (
         <View style={styles.MainContainer}>
-          <Text style={styles.familyTitle}>Family Members :</Text>
+          <Text style={styles.familyTitle}>{t('familyMembers')} :</Text>
           {ChildData.map(user => {
             const childAge = AgeCount(user?.dob);
             const formattedDate = moment(user?.dob).format('DD/MM/YYYY');
@@ -165,41 +173,41 @@ const FamilyList = ({navigation, route}) => {
                   {selectedUser === user && (
                     <View style={styles.dropdownContent}>
                       <View style={styles.row}>
-                        <Text style={styles.familylabel}>Date of birth : </Text>
+                        <Text style={styles.familylabel}>{t('dateofbirth')} : </Text>
                         <Text style={styles.familyDetails}>
                           {formattedDate}
                         </Text>
                       </View>
                       <View style={styles.row}>
-                        <Text style={styles.familylabel}>Age : </Text>
+                        <Text style={styles.familylabel}>{t('age')} : </Text>
                         <Text style={styles.familyDetails}>
                           {childAge} years{' '}
                         </Text>
                       </View>
                       <View style={styles.row}>
-                        <Text style={styles.familylabel}>Job : </Text>
+                        <Text style={styles.familylabel}>{t('profession')} : </Text>
                         <Text style={styles.familyDetails}>{user.job}</Text>
                       </View>
                       <View style={styles.row}>
                         <Text style={styles.familylabel}>
-                          Marital Status :{' '}
+                          {t('maritalstatus')} :{' '}
                         </Text>
                         <Text style={styles.familyDetails}>
                           {user.marital_status}
                         </Text>
                       </View>
                       <View style={styles.row}>
-                        <Text style={styles.familylabel}>Education : </Text>
+                        <Text style={styles.familylabel}>{t('education')} : </Text>
                         <Text style={styles.familyDetails}>
                           {user.education}
                         </Text>
                       </View>
                       <View style={styles.row}>
-                        <Text style={styles.familylabel}>Gender : </Text>
+                        <Text style={styles.familylabel}>{t('gender')} : </Text>
                         <Text style={styles.familyDetails}>{user.gender}</Text>
                       </View>
                       <View style={styles.row}>
-                        <Text style={styles.familylabel}>Relation : </Text>
+                        <Text style={styles.familylabel}>{t('relationship')} : </Text>
                         <Text style={styles.familyDetails}>
                           {user.relationship}
                         </Text>
@@ -214,7 +222,7 @@ const FamilyList = ({navigation, route}) => {
       ) : (
         <View style={styles.blankcontainer}>
           <Text style={styles.blank}>
-            Family members are not available for this user...
+            {t('familymembersarenotavailable')}
           </Text>
         </View>
       )}

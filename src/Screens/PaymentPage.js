@@ -2,15 +2,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import {
   Image,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import { showToast } from '../component/CustomToast';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const PaymentPage = ({ navigation }) => {
 
@@ -18,6 +19,7 @@ const PaymentPage = ({ navigation }) => {
   const [amount, setamount] = useState(null);
   const [razorpay_key, setrazorpay_key] = useState(null);
   const [PerentsData, setPerentsData] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (PaymentamoutData !== null) {
@@ -47,8 +49,7 @@ const PaymentPage = ({ navigation }) => {
 
     showToast(
       'info',
-      'Do payment for successfull registration.',
-      'સફળ રજીસ્ટ્રેશન માટે પેમેન્ટ કરો.',
+      t('dopaymentforsuccessfullregistration'),
       5000,
     );
   }, []);
@@ -56,7 +57,7 @@ const PaymentPage = ({ navigation }) => {
   const paymentamout = async () => {
     try {
       const response = await api.get(`/listsettings`);
-      
+
       if (response.status === 200) {
         const data = response.data;
         const amountObject = data.find(item => item.key === 'amount');
@@ -83,21 +84,21 @@ const PaymentPage = ({ navigation }) => {
         personal_id: PerentsData && PerentsData?.personal_id,
         mobile_number: PerentsData && PerentsData?.mobile_number,
       });
-  
+
       const orderId = response.data.order;
       const razorpay_key_id = response.data.razorpay_key_id;
-      console.log("razorpay_key_id",razorpay_key_id)
-        if (orderId) {
+      console.log("razorpay_key_id", orderId, razorpay_key_id)
+      if (orderId) {
 
-        await paynow(orderId ,razorpay_key_id); 
+        await paynow(orderId, razorpay_key_id);
       }
     } catch (error) {
       console.error('An error occurred:', error);
     }
   };
 
-  const paynow = async (orderId,razorpay_key_id) => {
-    console.log("razorpay_key_id in the paynow", razorpay_key_id)
+  const paynow = async (orderId, razorpay_key_id) => {
+    console.log("razorpay_key_id in the paynow", razorpay_key_id, 'and', typeof orderId.amount)
     const options = {
       description: 'Pay to Panchal Samaj',
       image:
@@ -114,18 +115,18 @@ const PaymentPage = ({ navigation }) => {
       },
       theme: { color: '#0D5ADD' },
     };
-    console.log("final options",options)
+    console.log("final options", options)
 
     RazorpayCheckout.open(options)
       .then(data => {
         try {
-          // AsyncStorage.removeItem('PerentsData');
+          console.log(data, "data")
           const response = api.post(`/payment`, {
             razorpay_payment_id: data.razorpay_payment_id,
             status_code: data.status_code,
             user_id: PerentsData && PerentsData?._id,
           });
-          
+
           AsyncStorage.removeItem('PerentsData').then(() => {
           });
           navigation.navigate('PaymentSuccess');
@@ -134,6 +135,8 @@ const PaymentPage = ({ navigation }) => {
         }
       })
       .catch(error => {
+        AsyncStorage.removeItem('PerentsData').then(() => {
+        });
         navigation.navigate('PaymentFail');
         console.error('Payment error:', error);
       });
@@ -155,7 +158,7 @@ const PaymentPage = ({ navigation }) => {
         <ScrollView>
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Name :</Text>
+              <Text style={styles.label}>{t('name')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData &&
                   PerentsData?.firstname + ' ' + PerentsData?.lastname}
@@ -165,7 +168,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Mobile No. :</Text>
+              <Text style={styles.label}>{t('mobile')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.mobile_number}
               </Text>
@@ -174,7 +177,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>State :</Text>
+              <Text style={styles.label}>{t('state')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.state}
               </Text>
@@ -183,7 +186,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>City :</Text>
+              <Text style={styles.label}>{t('city')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.city}
               </Text>
@@ -192,7 +195,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Pincode :</Text>
+              <Text style={styles.label}>{t('pincode')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.pincode}
               </Text>
@@ -201,7 +204,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Gender :</Text>
+              <Text style={styles.label}>{t('gender')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.gender}
               </Text>
@@ -210,7 +213,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Education :</Text>
+              <Text style={styles.label}> {t('education')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.education}
               </Text>
@@ -219,7 +222,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>profession :</Text>
+              <Text style={styles.label}>{t('profession')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.job}
               </Text>
@@ -228,7 +231,7 @@ const PaymentPage = ({ navigation }) => {
 
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>Address :</Text>
+              <Text style={styles.label}>{t('address')} :</Text>
               <Text style={styles.userInfo}>
                 {PerentsData && PerentsData?.address}
               </Text>
@@ -237,11 +240,11 @@ const PaymentPage = ({ navigation }) => {
 
         </ScrollView>
         {PaymentamoutData !== null && (
-          <Pressable style={styles.button} onPress={handlePayment}>
+          <TouchableOpacity style={styles.button} onPress={handlePayment} activeOpacity={0.6}>
             <Text style={styles.btntext}>
-              Pay ₹{PaymentamoutData.amountObject.value}
+              {t('pay')} ₹{PaymentamoutData.amountObject.value}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       </View>
     </View>

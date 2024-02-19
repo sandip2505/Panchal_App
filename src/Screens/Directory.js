@@ -12,6 +12,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import LoadingPage from './LoadingPage';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 import { IMAGE_URL} from '@env';
 import api from './api';
@@ -21,6 +22,7 @@ const Directory = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [options, setOptions] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchOptions();
@@ -125,7 +127,7 @@ const Directory = ({navigation}) => {
           style={styles.input}
           dropdownIconColor="gray"
           mode="dropdown">
-          <Picker.Item label="All villages / બધા ગામો" value="" />
+          <Picker.Item label={t('allvillages')} value="" />
 
           {options.map(option => (
             <Picker.Item
@@ -147,7 +149,7 @@ const Directory = ({navigation}) => {
         />
       ) : (
         <View style={styles.blankcontainer}>
-          <Text style={styles.blank}>No data found...</Text>
+          <Text style={styles.blank}>{t('nosearchdatafound')}</Text>
         </View>
       )}
     </View>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,13 +8,14 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {useNavigation} from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from './api';
-import {RadioButton} from 'react-native-paper';
-import {showToast} from '../component/CustomToast';
+import { RadioButton } from 'react-native-paper';
+import { showToast } from '../component/CustomToast';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const CustomDateField = props => {
   return (
@@ -24,8 +25,8 @@ const CustomDateField = props => {
   );
 };
 
-const FamilyRegister = ({route}) => {
-  const {userId} = route.params;
+const FamilyRegister = ({ route }) => {
+  const { userId } = route.params;
 
   const navigation = useNavigation();
 
@@ -52,47 +53,68 @@ const FamilyRegister = ({route}) => {
   const [gender, setGender] = useState('');
   const [education, setEducation] = useState('');
   const [relationship, setRelationship] = useState('');
+  const [relationshipData, setRelationshipData] = useState([]);
   const [job, setJob] = useState('');
   const [maritalStatus, setMaritalStatus] = useState('');
   // validation
   const [formErrors, setFormErrors] = useState([]);
+  const { t } = useTranslation();
+  const initialLabel = t('maritalstatus');
+  const married = t('married');
+  const unmarried = t('unmarried');
+  const widower = t('widower');
+  const widow = t('widow');
+  const divorcee = t('divorcee');
 
+  console.log(relationshipData && relationshipData, 'setRelationshipData')
   // const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    Data();
+  }, []);
+  const Data = () => {
+    api.get(`/data/`).then(response => {
+      const data = response.data;
+      console.log(data, 'data')
+      if (data.relationship && data.relationship.length > 0) {
+        setRelationshipData(data.relationship);
+      }
+    });
+  }
   const isFormValid = form => {
     const errors = {};
 
     if (form.firstname.length <= 0) {
-      errors.firstname = 'Please enter firstname';
+      errors.firstname = t('pleaseenterfirstname');
     }
 
     if (form.middlename.length <= 0) {
-      errors.middlename = 'Please enter middlename';
+      errors.middlename = t('pleaseentermiddlename');
     }
 
 
     if (form.dob === null) {
-      errors.dob = 'Please select date of birth';
+      errors.dob = t('pleaseenterdob');
     }
 
     if (form.education.length <= 0) {
-      errors.education = 'Please enter education';
+      errors.education = t('pleaseentereducation');
     }
 
     if (form.job.length <= 0) {
-      errors.job = 'Please enter job';
+      errors.job = t('pleaseenterjob');
     }
 
     if (form.gender.length <= 0) {
-      errors.gender = 'Please choose gender';
+      errors.gender = t('pleaseentergender');
     }
 
     if (form.relationship == '') {
-      errors.relationship = 'Please choose relation';
+      errors.relationship = t('pleasechooserelation');
     }
 
     if (form.maritalStatus.length <= 0) {
-      errors.maritalStatus = 'Please choose marital status';
+      errors.maritalStatus = t('pleasechoosemaritalstatus');
     }
 
     return errors;
@@ -127,12 +149,11 @@ const FamilyRegister = ({route}) => {
 
 
       const maxFormsAllowed = Math.max(7 - childData.length);
-   
+
       if (forms.length >= maxFormsAllowed) {
         showToast(
           'error',
-          `You can't add more than 7 forms.`,
-          'તમે ૭ થી વધારે ફોર્મ ના ઉમેરી શકો.',
+          t('youcantaddmorethan7forms'),
           2500,
         );
 
@@ -154,8 +175,7 @@ const FamilyRegister = ({route}) => {
     } else {
       showToast(
         'error',
-        'Fill the data to add new form.',
-        'નવું ફોર્મ ઉમેરવા માટે તમામ માહિતી ભરો.',
+        t('fillthedatatoaddnewform'),
         2500,
       );
     }
@@ -207,15 +227,14 @@ const FamilyRegister = ({route}) => {
       api.post(`/addchildUser/${_id}`, forms)
         .then(response => {
           AsyncStorage.removeItem('childData').then(() => {
-      
+
             const familyData = JSON.stringify(response.data.familyData);
             AsyncStorage.setItem('childData', familyData).then(() => {
             });
           });
           showToast(
             'success',
-            'Data registerd successfully.',
-            'ડેટા સફળતાપૂર્વક રજીસ્ટર થઈ ગયા.',
+            t('registeredsuccessfully'),
             2500,
           );
 
@@ -236,8 +255,7 @@ const FamilyRegister = ({route}) => {
     } else {
       showToast(
         'error',
-        'Please fill all the required fields !',
-        'કૃપા કરીને તમામ જરૂરી માહિતી ભરો.',
+        t('pleasefillalltherequiredfields'),
         2500,
       );
     }
@@ -245,18 +263,18 @@ const FamilyRegister = ({route}) => {
 
   const formatDate = date => {
     const formattedDate = new Date(date);
-    const options = {year: 'numeric', month: 'long', day: 'numeric'};
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return formattedDate.toLocaleDateString(undefined, options);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.mainTitle}> Family Members </Text>
+      <Text style={styles.mainTitle}> {t('familyMembers')} </Text>
       <ScrollView>
         {forms.map((form, index) => (
           <View key={index}>
             <View style={styles.header}>
-              <Text style={styles.title}> Form - {index + 1} </Text>
+              <Text style={styles.title}> {t('form')} - {index + 1} </Text>
               {index > 0 && (
                 <Pressable
                   style={styles.removebtn}
@@ -275,7 +293,7 @@ const FamilyRegister = ({route}) => {
                     : 'gray',
                 },
               ]}
-              placeholder="First Name / પોતાનું નામ"
+              placeholder={t('firstname')}
               value={form.firstname}
               onChangeText={value =>
                 handleInputChange(index, 'firstname', value)
@@ -297,7 +315,7 @@ const FamilyRegister = ({route}) => {
                     : 'gray',
                 },
               ]}
-              placeholder="Middle Name / પિતાનું અથવા પતિનું નામ"
+              placeholder={t('middlename')}
               value={form.middlename}
               onChangeText={value =>
                 handleInputChange(index, 'middlename', value)
@@ -314,10 +332,10 @@ const FamilyRegister = ({route}) => {
                 <TextInput
                   style={[
                     styles.input,
-                    {borderColor: formErrors[index]?.dob ? '#ff0000' : 'gray'},
+                    { borderColor: formErrors[index]?.dob ? '#ff0000' : 'gray' },
                   ]}
                   placeholderTextColor="gray"
-                  placeholder="Date of birth / જન્મ તારીખ"
+                  placeholder={t('dateofbirth')}
                   editable={false}
                   value={form.dob ? formatDate(form.dob) : ''}
                 />
@@ -347,7 +365,7 @@ const FamilyRegister = ({route}) => {
                     : 'gray',
                 },
               ]}
-              placeholder="Education / ભણતર"
+              placeholder={t('education')}
               value={form.education}
               onChangeText={value =>
                 handleInputChange(index, 'education', value)
@@ -363,9 +381,9 @@ const FamilyRegister = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: formErrors[index]?.job ? '#ff0000' : 'gray'},
+                { borderColor: formErrors[index]?.job ? '#ff0000' : 'gray' },
               ]}
-              placeholder="Profession / વ્યવસાય"
+              placeholder={t('profession')}
               value={form.job}
               onChangeText={value => handleInputChange(index, 'job', value)}
             />
@@ -382,8 +400,8 @@ const FamilyRegister = ({route}) => {
                     : 'gray',
                 },
               ]}>
-              <Picker
-                style={[styles.input, {marginTop: 0}]}
+              {/* <Picker
+                style={[styles.input, { marginTop: 0 }]}
                 selectedValue={form.relationship}
                 onValueChange={value => handleRelationshipChange(index, value)}
                 dropdownIconColor="gray"
@@ -407,6 +425,29 @@ const FamilyRegister = ({route}) => {
                 />
                 <Picker.Item label="Brother / ભાઈ" value="Brother" />
                 <Picker.Item label="Sister / બહેન" value="Sister" />
+              </Picker> */}
+              <Picker
+                style={[styles.input, { marginTop: 0 }]}
+                selectedValue={form.relationship}
+                onValueChange={value => handleRelationshipChange(index, value)}
+                dropdownIconColor="gray"
+                mode="dropdown">
+
+                <Picker.Item
+                  label={t('selectrelation')}
+                  value=""
+                  selectedValue
+                  enabled={false}
+                />
+
+                {relationshipData.map(item => (
+                  <Picker.Item
+                    // key={item.key}
+                    label={`${item.value}`}
+                    value={item.key}
+                  />
+                ))}
+
               </Picker>
             </View>
             {formErrors[index]?.relationship && (
@@ -425,23 +466,23 @@ const FamilyRegister = ({route}) => {
                 },
               ]}>
               <Picker
-                style={[styles.input, {marginTop: 0}]}
+                style={[styles.input, { marginTop: 0 }]}
                 selectedValue={form.maritalStatus}
                 onValueChange={value => handleMaritalStatusChange(index, value)}
                 dropdownIconColor="gray"
                 mode="dropdown">
                 <Picker.Item
-                  label="Marital status / વૈવાહિક સ્ટેટસ"
+                  label={initialLabel}
                   value=""
                   selectedValue
                   enabled={false}
                 />
-                <Picker.Item label="Unmarried / અપરિણીત" value="Unmarried" />
-                <Picker.Item label="Married / પરિણીત" value="Married" />
-                <Picker.Item label="widower / વિધુર" value="widower" />
-                <Picker.Item label="Widow / વિધવા" value="Widow" />
+                <Picker.Item label={unmarried} value="Unmarried" />
+                <Picker.Item label={married} value="Married" />
+                <Picker.Item label={widower} value="widower" />
+                <Picker.Item label={widow} value="Widow" />
                 <Picker.Item
-                  label="Divorcee / છૂટાછેડા લેનાર"
+                  label={divorcee}
                   value="Divorcee"
                 />
               </Picker>
@@ -459,8 +500,9 @@ const FamilyRegister = ({route}) => {
                   borderColor: formErrors[index]?.gender ? '#ff0000' : 'gray',
                 },
               ]}>
+              <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
               <View style={styles.radioContainer}>
-                <Text style={styles.radioLabel}>Male / પુરૂષ</Text>
+                <Text style={styles.radioLabel}>{t('male')}</Text>
                 <RadioButton
                   value="male"
                   status={form.gender === 'male' ? 'checked' : 'unchecked'}
@@ -468,7 +510,7 @@ const FamilyRegister = ({route}) => {
                   color="blue"
                 />
 
-                <Text style={styles.radioLabel}>Female / સ્ત્રી</Text>
+                <Text style={styles.radioLabel}>{t('female')}</Text>
                 <RadioButton
                   value="female"
                   status={form.gender === 'female' ? 'checked' : 'unchecked'}
@@ -476,7 +518,7 @@ const FamilyRegister = ({route}) => {
                   color="blue"
                 />
 
-                <Text style={styles.radioLabel}>Other / અન્ય</Text>
+                <Text style={styles.radioLabel}>{t('other')}</Text>
                 <RadioButton
                   value="other"
                   status={form.gender === 'other' ? 'checked' : 'unchecked'}
@@ -494,15 +536,15 @@ const FamilyRegister = ({route}) => {
           <Pressable
             style={[
               styles.button,
-              {backgroundColor: '#007bff', marginRight: 5},
+              { backgroundColor: '#007bff', marginRight: 5 },
             ]}
             onPress={handleAddForm}>
-            <Text style={styles.btntext}>Add Form</Text>
+            <Text style={styles.btntext}>{t('addform')}</Text>
           </Pressable>
           <Pressable
-            style={[styles.button, {backgroundColor: '#4BB543', marginLeft: 5}]}
+            style={[styles.button, { backgroundColor: '#4BB543', marginLeft: 5 }]}
             onPress={handleRegister}>
-            <Text style={styles.btntext}>Submit</Text>
+            <Text style={styles.btntext}>{t('submit')}</Text>
           </Pressable>
         </View>
       </ScrollView>

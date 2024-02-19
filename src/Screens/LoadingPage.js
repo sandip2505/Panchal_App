@@ -3,7 +3,7 @@ import { Animated, Easing, StyleSheet, View } from 'react-native';
 
 const random = () => (parseInt(Math.random() * 255));
 const randomColor = () => 'rgb(' + random() + ',' + random() + ',' + random() + ')'
-const size = 60;
+const size = 40;
 const innerSize = size / 3;
 
 const TestPage = () => {

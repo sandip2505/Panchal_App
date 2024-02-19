@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import {showToast} from '../component/CustomToast';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
 const ChangePassword = () => {
   const navigation = useNavigation();
@@ -29,6 +30,7 @@ const ChangePassword = () => {
   const [currentPassError, setCurrentPassError] = useState('');
   const [newPassError, setNewPassError] = useState('');
   const [confirmPassError, setConfirmPassError] = useState('');
+  const { t } = useTranslation();
 
   const expectedPasswordPattern =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
@@ -48,21 +50,21 @@ const ChangePassword = () => {
 
   const handleChangepassword = async () => {
     if (currentPassword.length === 0) {
-      setCurrentPassError('Current password is required');
+      setCurrentPassError(t('currentpasswordisrequired'));
       return false;
     } else if (newPassword.length === 0) {
       setCurrentPassError('');
-      setNewPassError('New password is required');
+      setNewPassError(t('newpasswordisrequired'));
       return false;
     } else if (newPassword.length < 6) {
-      setNewPassError('Password must have at least 6 characters.');
+      setNewPassError(t('passwordmusthaveatleastcharacters'));
     } else if (!expectedPasswordPattern.test(newPassword)) {
       setNewPassError(
-        'Password must have at least one letter, one number, and one special character.',
+        t('passwordmusthaveatleastoneletteronenumberandonespecialcharacter'),
       );
     } else if (confirmPassword.length === 0) {
       setNewPassError('');
-      setConfirmPassError('Confirm password is required');
+      setConfirmPassError(t('confirmpasswordisrequired'));
       return false;
     } else if (currentPassword === newPassword) {
       setConfirmPassError(
@@ -83,7 +85,7 @@ const ChangePassword = () => {
         });
         
         if (response.data.message == 'incorrect current password') {
-          setCurrentPassError('Incorrect current password');
+          setCurrentPassError(t('incorrectcurrentpassword'));
         } else if (response.data.message == 'confirm password not matched') {
           setCurrentPassError('');
           setConfirmPassError("Confirm password doesn't match");
@@ -93,8 +95,7 @@ const ChangePassword = () => {
           setConfirmPassError('');
           showToast(
             'success',
-            'Password updated successfully.',
-            'પાસવર્ડ સફળતાપૂર્વક અપડેટ થયો.',
+            t('passwordupdatedsuccessfully'),
             2500,
           );
           navigation.navigate('ProfilePage');
@@ -140,7 +141,7 @@ const ChangePassword = () => {
                 {borderColor: currentPassError ? '#ff0000' : 'gray'},
                 {shadowColor: currentPassError ? '#ff0000' : 'black'},
               ]}
-              placeholder="Current password"
+              placeholder={t('currentpassword')}
               placeholderTextColor="gray"
               onChangeText={setCurrentPassword}
               value={currentPassword}
@@ -168,7 +169,7 @@ const ChangePassword = () => {
                 {borderColor: newPassError ? '#ff0000' : 'gray'},
                 {shadowColor: newPassError ? '#ff0000' : 'black'},
               ]}
-              placeholder="New password"
+              placeholder={t('newPassword')}
               placeholderTextColor="gray"
               onChangeText={setNewPassword}
               value={newPassword}
@@ -192,7 +193,7 @@ const ChangePassword = () => {
               {borderColor: confirmPassError ? '#ff0000' : 'gray'},
               {shadowColor: confirmPassError ? '#ff0000' : 'black'},
             ]}
-            placeholder="Confirm password"
+            placeholder={t('confirmpassword')}
             placeholderTextColor="gray"
             onChangeText={setConfirmPassword}
             value={confirmPassword}
@@ -206,7 +207,7 @@ const ChangePassword = () => {
             style={styles.loginBtn}
             onPress={() => handleChangepassword()}
             activeOpacity={0.6}>
-            <Text style={styles.loginText}>Change Password</Text>
+            <Text style={styles.loginText}>{t('changePassword')}</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>

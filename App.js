@@ -9,8 +9,12 @@ import {
   StyleSheet,
   Modal,
   Pressable,
-  Dimensions,
+  Alert,
+  ScrollView,
+  PermissionsAndroid
 } from 'react-native';
+
+// import { PermissionsAndroid } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -53,14 +57,120 @@ import EditFamilyDetails from './src/Screens/EditFamilyDetails';
 import EditMainDetails from './src/Screens/EditMainDetails';
 import TestPage from './src/Screens/TestPage';
 import MaintenanceScreen from './src/Screens/MaintenanceScreen';
+import SettingsScreen from './src/Screens/SettingsScreen';
+import NewsPage from './src/Screens/NewsPage';
+import NewsDetails from './src/Screens/NewsDetails';
+import messaging from '@react-native-firebase/messaging';
+import api from './src/Screens/api';
+import PushNotification from 'react-native-push-notification';
+import { useTranslation, initReactI18next } from 'react-i18next';
+
 
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function FirstScreenStack({ navigation }) {
+const { t } = useTranslation();
 
+  useEffect(() => {
+    requestIgnoreBatteryOptimizations();
+    GetFCMToken();
   
+    PushNotification.configure({
+      onNotification: function (notification) {
+        console.log('Notification received:', notification);
+
+        if (notification.userInteraction) {
+
+          const _id = notification.data.newsId || notification.userData.newsId || notification.data._id;
+          navigation.navigate('NewsDetails', { item: _id });
+
+          console.log('Notification pressed!', _id);
+        }
+      },
+    });
+
+
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('FCM Message Data:', remoteMessage);
+      Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
+
+      const newsTitle = remoteMessage.data.title || (remoteMessage.notification && remoteMessage.notification.title);
+      const newsDescription = remoteMessage.data.description || (remoteMessage.notification && remoteMessage.notification.body);
+      const imageUrl = remoteMessage.data.image || (remoteMessage.notification && remoteMessage.notification.imageUrl);
+      const newsId = remoteMessage.data.newsId;
+      console.log(newsTitle, newsDescription, imageUrl, newsId, "Before notifyNewsAdded")
+      PushNotification.getChannels(function (channel_ids) {
+        console.log(channel_ids, "channel_ids");
+      });
+      notifyNewsAdded(newsTitle, newsDescription, imageUrl, newsId);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+
+
+  }, []);
+  const GetFCMToken = async () => {
+    try {
+      let fcmtoken = await AsyncStorage.getItem("fcmtoken");
+      // console.log(fcmtoken, "old token");
+      if (!fcmtoken) {
+        const femtoken = await messaging().getToken();
+        if (femtoken) {
+          // console.log(femtoken, "new token");
+          await AsyncStorage.setItem("fcmtoken", femtoken);
+        }
+      }
+    } catch (error) {
+      console.log(error, "error in GetFCMToken");
+    }
+  };
+
+  const requestIgnoreBatteryOptimizations = async () => {
+    try {
+      // Request necessary permissions
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      );
+      console.log(granted, 'granted >>', PermissionsAndroid.RESULTS.GRANTED)
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Notification permission granted');
+      } else {
+        console.log('Notification permission denied');
+      }
+    } catch (error) {
+      console.error('Error requesting permission:', error);
+    }
+  };
+
+
+
+  const notifyNewsAdded = (newsTitle, newsDescription, imageUrl, newsId) => {
+    console.log(newsTitle, newsDescription, imageUrl, newsId, "notifyNewsAdded")
+    PushNotification.localNotification({
+      title: newsTitle,
+      message: newsDescription,
+      largeIcon: imageUrl,
+      userData: { newsId, newsTitle, newsDescription, imageUrl },
+      invokeApp: true,
+      onPress: () => {
+        console.log('Notification pressed! on notifyNewsAdded');
+        navigation.navigate('NewsDetails', { item: newsId });
+      },
+    });
+
+    PushNotification.localNotificationSchedule({
+      title: 'Notification Sent',
+      message: 'News notification sent successfully!',
+      date: new Date(Date.now()),
+    });
+
+  };
+
   return (
     <Stack.Navigator
       initialRouteName="HomePage"
@@ -110,116 +220,133 @@ function FirstScreenStack({ navigation }) {
       <Stack.Screen
         name="AboutUs"
         component={AboutUs}
-        options={{ title: 'About us' }}
+        options={{ title: `${t('aboutUs')}` }}
       />
       <Stack.Screen
         name="RegisterForm"
         component={RegisterForm}
-        options={{ title: 'Register' }}
+        options={{ title: `${t('register')}` }}
       />
       <Stack.Screen
         name="FirstForm"
         component={FirstForm}
-        options={{ title: 'Register' }}
+        options={{ title: `${t('register')}` }}
       />
       <Stack.Screen
         name="Villages"
         component={Villages}
-        options={{ title: 'Villages' }}
+        options={{ title: `${t('villages')}` }}
       />
       <Stack.Screen
         name="PaymentPage"
         component={PaymentPage}
-        options={{ title: 'Payment' }}
+        options={{ title: `${t('paymentPage')}` }}
       />
       <Stack.Screen
         name="Directory"
         component={Directory}
-        options={{ title: 'Directory' }}
+        options={{ title: `${t('directory')}` }}
       />
       <Stack.Screen
         name="FamilyList"
         component={FamilyList}
-        options={{ title: 'Directory' }}
+        options={{ title: `${t('familyList')}` }}
       />
       <Stack.Screen
         name="PaymentSuccess"
         component={PaymentSuccess}
-        options={{ title: 'Payment' }}
+        options={{ title: `${t('paymentSuccess')}` }}
       />
       <Stack.Screen
         name="PaymentFail"
         component={PaymentFail}
-        options={{ title: 'Payment' }}
+        options={{ title: `${t('paymentFail')}` }}
       />
       <Stack.Screen
         name="FamilyDetailsPage"
         component={FamilyDetailsPage}
-        options={{ title: 'Family Members' }}
+        options={{ title: `${t('familyDetailsPage')}` }}
       />
       <Stack.Screen
         name="SearchDirectory"
         component={SearchDirectory}
-        options={{ title: 'Search' }}
+        options={{ title: `${t('searchDirectory')}` }}
       />
       <Stack.Screen
         name="ProfilePage"
         component={ProfilePage}
-        options={{ title: 'Profile' }}
+        options={{ title: `${t('profile')}` }}
       />
       <Stack.Screen
         name="ContactUs"
         component={ContactUs}
-        options={{ title: 'Contact Us' }}
+        options={{ title: `${t('contactUs')}` }}
       />
+
 
       <Stack.Screen
         name="committeeMembers"
         component={CommitteeMembers}
-        options={{ title: 'Committee Members' }}
+        options={{ title: `${t('committeeMember')}` }}
       />
 
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
-        options={{ title: 'Login' }}
+        options={{ title: `${t('login')}` }}
       />
       <Stack.Screen
         name="ChangePassword"
         component={ChangePassword}
-        options={{ title: 'Change Password' }}
+        options={{ title: `${t('changePassword')}` }}
       />
       <Stack.Screen
         name="FamilyRegister"
         component={FamilyRegister}
-        options={{ title: 'Family Register' }}
+        options={{ title: `${t('familyRegister')}` }}
       />
       <Stack.Screen
         name="EditMainDetails"
         component={EditMainDetails}
-        options={{ title: 'Edit Details' }}
+        options={{ title: `${t('editMainDetails')}` }}
       />
       <Stack.Screen
         name="EditFamilyDetails"
         component={EditFamilyDetails}
-        options={{ title: 'Edit Family Details' }}
+        options={{ title: `${t('editFamilyDetails')}` }}
       />
       <Stack.Screen
         name="TestPage"
         component={TestPage}
         options={{ title: 'Its a Testing Page' }}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+        options={{ title: `${t('settings')}` }}
+      />
+      <Stack.Screen
+        name="NewsPage"
+        component={NewsPage}
+        options={{ title:`${t('news')}` }}
+      />
+      <Stack.Screen
+        name="NewsDetails"
+        component={NewsDetails}
+        options={{ title: `${t('newsDetails')}` }}
+      />
+      <Stack.Screen
         name="MaintenanceScreen"
         component={MaintenanceScreen}
-        options={{ title: 'Its a MaintenanceScreen' }}
-      /> */}
+        options={{ title: `${t('maintenanceScreen')}` }}
+      />
     </Stack.Navigator>
   );
 }
 
 function App() {
   const [isConnected, setIsConnected] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     SplashScreen.hide();
@@ -362,7 +489,7 @@ function App() {
                       color: focused ? color : '#666',
                       flexBasis: '80%',
                     }}>
-                    Home
+                    {t('home')}
                   </Text>
                 </View>
               ),
@@ -376,66 +503,68 @@ function App() {
 
       {showInstructions && (
         <Modal visible={showInstructions} animationType="slide">
-          <View style={styles.container}>
-            <View style={styles.imageContainer}>
-              <Image
-                source={require('./src/assets/panchal.png')}
-                style={{ height: 150, width: 150 }}
-              />
+          <ScrollView>
+            <View style={styles.container}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require('./src/assets/panchal.png')}
+                  style={{ height: 150, width: 150 }}
+                />
 
-              <Text style={[styles.text, { fontWeight: 'bold' }]}>
-                શ્રી સવાસો ગોળ પંચાલ સમાજ, અમદાવાદ
-              </Text>
-            </View>
+                <Text style={[styles.text, { fontWeight: 'bold' }]}>
+                  શ્રી સવાસો ગોળ પંચાલ સમાજ, અમદાવાદ
+                </Text>
+              </View>
 
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>
-                એપ્લિકેશન નો ઉપયોગ કેવી રીતે કરવો ?
-              </Text>
-
-              <View>
-                <Text style={styles.text}>
-                  <Text style={styles.stepText}>સ્ટેપ 1 :</Text> ઘર ના મુખ્ય
-                  વ્યક્તિ નું રજીસ્ટ્રેશન કરો.
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>
+                  એપ્લિકેશન નો ઉપયોગ કેવી રીતે કરવો ?
                 </Text>
 
-                <Text style={styles.text}>
-                  <Text style={styles.stepText}>સ્ટેપ 1 :</Text> પેમેન્ટ પૂર્ણ
-                  કરો.
-                </Text>
+                <View>
+                  <Text style={styles.text}>
+                    <Text style={styles.stepText}>સ્ટેપ 1 :</Text> ઘર ના મુખ્ય
+                    વ્યક્તિ નું રજીસ્ટ્રેશન કરો.
+                  </Text>
 
-                <Text style={styles.text}>
-                  <Text style={styles.stepText}>સ્ટેપ 3 :</Text> ત્યારબાદ ઉપર
-                  ડાબી બાજુએ ત્રણ લાઈન ઉપર ક્લિક કરો પછી લૉગિન ઉપર ક્લિક કરો .
-                </Text>
+                  <Text style={styles.text}>
+                    <Text style={styles.stepText}>સ્ટેપ 1 :</Text> પેમેન્ટ પૂર્ણ
+                    કરો.
+                  </Text>
 
-                <Text style={styles.text}>
-                  <Text style={styles.stepText}>સ્ટેપ 4 :</Text> તમારો નંબર અને
-                  પાસવર્ડ નાખીને લૉગિન કરો .
-                </Text>
+                  <Text style={styles.text}>
+                    <Text style={styles.stepText}>સ્ટેપ 3 :</Text> ત્યારબાદ ઉપર
+                    ડાબી બાજુએ ત્રણ લાઈન ઉપર ક્લિક કરો પછી લૉગિન ઉપર ક્લિક કરો .
+                  </Text>
 
-                <Text style={styles.text}>
-                  <Text style={styles.stepText}>સ્ટેપ 5 :</Text> ત્યારબાદ ફરી
-                  ત્રણ લાઈન ઉપર ક્લિક કરી ને પ્રોફાઈલ ઉપર ક્લિક કરો.
-                </Text>
+                  <Text style={styles.text}>
+                    <Text style={styles.stepText}>સ્ટેપ 4 :</Text> તમારો નંબર અને
+                    પાસવર્ડ નાખીને લૉગિન કરો .
+                  </Text>
 
-                <Text style={styles.text}>
-                  <Text style={styles.stepText}>સ્ટેપ 6 :</Text> ત્યારબાદ નીચે "
-                  Family Members " ઉપર ક્લિક કરી ને પરિવાર ના સભ્યો નું
-                  રજિસ્ટ્રેશન કરો.
-                </Text>
+                  <Text style={styles.text}>
+                    <Text style={styles.stepText}>સ્ટેપ 5 :</Text> ત્યારબાદ ફરી
+                    ત્રણ લાઈન ઉપર ક્લિક કરી ને પ્રોફાઈલ ઉપર ક્લિક કરો.
+                  </Text>
 
-                <Text style={styles.text}></Text>
+                  <Text style={styles.text}>
+                    <Text style={styles.stepText}>સ્ટેપ 6 :</Text> ત્યારબાદ નીચે "
+                    Family Members " ઉપર ક્લિક કરી ને પરિવાર ના સભ્યો નું
+                    રજિસ્ટ્રેશન કરો.
+                  </Text>
 
-                <Text style={styles.text}>આભાર. 🙏</Text>
+                  <Text style={styles.text}></Text>
+
+                  <Text style={styles.text}>આભાર. 🙏</Text>
+                </View>
+              </View>
+              <View style={styles.btn}>
+                <TouchableOpacity onPress={handleInstructionsDismiss}>
+                  <Text style={styles.btnText}> આગળ વધો. </Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.btn}>
-              <Pressable onPress={handleInstructionsDismiss}>
-                <Text style={styles.btnText}> આગળ વધો. </Text>
-              </Pressable>
-            </View>
-          </View>
+          </ScrollView>
         </Modal>
       )}
     </NavigationContainer>
@@ -483,6 +612,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2196F3',
     height: 45,
     marginVertical: 20,
+    borderRadius: 10,
   },
 
   btnText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
