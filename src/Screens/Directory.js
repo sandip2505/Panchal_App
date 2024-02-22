@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     color: 'black',
-    paddingHorizontal: 8,
+    paddingHorizontal: 18,
   },
 
   inputContainer: {

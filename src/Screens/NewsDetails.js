@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import { IMAGE_URL } from '@env';
 import api from './api';
 import LoadingPage from './LoadingPage';
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 const NewsDetails = ({ route }) => {
   console.log(route.params.item, route.params, "route.params")
@@ -10,6 +12,7 @@ const NewsDetails = ({ route }) => {
   const [newsData, setNewsData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
 
   useEffect(() => {
     fetchNewsData();
@@ -55,43 +58,69 @@ const NewsDetails = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
+        <View style={styles.subContainer}>
       {newsData && (
         <>
-          <Image source={{ uri: `${IMAGE_URL}/${newsData.image}` }} style={styles.newsImage} />
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: `${IMAGE_URL}/${newsData.image}` }} style={styles.newsImage} />
+          </View>
           <View style={styles.contentContainer}>
-            <Text style={styles.newsTitle}>{formatCreatedAt(newsData.created_at)}</Text>
+            <Text style={styles.date}>{formatCreatedAt(newsData.created_at)}</Text>
             <Text style={styles.newsTitle}>{newsData.title}</Text>
             <Text style={styles.newsDescription}>{newsData.description}</Text>
           </View>
-        </>
+          </>
       )}
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
+    height:'100%',
+   
+  },
+  subContainer: {
+    height:'100%',
+    padding: 20
+  },
+  
+  imageContainer: {
+    width: "100%",
+    height: 200,
   },
   newsImage: {
     width: '100%',
-    height: 200,
-    resizeMode: 'cover',
+    height: '100%',
+    // top: 10,
+    borderRadius: 5,
+
   },
+
   contentContainer: {
-    padding: 20,
+    paddingVertical: 10,
+    // top: 20,
   },
   newsTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
     color: 'black',
+
   },
   newsDescription: {
     fontSize: 16,
     lineHeight: 24,
     color: 'black',
+  },
+  date: {
+    fontSize: 15,
+    lineHeight: 20,
+    color: 'black',
+    textAlign: 'right',
+    fontWeight: 'bold',
   },
   errorContainer: {
     flex: 1,

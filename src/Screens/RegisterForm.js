@@ -307,6 +307,18 @@ const RegisterForm = ({ route }) => {
             {firstnameError && (
               <Text style={styles.error}>{firstnameError}</Text>
             )}
+            <TextInput
+              placeholderTextColor="gray"
+              style={[
+                styles.input,
+              ]}
+              placeholder={t('lastname')}
+              editable={false}
+              value='Panchal'
+            />
+            {firstnameError && (
+              <Text style={styles.error}>{firstnameError}</Text>
+            )}
 
             <TextInput
               placeholderTextColor="gray"

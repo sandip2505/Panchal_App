@@ -71,12 +71,12 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function FirstScreenStack({ navigation }) {
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     requestIgnoreBatteryOptimizations();
     GetFCMToken();
-  
+
     PushNotification.configure({
       onNotification: function (notification) {
         console.log('Notification received:', notification);
@@ -328,7 +328,7 @@ const { t } = useTranslation();
       <Stack.Screen
         name="NewsPage"
         component={NewsPage}
-        options={{ title:`${t('news')}` }}
+        options={{ title: `${t('news')}` }}
       />
       <Stack.Screen
         name="NewsDetails"
@@ -558,11 +558,11 @@ function App() {
                   <Text style={styles.text}>આભાર. 🙏</Text>
                 </View>
               </View>
-              <View style={styles.btn}>
-                <TouchableOpacity onPress={handleInstructionsDismiss}>
+              <TouchableOpacity onPress={handleInstructionsDismiss}>
+                <View style={styles.btn}>
                   <Text style={styles.btnText}> આગળ વધો. </Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </Modal>

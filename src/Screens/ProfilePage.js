@@ -348,6 +348,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     elevation: 10,
     shadowColor: '#000',
+    zIndex: 1,
   },
 
   image: {

@@ -1,313 +1,196 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Pressable,
-  FlatList,
-  StyleSheet,
-  Button,
   Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Pressable,
   ActivityIndicator,
-  TextInput,
+  Alert,
+  PermissionsAndroid,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppState } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+import AgeCount from '../component/AgeCount';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import LoadingPage from './LoadingPage';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-
-
-
-
-import { IMAGE_URL} from '@env';
+import { API_BASE_URL, IMAGE_URL } from '@env';
+import moment from 'moment';
+import { showToast } from '../component/CustomToast';
+import RNFetchBlob from 'rn-fetch-blob';
+import ProgressBar from 'react-native-progress/Bar';
 import api from './api';
+import { useTranslation, initReactI18next } from 'react-i18next';
 
-const TestPage = ({navigation}) => {
-  const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
-  const [Villages, setOptions] = useState([]);
+const ProfilePage = () => {
+  const [parentsData, setParentsData] = useState(null);
+  const [downloadProgress, setDownloadProgress] = useState(0);
 
-
- 
+  const { t } = useTranslation();
 
   useEffect(() => {
-    fetchOptions();
+    const final = AsyncStorage.getItem('userData')
+      .then(value => {
+        if (value) {
+          const userData = JSON.parse(value);
+          setParentsData(userData);
+        }
+      })
+      .catch(error => {
+        console.error('Error in profile page : ', error);
+      });
+
   }, []);
 
-  const fetchOptions = async () => {
+
+  const requestStoragePermission = async (id) => {
     try {
-      setIsLoading(true);
-      const response = await api.get('/location');
-      setOptions(response.data);
-    
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      console.error('Error fetching options:', error);
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Downloader App Storage Permission',
+          message:
+            'Downloader App needs access to your storage' +
+            'so you can download files',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        downloadFile(id);
+      } else {
+      }
+    } catch (err) {
+      console.warn(err);
     }
   };
 
+  const downloadFile = (id) => {
+    const { config, fs } = RNFetchBlob;
+    const date = new Date();
+    const fileDir = fs.dirs.DownloadDir;
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        let response;
-        if (searchValue) {
-          response = await api.post('/villagebyuser',{searchValue: searchValue});
-        } else {
-          response = await api.get('/user-list');
-
-        }
-
-        if (response.status === 200) {
-          setIsLoading(true);
-          const data = response.data;
-          setUsers(data);
-          setIsLoading(false);
-        } else {
-          console.log('user-list Request failed with status:', response.status);
-          setIsLoading(false);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error('An error occurred:', error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [searchValue]);
-
-  const handleUserSelect = userId => {
-    navigation.navigate('FamilyList', {userId: userId});
+    config({
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        path:
+          fileDir +
+          '/download_' +
+          Math.floor(date.getDate() + date.getSeconds() / 2) +
+          '.pdf',
+        description: 'file download',
+      },
+      progress: (received, total) => {
+        const progress = (received / total) * 100;
+        setDownloadProgress(progress);
+      },
+    })
+      .fetch('GET', `YOUR_DOWNLOAD_URL/${id}`, {
+        // Update YOUR_DOWNLOAD_URL with your actual download URL
+      })
+      .then((res) => {
+        showToast('success', t('downloadsuccessfully'), 2000);
+        setDownloadProgress(0); // Reset progress when download is complete
+      })
+      .catch((error) => {
+        console.error('Download failed:', error);
+        setDownloadProgress(0); // Reset progress on download failure
+      });
   };
 
-  const renderSuggestionItem = ({ item }) => (
-    <Text>{item}</Text>
-  );
-  
-  const renderUserItem = ({item}) => (
-    <>
-      <Pressable onPress={() => handleUserSelect(item._id)}>
-        <View style={styles.userItem}>
-          <View style={styles.userImageContainer}>
-            {item?.photo ? (
-              <Image
-                source={{uri: `${IMAGE_URL}/${item?.photo}`}}
-                alt="Profile"
-                style={styles.userImage}
-                resizeMode="cover"
-              />
-            ) : (
-              <Image
-                style={styles.userImage}
-                source={require('../assets/3135715.png')}
-                alt="profile"
-                resizeMode="cover"
+  return (
+    <View style={styles.maincontainer}>
+      <View style={styles.container}>
+
+        <ScrollView>
+          <View style={styles.details}>
+            <View style={styles.row}>
+              <Text style={styles.label}>{t('invoice')} :</Text>
+              <TouchableOpacity
+                style={styles.dlfamilybtn}
+                onPress={() => requestStoragePermission(parentsData?._id)}
+                activeOpacity={0.6}>
+                <Text style={styles.dlbtntext}>{t('download')}</Text>
+              </TouchableOpacity>
+            </View>
+            {downloadProgress > 0 && (
+              <ProgressBar
+                progress={downloadProgress / 100}
+                width={null} // Use null for full width
+                color={'green'}
               />
             )}
-            
           </View>
-          
-          <View style={styles.userInfoContainer}>
-            <Text
-              style={
-                styles.userName
-              }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
-            <Text style={styles.userMobile}>
-              <Text style={{fontWeight: 'bold'}}>Mo.</Text> {item.mobile_number}
-            </Text>
-          </View>
-          <View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={30}
-              color="#666"
-            />
-          </View>
-        </View>
-      </Pressable>
-    </>
-  );
-
-  return (
-    <View style={styles.container}>
-      {/* <View style={styles.inputContainer}>
-        <Picker
-          selectedValue={searchValue}
-          onValueChange={itemValue => setSearchValue(itemValue)}
-          style={styles.input}
-          dropdownIconColor="gray"
-          mode="dropdown">
-          <Picker.Item label="All villages / બધા ગામો" value="" />
-
-          {options.map(option => (
-            <Picker.Item
-              key={option._id}
-              label={option.village}
-              value={option._id}
-            />
-          ))}
-        </Picker>
-      </View> */}
-
-      <View style={styles.searchContainer}>
-        <TextInput
-          value={searchValue}
-          placeholder="Search here..."
-          placeholderTextColor="gray"
-          style={styles.searchInput}
-          onChangeText={setSearchValue}
-        />
-        <View style={styles.iconcontainer}>
-          <Ionicons name="search" size={20} style={styles.searchicon} />
-        </View>
+        </ScrollView>
       </View>
-      {isLoading ? (
-        <LoadingPage />
-      ) : users.searchData ? (
-        <FlatList
-          data={users.searchData}
-          renderItem={renderUserItem}
-          keyExtractor={(item, index) => item._id + index.toString()}
-          contentContainerStyle={styles.userList}
-        />
-      ) : users && users.length ? (
-        <FlatList
-          data={users}
-          renderItem={renderUserItem}
-          keyExtractor={(item, index) => item._id + index.toString()}
-          contentContainerStyle={styles.userList}
-        />
-      ) : (
-        <View style={styles.blankcontainer}>
-          <Image
-            source={require('../assets/EmptySearch.png')}
-            alt="Empty"
-            style={styles.EmptySearchImage}
-          />
-          <Text style={styles.blank}>No search data found...</Text>
-        </View>
-      )}
     </View>
   );
 };
 
-export default TestPage;
-
 const styles = StyleSheet.create({
-  container: {
+  maincontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
     backgroundColor: '#fff',
     height: '100%',
   },
 
-  input: {
-    height: 40,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 6,
-    color: 'black',
-    paddingHorizontal: 8,
-  },
-
-  inputContainer: {
-    height: 55,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 6,
-    marginBottom: 16,
-    justifyContent: 'center',
-    marginVertical: 20,
-    marginHorizontal: 15,
-  },
-
-  userList: {
-    paddingHorizontal: '4%',
-    paddingBottom: 30,
-  },
-
-  userImageContainer: {
-    width: 45,
-    height: 45,
-    borderRadius: 25,
-    overflow: 'hidden',
-    marginRight: 10,
-  },
-
-  userImage: {
+  container: {
     width: '100%',
     height: '100%',
-    borderRadius: 100,
   },
 
-  userInfoContainer: {
-    flex: 1,
-  },
-
-  userItem: {
-    backgroundColor: '#edf9ff',
-    padding: 8,
-    marginVertical: 6,
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    shadowColor: 'black',
-    elevation: 5,
-  },
-
-  userName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  name: {
+    fontSize: 20,
     color: 'black',
-  },
-
-  userMobile: {
-    fontSize: 14,
-    color: '#666',
-  },
-
-  blankcontainer: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 20,
-  },
-
-  blank: {
-    color: 'black',
-    textAlign: 'center',
-    fontSize: 25,
-    fontWeight: '500',
-    width: '90%',
-    fontWeight: 'bold',
+    fontWeight: '600',
     textTransform: 'capitalize',
   },
-  searchContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    margin: '6%',
-    borderWidth: 1,
-    borderColor: '#00a9ff',
-    paddingHorizontal: 5,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+
+  details: {
+    backgroundColor: '#edf9ff',
+    borderRadius: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    marginVertical: 5,
+    marginHorizontal: 15,
+    shadowColor: 'black',
+    elevation: 3,
   },
-  iconcontainer: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#00a9ff',
-    display: 'flex',
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+
+  label: {
+    alignItems: 'flex-start',
+    flexBasis: '40%',
+    fontSize: 17,
+    color: 'black',
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+
+  dlfamilybtn: {
+    height: 35,
+    backgroundColor: '#68b300',
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
-  },
-  searchInput: {
-    flex: 1,
-    color: '#000',
-    height: 45,
+    shadowColor: 'gray',
+    elevation: 3,
+    width: '48%',
   },
 
 });
+
+export default ProfilePage;

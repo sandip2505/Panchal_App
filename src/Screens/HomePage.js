@@ -218,6 +218,40 @@ const HomePage = ({ navigation }) => {
            
         
           </View>
+          <View style={styles.row}>
+            {!isTestData && (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.box}
+                onPress={() => navigation.navigate('FirstForm')}>
+                <View style={styles.circle}>
+                  <Image
+                    style={styles.boxImage}
+                    source={require('../assets/register.png')}
+                    alt="register"
+                  />
+                </View>
+                <Text style={styles.boxText}>{t('register')}</Text>
+              </TouchableOpacity>
+            )}
+
+
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.box}
+              onPress={() => navigation.navigate('TestPage')}>
+              <View style={styles.circle}>
+                <Image
+                  style={styles.boxImage}
+                  source={require('../assets/news.png')}
+                  alt="search"
+                />
+              </View>
+              <Text style={styles.boxText}> Test </Text>
+            </TouchableOpacity>
+           
+        
+          </View>
           
         </View>
       </ScrollView>
