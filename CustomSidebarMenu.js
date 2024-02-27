@@ -8,6 +8,7 @@ import {
   Linking,
   TouchableOpacity,
   Modal,
+  Share,
 } from 'react-native';
 
 import {
@@ -22,7 +23,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import CustomModal from './src/component/CustomModal';
 import { showToast } from './src/component/CustomToast';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
 
 const CustomSidebarMenu = props => {
@@ -36,6 +37,25 @@ const CustomSidebarMenu = props => {
     AsyncStorage.getItem('isTest', function (err, value) {
       setIsTestData(JSON.parse(value));
     });
+  };
+  const appUrl = 'https://play.google.com/store/apps/details?id=com.panchal_application&pcampaignid=web_share';
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `Check out this awesome app: ${appUrl}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // Shared with activity type of result.activityType
+        } else {
+          // Shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // Dismissed
+      }
+    } catch (error) {
+      console.error('Error sharing:', error.message);
+    }
   };
 
   useEffect(() => {
@@ -134,13 +154,26 @@ const CustomSidebarMenu = props => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-              {/* name="cog" size={30} color="black" */}
+            {/* name="cog" size={30} color="black" */}
             <MaterialCommunityIcons name="cog" color="#666" size={30} />
           </View>
           <Text style={styles.customDrawerItemText}>{t('settings')}</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleShare}
+          style={styles.customDrawerItem}>
+          <View
+            style={{
+              flexBasis: '15%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <MaterialCommunityIcons name="share-variant" color="#666" size={30} />
+          </View>
+          <Text style={styles.customDrawerItemText}>{t('shereapp')}</Text>
+        </TouchableOpacity>
 
-       
+
         {isTestData && (
           <TouchableOpacity
             onPress={() => setShowModal(true)}

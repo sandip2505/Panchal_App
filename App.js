@@ -64,6 +64,7 @@ import messaging from '@react-native-firebase/messaging';
 import api from './src/Screens/api';
 import PushNotification from 'react-native-push-notification';
 import { useTranslation, initReactI18next } from 'react-i18next';
+import ForgotPassword from './src/Screens/ForgotPassword';
 
 
 
@@ -339,6 +340,11 @@ function FirstScreenStack({ navigation }) {
         name="MaintenanceScreen"
         component={MaintenanceScreen}
         options={{ title: `${t('maintenanceScreen')}` }}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+        options={{ title: `${t('ForgotPassword')}` }}
       />
     </Stack.Navigator>
   );

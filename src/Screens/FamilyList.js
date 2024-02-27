@@ -232,7 +232,7 @@ const FamilyList = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
     height: '100%',
     width: '100%',
   },

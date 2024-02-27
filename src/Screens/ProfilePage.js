@@ -137,13 +137,13 @@ const ProfilePage = () => {
       console.warn(err);
     }
   };
-  
+
   const downloadFile = (id) => {
-    const {config, fs} = RNFetchBlob;
+    const { config, fs } = RNFetchBlob;
     const date = new Date();
     const fileDir = fs.dirs.DownloadDir;
     config({
-  
+
       fileCache: true,
       addAndroidDownloads: {
         useDownloadManager: true,
@@ -156,7 +156,7 @@ const ProfilePage = () => {
         description: 'file download',
       },
     })
-    // api.get(`/paymentReceipt/${id}`)
+      // api.get(`/paymentReceipt/${id}`)
       .fetch('GET', `${API_BASE_URL}/paymentReceipt/${id}`, {
         //some headers ..
       })
@@ -164,11 +164,25 @@ const ProfilePage = () => {
         // the temp file path
         showToast(
           'success',
-         t('downloadsuccessfully'),
+          t('downloadsuccessfully'),
           2000,
         );
       });
   };
+  handleDownload = () => {
+    this.setState({ isLoading: true });
+
+    // Simulate a 10-second loading process
+    setTimeout(() => {
+      // Set isLoading to false after 10 seconds
+      this.setState({ isLoading: false });
+
+      // Perform your download logic here (e.g., call a function to download the file)
+      // Replace the following line with your actual download logic
+      console.log('Download successful');
+    }, 10000);
+  };
+
   return (
     <View style={styles.maincontainer}>
       <View style={styles.container}>
@@ -288,12 +302,19 @@ const ProfilePage = () => {
           </View>
           <View style={styles.details}>
             <View style={styles.row}>
-              <Text style={styles.label}>{t('invoice')} :</Text>
+              <Text style={styles.label}>invoice :</Text>
               <TouchableOpacity
-                style={styles.dlfamilybtn}
-                onPress={() => requestStoragePermission(parentsData?._id)}
-                activeOpacity={0.6}>
-                <Text style={styles.dlbtntext}>{t('download')}</Text>
+                style={[styles.dlfamilybtn, isLoading && styles.disabledButton]}
+                onPress={this.handleDownload}
+                activeOpacity={0.6}
+                disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <ActivityIndicator size="small" color="#fff" />
+                  </>
+                ) : (
+                  <Text style={styles.dlbtntext}>Download</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -332,6 +353,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
+    backgroundColor: '#dae4f0',
   },
 
   img: {
@@ -477,6 +499,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     // textTransform: 'uppercase',
+  },
+  
+  disabledButton: {
+    backgroundColor: '#68b300',
   },
 });
 

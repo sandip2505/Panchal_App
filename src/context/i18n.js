@@ -3,8 +3,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import 'intl';
 import 'intl-pluralrules';
-const language= 'en';
-console.log(language, 'language for i18n');
+
 const resources = {
   en: {
     translation: {
@@ -107,6 +106,7 @@ const resources = {
       gotoregister: 'GO TO REGISTER PAGE',
       searchhere: 'Search here...',
       nosearchdatafound: 'No search data found...',
+      nodatafound: 'No data found...',
       invoice: 'Invoice',
       download: 'Download',
       familyMembers: 'Family Members',
@@ -141,6 +141,7 @@ const resources = {
       allvillages: 'All villages',
       cancel: 'Cancel',
       yes: 'Yes',
+      shereapp: 'Shere App',
     },
   },
   gu: {
@@ -243,6 +244,7 @@ const resources = {
       gotoregister: 'રજીસ્ટર પેજ પર જાઓ',
       searchhere: 'અહીં શોધો...',
       nosearchdatafound: 'કોઈ શોધ ડેટા મળ્યો નથી...',
+      nodatafound: 'કોઈ ડેટા મળ્યો નથી...',
       invoice: 'બીલ',
       download: 'ડાઉનલોડ',
       familyMembers: 'પરિવારના સભ્યો',
@@ -258,7 +260,7 @@ const resources = {
       incorrectcurrentpassword: 'ખોટો વર્તમાન પાસવર્ડ',
       passwordupdatedsuccessfully: 'પાસવર્ડ સફળતાપૂર્વક અપડેટ થયો.',
       dataupdatedsuccessfully: 'ડેટા સફળતાપૂર્વક અપડેટ થઈ ગયા.',
-      chooseyourgender: 'તમારું લિંગ પસંદ કરો',
+      chooseyourgender: 'લિંગ પસંદ કરો',
       update: 'અપડેટ',
       datadeletedsuccessfully: 'ડેટા કાઢી નાખ્યું.',
       personalid: 'વ્યક્તિગત આઈડી',
@@ -277,6 +279,7 @@ const resources = {
       allvillages: 'બધા ગામો',
       cancel: 'રદ કરો',
       yes: 'હા',
+      shereapp: 'એપ્લિકેશન શેર કરો',
 
 
     },
@@ -287,8 +290,8 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'gu',
-    fallbackLng: language || 'gu',
+    lng: 'en',
+    fallbackLng: 'en',
 
     interpolation: {
       escapeValue: false,

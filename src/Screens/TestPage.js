@@ -1,158 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-  Alert,
-  PermissionsAndroid,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AppState } from 'react-native';
-import ImagePicker from 'react-native-image-crop-picker';
-import AgeCount from '../component/AgeCount';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import { API_BASE_URL, IMAGE_URL } from '@env';
-import moment from 'moment';
-import { showToast } from '../component/CustomToast';
-import RNFetchBlob from 'rn-fetch-blob';
-import ProgressBar from 'react-native-progress/Bar';
-import api from './api';
-import { useTranslation, initReactI18next } from 'react-i18next';
+import React, { Component } from 'react';
+import { Text, StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 
-const ProfilePage = () => {
-  const [parentsData, setParentsData] = useState(null);
-  const [downloadProgress, setDownloadProgress] = useState(0);
+export default class TestPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+    };
+  }
 
-  const { t } = useTranslation();
+  handleDownload = () => {
+    this.setState({ isLoading: true });
 
-  useEffect(() => {
-    const final = AsyncStorage.getItem('userData')
-      .then(value => {
-        if (value) {
-          const userData = JSON.parse(value);
-          setParentsData(userData);
-        }
-      })
-      .catch(error => {
-        console.error('Error in profile page : ', error);
-      });
+    // Simulate a 10-second loading process
+    setTimeout(() => {
+      // Set isLoading to false after 10 seconds
+      this.setState({ isLoading: false });
 
-  }, []);
-
-
-  const requestStoragePermission = async (id) => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Downloader App Storage Permission',
-          message:
-            'Downloader App needs access to your storage' +
-            'so you can download files',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        downloadFile(id);
-      } else {
-      }
-    } catch (err) {
-      console.warn(err);
-    }
+      // Perform your download logic here (e.g., call a function to download the file)
+      // Replace the following line with your actual download logic
+      console.log('Download successful');
+    }, 10000);
   };
 
-  const downloadFile = (id) => {
-    const { config, fs } = RNFetchBlob;
-    const date = new Date();
-    const fileDir = fs.dirs.DownloadDir;
+  render() {
+    const { isLoading } = this.state;
 
-    config({
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        path:
-          fileDir +
-          '/download_' +
-          Math.floor(date.getDate() + date.getSeconds() / 2) +
-          '.pdf',
-        description: 'file download',
-      },
-      progress: (received, total) => {
-        const progress = (received / total) * 100;
-        setDownloadProgress(progress);
-      },
-    })
-      .fetch('GET', `YOUR_DOWNLOAD_URL/${id}`, {
-        // Update YOUR_DOWNLOAD_URL with your actual download URL
-      })
-      .then((res) => {
-        showToast('success', t('downloadsuccessfully'), 2000);
-        setDownloadProgress(0); // Reset progress when download is complete
-      })
-      .catch((error) => {
-        console.error('Download failed:', error);
-        setDownloadProgress(0); // Reset progress on download failure
-      });
-  };
-
-  return (
-    <View style={styles.maincontainer}>
-      <View style={styles.container}>
-
-        <ScrollView>
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('invoice')} :</Text>
-              <TouchableOpacity
-                style={styles.dlfamilybtn}
-                onPress={() => requestStoragePermission(parentsData?._id)}
-                activeOpacity={0.6}>
-                <Text style={styles.dlbtntext}>{t('download')}</Text>
-              </TouchableOpacity>
-            </View>
-            {downloadProgress > 0 && (
-              <ProgressBar
-                progress={downloadProgress / 100}
-                width={null} // Use null for full width
-                color={'green'}
-              />
+    return (
+      <View style={styles.details}>
+        <View style={styles.row}>
+          <Text style={styles.label}>invoice :</Text>
+          <TouchableOpacity
+            style={[styles.dlfamilybtn, isLoading && styles.disabledButton]}
+            onPress={this.handleDownload}
+            activeOpacity={0.6}
+            disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <ActivityIndicator size="small" color="#fff" />
+              </>
+            ) : (
+              <Text style={styles.dlbtntext}>Download</Text>
             )}
-          </View>
-        </ScrollView>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  maincontainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: '#fff',
-    height: '100%',
-  },
 
-  container: {
-    width: '100%',
-    height: '100%',
-  },
-
-  name: {
-    fontSize: 20,
-    color: 'black',
-    fontWeight: '600',
-    textTransform: 'capitalize',
+  disabledButton: {
+    backgroundColor: '#68b300',
   },
 
   details: {
@@ -191,6 +91,9 @@ const styles = StyleSheet.create({
     width: '48%',
   },
 
-});
-
-export default ProfilePage;
+  dlbtntext: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+})

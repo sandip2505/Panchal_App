@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   },
 
   familyItem: {
-    backgroundColor: '#edf9ff',
+    backgroundColor: '#bbe2ec',
     padding: 12,
     borderRadius: 8,
     shadowColor: '#000000',
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
     height: '100%',
     width: '100%',
     paddingVertical: 20,

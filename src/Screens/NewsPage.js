@@ -5,6 +5,7 @@ import LoadingPage from './LoadingPage';
 import api from './api';
 import { IMAGE_URL } from '@env';
 
+import { useTranslation } from 'react-i18next';
 
 
 const cardHeight = 180;
@@ -14,7 +15,9 @@ const offset = cardHeight + padding;
 export default function NewsPage({ navigation }) {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(false);
+  const [dataFound, setDataFound] = useState(false);
   const [newsData, setNewsData] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchNewsData();
@@ -29,9 +32,13 @@ export default function NewsPage({ navigation }) {
           if (response.status === 200) {
             setIsLoading(true);
             const data = response.data;
+            if (data.length === 0) {
+              setDataFound(true)
+            } else {
+              setNewsData(data);
+              setIsLoading(false);
+            }
 
-            setNewsData(data);
-            setIsLoading(false);
           } else {
             setIsLoading(false);
             console.log('location Request failed with status:', response.status);
@@ -50,10 +57,24 @@ export default function NewsPage({ navigation }) {
 
   const formatCreatedAt = (timestamp) => {
     const date = new Date(Number(timestamp));
-    const month = date.toLocaleString('en-us', { month: 'short' });
+
     const day = date.getDate();
-    return `${month} ${day}`;
-  };
+    const month = date.toLocaleString('en-us', { month: 'long' });
+    const year = date.getFullYear();
+
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours %= 12;
+    hours = hours || 12; // Handle midnight (12:00 AM)
+
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+
+    return `${day} ${month} ${year} ${formattedTime}`;
+};
 
   const NewsDetails = (item) => {
     const { _id } = item;
@@ -79,6 +100,11 @@ export default function NewsPage({ navigation }) {
 
   if (isLoading) {
     return <LoadingPage />;
+  }
+  if (dataFound) {
+    return <View style={styles.blankcontainer}>
+      <Text style={styles.blank}>{t('nodatafound')}</Text>
+    </View>;
   }
   return (
     <View style={styles.container}>
@@ -113,7 +139,7 @@ export default function NewsPage({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#dae4f0',
     height: '100%',
   },
   subContainer: {
@@ -171,5 +197,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
     color: 'black'
+  },
+  blankcontainer: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 20,
+  },
+  blank: {
+    color: 'black',
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: '500',
+    width: '90%',
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
 });

@@ -51,8 +51,9 @@ const SettingsScreen = () => {
             onValueChange={(itemValue) => setLanguage(itemValue)}
             dropdownIconColor="gray"
             mode="dropdown"
+
           >
-            <Picker.Item label={initialLabel} value="" enabled={false} />
+            <Picker.Item label={initialLabel} value="" enabled={true} />
             <Picker.Item label="English" value="en" />
             <Picker.Item label="ગુજરાતી" value="gu" />
           </Picker>
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
   },
   inputContainer: {
     height: 55,

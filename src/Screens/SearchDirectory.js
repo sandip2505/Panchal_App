@@ -7,6 +7,8 @@ import {
   StyleSheet,
   TextInput,
   Image,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -22,6 +24,10 @@ const SearchDirectory = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
   const { t } = useTranslation();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [image, setImage] = useState(null);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +59,15 @@ const SearchDirectory = ({navigation}) => {
     fetchData();
   }, [searchValue]);
 
+  const handleImageClick = (image) => {
+    setImage(image)
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   const handleUserSelect = userId => {
     navigation.navigate('FamilyList', {userId: userId});
   };
@@ -61,23 +76,39 @@ const SearchDirectory = ({navigation}) => {
     <>
       <Pressable onPress={() => handleUserSelect(item._id)}>
         <View style={styles.userItem}>
-          <View style={styles.userImageContainer}>
-            {item?.photo ? (
+        <TouchableOpacity onPress={() => handleImageClick(item?.photo)}>
+            <View style={styles.userImageContainer}>
+              {item?.photo ? (
+                <Image
+                  source={{ uri: `${IMAGE_URL}/${item?.photo}` }}
+                  alt="Profile"
+                  style={styles.userImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Image
+                  style={styles.userImage}
+                  source={require('../assets/3135715.png')}
+                  alt="profile"
+                  resizeMode="cover"
+                />
+              )}
+            </View>
+          </TouchableOpacity>
+          <Modal visible={modalVisible} transparent={true} onRequestClose={closeModal}>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+
               <Image
-                source={{uri: `${IMAGE_URL}/${item?.photo}`}}
-                alt="Profile"
-                style={styles.userImage}
-                resizeMode="cover"
+                source={{ uri: `${IMAGE_URL}/${image}` }}
+                alt="Full Image"
+                style={styles.fullImage}
+                resizeMode="contain"
               />
-            ) : (
-              <Image
-                style={styles.userImage}
-                source={require('../assets/3135715.png')}
-                alt="profile"
-                resizeMode="cover"
-              />
-            )}
-          </View>
+            </View>
+          </Modal>
           <View style={styles.userInfoContainer}>
             <Text style={styles.userName}>
               {item?.firstname} {item?.middlename} {item?.lastname}
@@ -147,7 +178,7 @@ const SearchDirectory = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
     height: '100%',
     width: '100%',
   },
@@ -271,6 +302,46 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     width: '90%',
     paddingTop: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  fullImage: {
+    width: '80%',
+    height: '80%',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    padding: 10,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  fullImage: {
+    width: '80%',
+    height: '80%',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    padding: 10,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 

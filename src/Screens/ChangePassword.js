@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,10 +11,10 @@ import {
   Linking,
   Pressable,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import {showToast} from '../component/CustomToast';
+import { showToast } from '../component/CustomToast';
 import api from './api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
@@ -77,13 +77,13 @@ const ChangePassword = () => {
       setConfirmPassError('');
       try {
 
-        const response = await api.post('/password_change',{
+        const response = await api.post('/password_change', {
           id: parentsData?._id,
           old_password: currentPassword,
           password: newPassword,
           cpassword: confirmPassword,
         });
-        
+
         if (response.data.message == 'incorrect current password') {
           setCurrentPassError(t('incorrectcurrentpassword'));
         } else if (response.data.message == 'confirm password not matched') {
@@ -134,12 +134,12 @@ const ChangePassword = () => {
         </View>
 
         <View style={styles.inputContainer}>
-          <View style={{display: 'flex', flexDirection: 'row'}}>
+          <View style={{ display: 'flex', flexDirection: 'row' }}>
             <TextInput
               style={[
                 styles.input,
-                {borderColor: currentPassError ? '#ff0000' : 'gray'},
-                {shadowColor: currentPassError ? '#ff0000' : 'black'},
+                { borderColor: currentPassError ? '#ff0000' : 'gray' },
+                { shadowColor: currentPassError ? '#ff0000' : 'black' },
               ]}
               placeholder={t('currentpassword')}
               placeholderTextColor="gray"
@@ -162,12 +162,12 @@ const ChangePassword = () => {
             <Text style={styles.error}>{currentPassError}</Text>
           )}
 
-          <View style={{display: 'flex', flexDirection: 'row'}}>
+          <View style={{ display: 'flex', flexDirection: 'row' }}>
             <TextInput
               style={[
                 styles.input,
-                {borderColor: newPassError ? '#ff0000' : 'gray'},
-                {shadowColor: newPassError ? '#ff0000' : 'black'},
+                { borderColor: newPassError ? '#ff0000' : 'gray' },
+                { shadowColor: newPassError ? '#ff0000' : 'black' },
               ]}
               placeholder={t('newPassword')}
               placeholderTextColor="gray"
@@ -190,8 +190,8 @@ const ChangePassword = () => {
           <TextInput
             style={[
               styles.input,
-              {borderColor: confirmPassError ? '#ff0000' : 'gray'},
-              {shadowColor: confirmPassError ? '#ff0000' : 'black'},
+              { borderColor: confirmPassError ? '#ff0000' : 'gray' },
+              { shadowColor: confirmPassError ? '#ff0000' : 'black' },
             ]}
             placeholder={t('confirmpassword')}
             placeholderTextColor="gray"
@@ -218,7 +218,11 @@ const ChangePassword = () => {
 export default ChangePassword;
 
 const styles = StyleSheet.create({
-  container: {height: '100%', width: '100%'},
+  container: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#dae4f0'
+  },
 
   bgImg: {
     height: '100%',
