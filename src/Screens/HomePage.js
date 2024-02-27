@@ -83,7 +83,7 @@ const HomePage = ({ navigation }) => {
         <View style={{ height: sliderHeight, overflow: 'hidden' }}>
           <SwiperFlatList
             autoplay
-            autoplayDelay={3}
+            autoplayDelay={2}
             autoplayLoop
             showPagination
             autoplayLoopKeepAnimation
@@ -94,7 +94,7 @@ const HomePage = ({ navigation }) => {
             paginationStyleItemActive={{
               width: 15,
               height: 8,
-              backgroundColor: '#00ff',
+              backgroundColor: '#383dc9',
             }}
             paginationStyleItemInactive={{
               width: 8,
@@ -219,22 +219,7 @@ const HomePage = ({ navigation }) => {
 
           </View>
           <View style={styles.row}>
-            {!isTestData && (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.box}
-                onPress={() => navigation.navigate('FirstForm')}>
-                <View style={styles.circle}>
-                  <Image
-                    style={styles.boxImage}
-                    source={require('../assets/register.png')}
-                    alt="register"
-                  />
-                </View>
-                <Text style={styles.boxText}>{t('register')}</Text>
-              </TouchableOpacity>
-            )}
-
+            
 
             <TouchableOpacity
               activeOpacity={0.7}
@@ -308,6 +293,7 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     elevation: 5,
     backgroundColor: '#fff',
+    // #f2ece4
   },
 
   boxText: {

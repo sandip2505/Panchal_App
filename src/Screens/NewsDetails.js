@@ -39,10 +39,24 @@ const NewsDetails = ({ route }) => {
 
   const formatCreatedAt = (timestamp) => {
     const date = new Date(Number(timestamp));
-    const month = date.toLocaleString('en-us', { month: 'short' });
+
     const day = date.getDate();
-    return `${month} ${day}`;
-  };
+    const month = date.toLocaleString('en-us', { month: 'long' });
+    const year = date.getFullYear();
+
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours %= 12;
+    hours = hours || 12; 
+
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+
+    return `${day} ${month} ${year} ${formattedTime}`;
+};
 
   if (isLoading) {
     return <LoadingPage />;
@@ -78,7 +92,7 @@ const NewsDetails = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
     height:'100%',
    
   },

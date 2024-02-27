@@ -186,7 +186,7 @@ const RegisterForm = ({ route }) => {
 
     if (isValid) {
       const userData = new FormData();
-
+      console.log(userData, "userData")
       userData.append('firstname', firstname);
       userData.append('middlename', middlename);
       userData.append('locations_id', locations_id);
@@ -204,46 +204,81 @@ const RegisterForm = ({ route }) => {
       userData.append('fcmtoken', fcmtoken);
 
       try {
-        const response = await api
-          .post(`/user_register`, {
-            headers: {
-              Accept: 'application/json',
-            },
-            userData,
-          })
-          .then(res => {
+        const PerentsData = {
+          firstname: firstname,
+          middlename: middlename,
+          lastname: 'Panchal',
+          locations_id: locations_id,
+          dob: dob,
+          mobile_number: mobile_number,
+          password: password,
+          state: state,
+          city: city,
+          pincode: pincode,
+          gender:gender,
+          education: education,
+          address: address,
+          job: job,
+          marital_status: marital_status,
+          device_token: fcmtoken,
+          payment_id:null,
+        }
+        console.log(PerentsData, "PerentsData")
+        AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
+        setFirstname('');
+        setMiddlename('');
+        setPassword('');
+        setDob(null);
+        setShowPicker(false);
+        setMobileNumber('');
+        setState('');
+        setCity('');
+        setPincode('');
+        setGender('');
+        setEducation('');
+        setAddress('');
+        setJob('');
+        setMaritalStatus('');
+        navigation.navigate('PaymentPage');
+       
+        // const response = await api
+        //   .post(`/user_regisster`, {
+        //     headers: {
+        //       Accept: 'application/json',
+        //     },
+        //     userData,
+        //   })
+        //   .then(res => {
 
-            const userId = res.data._id;
-            const PerentsData = res.data;
-            // if (PerentsData) {
-            //   order(PerentsData);
-            // }
-            if (res.data.mobileError === 'Mobile number already register') {
-              showToast(
-                'error',
-                t('mobilenumberisalreadyregistered'),
-                2500,
-              );
-            } else {
-              AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
-              setFirstname('');
-              setMiddlename('');
-              setPassword('');
-              setDob(null);
-              setShowPicker(false);
-              setMobileNumber('');
-              setState('');
-              setCity('');
-              setPincode('');
-              setGender('');
-              setEducation('');
-              setAddress('');
-              setJob('');
-              setMaritalStatus('');
-              navigation.navigate('PaymentPage');
-            }
-          })
-          .catch(err => { });
+        //     const userId = res.data._id;
+        //     const PerentsData = res.data;
+          
+        //     if (res.data.mobileError === 'Mobile number already register') {
+        //       showToast(
+        //         'error',
+        //         t('mobilenumberisalreadyregistered'),
+        //         2500,
+        //       );
+        //     } else {
+        //       AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
+        //       setFirstname('');
+        //       setMiddlename('');
+        //       setPassword('');
+        //       setDob(null);
+        //       setShowPicker(false);
+        //       setMobileNumber('');
+        //       setState('');
+        //       setCity('');
+        //       setPincode('');
+        //       setGender('');
+        //       setEducation('');
+        //       setAddress('');
+        //       setJob('');
+        //       setMaritalStatus('');
+        //       navigation.navigate('PaymentPage');
+        //     }
+        //   })
+        //   .catch(err => { });
       } catch (error) {
         if (error.response) {
           console.log('Status code:', error.response);
@@ -485,7 +520,7 @@ const RegisterForm = ({ route }) => {
                 label={initialLabel}
                 value=""
                 selectedValue
-                enabled={false}
+                enabled={true}
               />
               <Picker.Item
                 label={married}
@@ -550,7 +585,7 @@ const RegisterForm = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
   },
 
   childContainer: {

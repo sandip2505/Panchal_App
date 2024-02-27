@@ -64,8 +64,6 @@ import messaging from '@react-native-firebase/messaging';
 import api from './src/Screens/api';
 import PushNotification from 'react-native-push-notification';
 import { useTranslation, initReactI18next } from 'react-i18next';
-import LoginScreenCopy from './src/Screens/LoginScreenCopy';
-import ForgotPassword from './src/Screens/ForgotPassword';
 
 
 
@@ -341,16 +339,6 @@ function FirstScreenStack({ navigation }) {
         name="MaintenanceScreen"
         component={MaintenanceScreen}
         options={{ title: `${t('maintenanceScreen')}` }}
-      />
-      <Stack.Screen
-        name="newLogin"
-        component={LoginScreenCopy}
-        options={{ title: `${t('Login')}` }}
-      />
-      <Stack.Screen
-        name="ForgotPassword"
-        component={ForgotPassword}
-        options={{ title: `${t('Forgot Password')}` }}
       />
     </Stack.Navigator>
   );

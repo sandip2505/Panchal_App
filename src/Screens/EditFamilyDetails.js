@@ -454,7 +454,7 @@ const EditMainDetails = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#dae4f0',
     height: '100%',
     flexDirection: 'column',
   },

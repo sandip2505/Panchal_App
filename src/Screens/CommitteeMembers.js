@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     width: '100%',
     height: '100%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#dae4f0',
     padding: 15,
   },
 

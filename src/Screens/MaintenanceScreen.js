@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Adjust the background color opacity as needed
+    backgroundColor: '#dae4f0',
   },
   cardContainer: {
     width: '80%',

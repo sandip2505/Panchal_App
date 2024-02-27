@@ -33,7 +33,6 @@ export default function LoginScreen({ navigation }) {
   useEffect(() => {
     GetFCMToken();
   })
-
   const GetFCMToken = async () => {
     try {
       let fcmtoken = await AsyncStorage.getItem("fcmtoken");
@@ -69,7 +68,6 @@ export default function LoginScreen({ navigation }) {
           password: password,
           device_token: fcmtoken,
         });
-
         const userData = JSON.stringify(response.data.user);
         const childData = JSON.stringify(response.data.childData);
         const villageData = JSON.stringify(response.data.villageData);

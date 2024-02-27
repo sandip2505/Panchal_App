@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
   },
   webViewContent: {
     width: '100%',

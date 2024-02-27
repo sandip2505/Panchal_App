@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#dae4f0',
   },
   errorText: {
     color: 'red',

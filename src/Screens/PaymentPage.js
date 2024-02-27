@@ -87,7 +87,6 @@ const PaymentPage = ({ navigation }) => {
 
       const orderId = response.data.order;
       const razorpay_key_id = response.data.razorpay_key_id;
-      console.log("razorpay_key_id", orderId, razorpay_key_id)
       if (orderId) {
 
         await paynow(orderId, razorpay_key_id);
@@ -115,17 +114,27 @@ const PaymentPage = ({ navigation }) => {
       },
       theme: { color: '#0D5ADD' },
     };
-    console.log("final options", options)
 
     RazorpayCheckout.open(options)
-      .then(data => {
+      .then(async data => {
         try {
-          console.log(data, "data")
-          const response = api.post(`/payment`, {
+          const response = await api.post(`/payment`, {
             razorpay_payment_id: data.razorpay_payment_id,
             status_code: data.status_code,
             user_id: PerentsData && PerentsData?._id,
           });
+          PerentsData.payment_id = data.razorpay_payment_id;
+          console.log(PerentsData,data.razorpay_payment_id,PerentsData.payment_id, 'PerentsData')
+          const registerData = await api
+            .post(`/user_register`, {
+              headers: {
+                Accept: 'application/json',
+              },
+              PerentsData,
+            })
+            .then(res => {
+              console.log('register', res);
+            })
 
           AsyncStorage.removeItem('PerentsData').then(() => {
           });
@@ -257,8 +266,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    // backgroundColor: '#f1f1f1',
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
     height: '100%',
   },
 

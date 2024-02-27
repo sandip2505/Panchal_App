@@ -61,16 +61,16 @@ const FirstForm = () => {
       <ScrollView>
         <View style={styles.inputContainer}>
           <Picker
-            style={styles.input}
             selectedValue={locations}
             onValueChange={itemValue => setLocations(itemValue)}
+            style={styles.input}
             dropdownIconColor="gray"
             mode="dropdown">
             <Picker.Item
               label={initialLabel}
               value=""
               selectedValue
-              enabled={false}
+              enabled={true}
             />
             {options.map(option => (
               <Picker.Item
@@ -80,6 +80,7 @@ const FirstForm = () => {
               />
             ))}
           </Picker>
+          
         </View>
         <View>
           <Pressable style={styles.button} onPress={handleRegister}>

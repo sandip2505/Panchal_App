@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,20 +8,25 @@ import {
   Button,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import LoadingPage from './LoadingPage';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
-import { IMAGE_URL} from '@env';
+import { IMAGE_URL } from '@env';
 import api from './api';
 
-const Directory = ({navigation}) => {
+const Directory = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [dataFound, setDataFound] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [image, setImage] = useState(null);
   const [options, setOptions] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -33,7 +38,7 @@ const Directory = ({navigation}) => {
       setIsLoading(true);
       const response = await api.get('/location');
       setOptions(response.data);
-    
+
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -47,7 +52,7 @@ const Directory = ({navigation}) => {
         setIsLoading(true);
         let response;
         if (searchValue) {
-          response = await api.post('/villagebyuser',{searchValue: searchValue});
+          response = await api.post('/villagebyuser', { searchValue: searchValue });
         } else {
           response = await api.get('/user-list');
 
@@ -56,8 +61,13 @@ const Directory = ({navigation}) => {
         if (response.status === 200) {
           setIsLoading(true);
           const data = response.data;
-          setUsers(data);
-          setIsLoading(false);
+          console.log(data.length === 0)
+          if (data.length === 0) {
+            setDataFound(true)
+          } else {
+            setUsers(data);
+            setIsLoading(false);
+          }
         } else {
           console.log('user-list Request failed with status:', response.status);
           setIsLoading(false);
@@ -73,37 +83,70 @@ const Directory = ({navigation}) => {
   }, [searchValue]);
 
   const handleUserSelect = userId => {
-    navigation.navigate('FamilyList', {userId: userId});
+    navigation.navigate('FamilyList', { userId: userId });
   };
 
-  const renderUserItem = ({item}) => (
+  const handleImageClick = (image) => {
+    setImage(image)
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+  if (dataFound) {
+    return <View style={styles.blankcontainer}>
+      <Text style={styles.blank}>{t('nodatafound')}</Text>
+    </View>;
+  }
+
+  const renderUserItem = ({ item }) => (
     <>
       <Pressable onPress={() => handleUserSelect(item._id)}>
         <View style={styles.userItem}>
-          <View style={styles.userImageContainer}>
-            {item?.photo ? (
+          <TouchableOpacity onPress={() => handleImageClick(item?.photo)}>
+            <View style={styles.userImageContainer}>
+              {item?.photo ? (
+                <Image
+                  source={{ uri: `${IMAGE_URL}/${item?.photo}` }}
+                  alt="Profile"
+                  style={styles.userImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Image
+                  style={styles.userImage}
+                  source={require('../assets/3135715.png')}
+                  alt="profile"
+                  resizeMode="cover"
+                />
+              )}
+            </View>
+          </TouchableOpacity>
+          <Modal visible={modalVisible} transparent={true} onRequestClose={closeModal}>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+
               <Image
-                source={{uri: `${IMAGE_URL}/${item?.photo}`}}
-                alt="Profile"
-                style={styles.userImage}
-                resizeMode="cover"
+                source={{ uri: `${IMAGE_URL}/${image}` }}
+                alt="Full Image"
+                style={styles.fullImage}
+                resizeMode="contain"
               />
-            ) : (
-              <Image
-                style={styles.userImage}
-                source={require('../assets/3135715.png')}
-                alt="profile"
-                resizeMode="cover"
-              />
-            )}
-          </View>
+            </View>
+          </Modal>
           <View style={styles.userInfoContainer}>
             <Text
               style={
                 styles.userName
               }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
             <Text style={styles.userMobile}>
-              <Text style={{fontWeight: 'bold'}}>Mo.</Text> {item.mobile_number}
+              <Text style={{ fontWeight: 'bold' }}>Mo.</Text> {item.mobile_number}
             </Text>
           </View>
           <View>
@@ -138,20 +181,14 @@ const Directory = ({navigation}) => {
           ))}
         </Picker>
       </View>
-      {isLoading ? (
-       <LoadingPage />
-      ) : users && users.length ? (
-        <FlatList
-          data={users}
-          renderItem={renderUserItem}
-          keyExtractor={item => item._id}
-          contentContainerStyle={styles.userList}
-        />
-      ) : (
-        <View style={styles.blankcontainer}>
-          <Text style={styles.blank}>{t('nosearchdatafound')}</Text>
-        </View>
-      )}
+
+      <FlatList
+        data={users}
+        renderItem={renderUserItem}
+        keyExtractor={item => item._id}
+        contentContainerStyle={styles.userList}
+      />
+
     </View>
   );
 };
@@ -160,7 +197,7 @@ export default Directory;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
     height: '100%',
   },
 
@@ -244,5 +281,25 @@ const styles = StyleSheet.create({
     width: '90%',
     fontWeight: 'bold',
     textTransform: 'capitalize',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  fullImage: {
+    width: '80%',
+    height: '80%',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    padding: 10,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });

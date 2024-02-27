@@ -172,7 +172,7 @@ export default ContactUs;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#dae4f0',
     width: '100%',
     height: '100%',
   },
