@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRightWidth: 1,
     borderRightColor: 'gray',
-    flexBasis: '30%',
+    // flexBasis: '30%',
   },
   cardContent: {
     paddingLeft: 10,

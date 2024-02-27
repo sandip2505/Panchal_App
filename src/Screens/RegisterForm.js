@@ -307,18 +307,6 @@ const RegisterForm = ({ route }) => {
             {firstnameError && (
               <Text style={styles.error}>{firstnameError}</Text>
             )}
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-              ]}
-              placeholder={t('lastname')}
-              editable={false}
-              value='Panchal'
-            />
-            {firstnameError && (
-              <Text style={styles.error}>{firstnameError}</Text>
-            )}
 
             <TextInput
               placeholderTextColor="gray"
@@ -333,6 +321,16 @@ const RegisterForm = ({ route }) => {
             {middlenameError && (
               <Text style={styles.error}>{middlenameError}</Text>
             )}
+
+            <TextInput
+              placeholderTextColor="gray"
+              style={[
+                styles.input,
+              ]}
+              placeholder={t('lastname')}
+              editable={false}
+              value='Panchal'
+            />
 
           </View>
 
@@ -385,6 +383,7 @@ const RegisterForm = ({ route }) => {
               placeholder={t('mobile')}
               value={mobile_number}
               onChangeText={setMobileNumber}
+              maxLength={10}
               keyboardType="numeric"
             />
             {mobile_numberError && (
@@ -509,7 +508,7 @@ const RegisterForm = ({ route }) => {
               styles.gender,
               { borderColor: genderError ? '#ff0000' : 'gray' },
             ]}>
-              <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
+            <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
 
             <View style={styles.radioContainer}>
               <Text style={styles.radioLabel}>{t('male')}</Text>
@@ -612,8 +611,8 @@ const styles = StyleSheet.create({
 
   gender: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'start',
     justifyContent: 'space-between',
     padding: 5,
     marginTop: 16,

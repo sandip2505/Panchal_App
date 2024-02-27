@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { IMAGE_URL} from '@env';
+import { IMAGE_URL } from '@env';
 import api from './api';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -67,7 +67,7 @@ const HomePage = ({ navigation }) => {
       if (response.status === 200) {
         const data = response.data;
         setImage(data);
-        
+
       } else {
         return response.status
         console.log('slider Request failed with status:', response.status);
@@ -76,7 +76,7 @@ const HomePage = ({ navigation }) => {
       console.error('slider Request failed:', error.message);
     }
   };
- 
+
   return (
     <View style={styles.maindiv}>
       <ScrollView>
@@ -215,8 +215,8 @@ const HomePage = ({ navigation }) => {
               </View>
               <Text style={styles.boxText}> {t('news')} </Text>
             </TouchableOpacity>
-           
-        
+
+
           </View>
           <View style={styles.row}>
             {!isTestData && (
@@ -249,10 +249,23 @@ const HomePage = ({ navigation }) => {
               </View>
               <Text style={styles.boxText}> Test </Text>
             </TouchableOpacity>
-           
-        
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.box}
+              onPress={() => navigation.navigate('newLogin')}>
+              <View style={styles.circle}>
+                <Image
+                  style={styles.boxImage}
+                  source={require('../assets/news.png')}
+                  alt="search"
+                />
+              </View>
+              <Text style={styles.boxText}> newLogin </Text>
+            </TouchableOpacity>
+
+
           </View>
-          
+
         </View>
       </ScrollView>
     </View>
@@ -265,7 +278,7 @@ const styles = StyleSheet.create({
   maindiv: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#fdf1d3',
   },
 
   image: {
