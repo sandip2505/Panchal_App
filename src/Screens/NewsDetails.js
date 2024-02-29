@@ -7,7 +7,6 @@ const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 const NewsDetails = ({ route }) => {
-  console.log(route.params.item, route.params, "route.params")
   const _id = route.params.item;
   const [newsData, setNewsData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
