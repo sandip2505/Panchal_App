@@ -673,8 +673,7 @@ const styles = StyleSheet.create({
 
   gender: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     padding: 5,
     borderWidth: 1,

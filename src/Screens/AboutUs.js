@@ -1,9 +1,9 @@
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {WebView} from 'react-native-webview';
+import { StyleSheet, View, ActivityIndicator, ImageBackground } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { WebView } from 'react-native-webview';
 import LoadingPage from './LoadingPage';
 import api from './api';
-const AboutUs = ({navigation}) => {
+const AboutUs = ({ navigation }) => {
   const [aboutUs, setaboutUs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,9 +42,10 @@ const AboutUs = ({navigation}) => {
   `;
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../assets/bg3.jpg')} style={styles.container}>
+      {/* <View > */}
       {isLoading ? (
-       <LoadingPage />
+        <LoadingPage />
       ) : (
         aboutUs.map(item => (
           <WebView
@@ -56,7 +57,8 @@ const AboutUs = ({navigation}) => {
           />
         ))
       )}
-    </View>
+      {/* </View> */}
+    </ImageBackground>
   );
 };
 
@@ -64,12 +66,12 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#dae4f0',
+    // backgroundColor: '#dae4f0',
   },
   webViewContent: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
   },
 });
 

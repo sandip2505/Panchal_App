@@ -47,6 +47,8 @@ import FamilyList from './src/Screens/FamilyList';
 import PaymentSuccess from './src/Screens/PaymentSuccess';
 import PaymentFail from './src/Screens/PaymentFail';
 import LoginScreen from './src/Screens/LoginScreen';
+import ForgotPassword from './src/Screens/ForgotPassword';
+import ResetPassword from './src/Screens/ResetPassword';
 import ProfilePage from './src/Screens/ProfilePage';
 import FamilyDetailsPage from './src/Screens/FamilyDetailsPage';
 import SearchDirectory from './src/Screens/SearchDirectory';
@@ -117,11 +119,10 @@ function FirstScreenStack({ navigation }) {
   const GetFCMToken = async () => {
     try {
       let fcmtoken = await AsyncStorage.getItem("fcmtoken");
-      // console.log(fcmtoken, "old token");
+
       if (!fcmtoken) {
         const femtoken = await messaging().getToken();
         if (femtoken) {
-          // console.log(femtoken, "new token");
           await AsyncStorage.setItem("fcmtoken", femtoken);
         }
       }
@@ -294,6 +295,16 @@ function FirstScreenStack({ navigation }) {
         name="LoginScreen"
         component={LoginScreen}
         options={{ title: `${t('login')}` }}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+        options={{ title: `${t('Forgot Password')}` }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={ResetPassword}
+        options={{ title: `${t('Reset Password')}` }}
       />
       <Stack.Screen
         name="ChangePassword"

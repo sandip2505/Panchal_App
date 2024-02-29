@@ -4,6 +4,7 @@ import {
   View,
   ActivityIndicator,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
@@ -24,28 +25,28 @@ const Villages = ({ navigation }) => {
     fetchVillagesData();
   }, []);
 
-  
+
   const fetchVillagesData = async () => {
     try {
       setIsLoading(true);
       api.get('/location')
-      .then((response) => {
-        if (response.status === 200) {
-          setIsLoading(true);
-          const data = response.data;
-          setVillagesData(data);
+        .then((response) => {
+          if (response.status === 200) {
+            setIsLoading(true);
+            const data = response.data;
+            setVillagesData(data);
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
+            console.log('location Request failed with status:', response.status);
+
+          }
           setIsLoading(false);
-        } else {
-          setIsLoading(false);
-          console.log('location Request failed with status:', response.status);
-         
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        // Handle error
-        console.error(error,'Handle error');
-      });
+        })
+        .catch((error) => {
+          // Handle error
+          console.error(error, 'Handle error');
+        });
 
     } catch (error) {
       setIsLoading(false);
@@ -64,7 +65,7 @@ const Villages = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../assets/bg3.jpg')} style={styles.container}>
       {isLoading ? (
         <LoadingPage />
       ) : villagesData && villagesData.length ? (
@@ -80,7 +81,7 @@ const Villages = ({ navigation }) => {
           <Text style={styles.blank}>{t('nosearchdatafound')}</Text>
         </View>
       )}
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -89,12 +90,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: '#dae4f0',
+    // backgroundColor: '#dae4f0',
     width: '100%',
   },
 
   box: {
-    backgroundColor: '#edf9ff',
+    backgroundColor: '#fff',
     padding: 8,
     marginVertical: 5,
     borderRadius: 6,

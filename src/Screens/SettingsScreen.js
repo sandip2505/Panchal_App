@@ -1,7 +1,7 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert, ImageBackground } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import {showToast} from '../component/CustomToast';
+import { showToast } from '../component/CustomToast';
 import { useTranslation } from 'react-i18next';
 import i18n from '../context/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,7 +19,7 @@ const SettingsScreen = () => {
     i18n.changeLanguage(selectedLanguage).catch((error) => {
       console.error('Error changing language:', error);
     });
-   
+
   };
 
   useEffect(() => {
@@ -27,9 +27,7 @@ const SettingsScreen = () => {
       try {
         const storedLanguage = await AsyncStorage.getItem('selectedLanguage');
         if (storedLanguage) {
-          i18n.changeLanguage(storedLanguage).catch((error) => {
-            console.error('Error changing language:', error);
-          });
+          await i18n.changeLanguage(storedLanguage)
           setLanguage(storedLanguage);
         }
       } catch (error) {
@@ -41,9 +39,9 @@ const SettingsScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ImageBackground style={styles.container} source={require('../assets/bg3.jpg')} >
       <ScrollView>
-          <Text style={styles.heading}>{t('changeLanguage')}</Text>
+        <Text style={styles.heading}>{t('changeLanguage')}</Text>
         <View style={styles.inputContainer}>
           <Picker
             style={styles.input}
@@ -64,22 +62,24 @@ const SettingsScreen = () => {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#dae4f0',
+    // padding: 16,
+    // backgroundColor: '#dae4f0',
   },
   inputContainer: {
     height: 55,
-    borderWidth: 1,
-    borderColor: 'gray',
+    // borderWidth: 1,
+    backgroundColor: '#fff',
     borderRadius: 6,
+    elevation: 5,
     marginBottom: 16,
+    marginHorizontal: 15,
     justifyContent: 'center',
   },
   input: {
@@ -89,6 +89,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: 'black',
+    marginHorizontal: 15,
+    marginTop: 15,
+    marginBottom: 3,
   },
   button: {
     height: 50,
@@ -96,6 +99,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     flex: 1,
     alignItems: 'center',
+    marginHorizontal: 15,
     justifyContent: 'center',
   },
   btntext: {

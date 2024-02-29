@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,18 +8,22 @@ import {
   Button,
   TouchableOpacity,
   ImageBackground,
-  Linking,
+  Platform,
   Pressable,
+  KeyboardAvoidingView,
+  ScrollView,
+  SafeAreaView
 } from 'react-native';
 import api from './api';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {showToast} from '../component/CustomToast';
+import { showToast } from '../component/CustomToast';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import { useTranslation, initReactI18next } from 'react-i18next';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({ navigation }) {
   const [mobile_no, setmobile_no] = useState('');
   const [password, setPassword] = useState('');
   const [fcmtoken, setFcmtoken] = useState('');
@@ -32,13 +36,13 @@ export default function LoginScreen({navigation}) {
 
   useEffect(() => {
     GetFCMToken();
-  })
-  
+  }, [])
+
   const GetFCMToken = async () => {
     try {
       let fcmtoken = await AsyncStorage.getItem("fcmtoken");
       setFcmtoken(fcmtoken)
-      console.log(fcmtoken, "old token");
+
       if (!fcmtoken) {
         const femtoken = await messaging().getToken();
         if (femtoken) {
@@ -69,7 +73,7 @@ export default function LoginScreen({navigation}) {
           password: password,
           device_token: fcmtoken,
         });
-        
+
         const userData = JSON.stringify(response.data.user);
         const childData = JSON.stringify(response.data.childData);
         const villageData = JSON.stringify(response.data.villageData);
@@ -106,145 +110,152 @@ export default function LoginScreen({navigation}) {
   };
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../assets/login2.jpg')}
-        resizeMode="stretch"
-        style={styles.bgImg}>
-        <View style={styles.image}>
-          <EvilIcons name="user" size={200} color="#FFF" />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <View style={{marginBottom: 20}}>
-            <TextInput
-              style={[
-                styles.input,
-                {borderColor: mobileError ? '#ff0000' : 'gray'},
-                {shadowColor: mobileError ? '#ff0000' : 'black'},
-              ]}
-              placeholder={t('mobile')}
-              placeholderTextColor="gray"
-              onChangeText={setmobile_no}
-              keyboardType="numeric"
-              value={mobile_no}
-            />
-            {mobileError && <Text style={styles.error}>{mobileError}</Text>}
-          </View>
-
-          <View style={{marginBottom: 20}}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-              <TextInput
-                style={[
-                  styles.input,
-                  {
-                    borderColor: passwordError ? '#ff0000' : 'gray',
-                    shadowColor: passwordError ? '#ff0000' : 'black',
-                  },
-                ]}
-                placeholder={t('password')}
-                placeholderTextColor="gray"
-                onChangeText={setPassword}
-                value={password}
-                secureTextEntry={isVisible ? false : true}
+    <ImageBackground source={require('../assets/bg3.jpg')} style={{ flex: 1 }} resizeMode="cover">
+      <SafeAreaView>
+        <ScrollView keyboardShouldPersistTaps='always'>
+          <View style={styles.container}>
+            <View>
+              <Image
+                source={require('../assets/login.png')}
+                style={styles.logo}
+                alt="search"
               />
-              <Pressable
-                onPress={() => handleShowPassword()}
-                style={styles.passwordBtn}>
-                <Ionicons
-                  name={isVisible ? 'eye-off' : 'eye'}
-                  size={25}
-                  color="#777"
-                />
-              </Pressable>
             </View>
-            {passwordError && <Text style={styles.error}>{passwordError}</Text>}
-          </View>
 
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={handleLogin}
-            activeOpacity={0.6}>
-            <Text style={styles.loginText}>login</Text>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </View>
+            <View style={styles.containerBox}>
+              <Text style={styles.title}>Enter mobile number and password</Text>
+              <View style={styles.inputGroup}>
+                <View style={styles.inputView}>
+                  <TextInput placeholder='Mobile Number' placeholderTextColor="gray" onChangeText={setmobile_no} keyboardType="numeric" maxLength={10} style={[styles.inputText, { shadowColor: mobileError ? 'red' : 'black' }]} value={mobile_no} />
+                  {mobileError && <Text style={styles.error}>{mobileError}</Text>}
+
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput placeholder='Password' placeholderTextColor="gray" onChangeText={setPassword} style={[styles.inputText, { shadowColor: passwordError ? 'red' : 'black' }]}
+                    secureTextEntry={isVisible ? false : true}
+                    value={password}
+                  />
+                  <Pressable
+                    onPress={() => handleShowPassword()}
+                    style={styles.passwordBtn}
+                  >
+                    <Ionicons
+                      name={isVisible ? 'eye-off' : 'eye'}
+                      size={25}
+                      color="#777"
+                    />
+                  </Pressable>
+                  {passwordError && <Text style={styles.error}>{passwordError}</Text>}
+                </View>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.forgotParent}
+                onPress={() => navigation.navigate('ForgotPassword')}
+              >
+                <Text style={styles.forgotText}>Forgot password?</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={handleLogin}
+                activeOpacity={0.6}>
+                <Text style={styles.loginText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#fff', position: 'relative'},
-
-  bgImg: {
-    height: '100%',
-    width: '100%',
-    justifyContent: 'center',
-  },
-
-  image: {
+  container: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: '15%',
   },
-
-  inputContainer: {
-    width: '100%',
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    marginVertical: 30,
+  logo: {
+    width: 230,
+    height: 230,
+    marginVertical: 30
   },
-
-  input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 30,
-    color: 'black',
-    paddingHorizontal: 15,
+  containerBox: {
+    width: 350,
+    height: 320,
+    borderRadius: 25,
+    backgroundColor: '#ffffff',
+    display: 'flex',
+    alignItems: 'center',
+    padding: 5,
+    elevation: 7,
+    shadowColor: 'black',
+    margin: 15
+  },
+  title: {
+    color: '#000',
+    fontSize: 16,
+    marginTop: 20,
+    fontWeight: '500',
+    alignSelf: 'center'
+  },
+  inputGroup: {
+    width: '90%',
+    marginTop: 20,
+    display: 'flex',
+    gap: 10
+  },
+  inputText: {
     backgroundColor: '#fff',
-    shadowColor: 'black',
-    elevation: 5,
-    width: '100%',
-    height: 55,
-  },
-
-  forgot_button: {
-    height: 30,
-    marginBottom: 30,
-  },
-
-  loginBtn: {
-    height: 55,
-    backgroundColor: '#036bfc',
+    width: "100%",
     borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: '15%',
-    shadowColor: 'black',
+    paddingLeft: 15,
+    color: '#000',
     elevation: 5,
   },
-
   loginText: {
     color: '#f9f9f9',
     fontSize: 20,
     textTransform: 'capitalize',
-    fontWeight: '600',
+    fontWeight: '700',
   },
-
+  loginBtn: {
+    height: 50,
+    width: "90%",
+    backgroundColor: '#036bfc',
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: '5%',
+    shadowColor: 'black',
+    elevation: 5,
+  },
   passwordBtn: {
     position: 'absolute',
     right: '4%',
-    top: '29%',
+    top: '25%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  inputView: {
+    position: 'relative',
+  },
+  forgotParent: {
+    marginTop: 10,
+    marginEnd: 25,
+    alignSelf: 'flex-end'
+  },
+  forgotText: {
+    color: '#000',
+    textAlign: 'right',
+    fontWeight: '500',
+  },
   error: {
     color: '#ff0000',
-    fontSize: 15,
+    fontSize: 13,
     textAlign: 'right',
-    paddingRight: 20,
-    paddingVertical: 2,
+    paddingRight: 10,
+    paddingTop: 2
   },
 });

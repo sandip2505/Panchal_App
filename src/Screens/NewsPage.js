@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, FlatList, StyleSheet, Image, Text, View, Alert, TouchableOpacity } from 'react-native';
+import { Animated, FlatList, StyleSheet, Image, Text, View, Alert, TouchableOpacity, ImageBackground } from 'react-native';
 import LoadingPage from './LoadingPage';
 import api from './api';
 import { IMAGE_URL } from '@env';
@@ -74,7 +74,7 @@ export default function NewsPage({ navigation }) {
     const formattedTime = `${hours}:${minutes} ${ampm}`;
 
     return `${day} ${month} ${year} ${formattedTime}`;
-};
+  };
 
   const NewsDetails = (item) => {
     const { _id } = item;
@@ -85,12 +85,12 @@ export default function NewsPage({ navigation }) {
     let words = text.split(' ');
 
     // Check if the number of words is more than 10
-    if (words.length > 10) {
+    if (words.length > 15) {
       // Remove words after the 10th word
-      words = words.slice(0, 20);
+      words = words.slice(0, 15);
 
       // Add ellipsis
-      words[19] += '...';
+      words[14] += '...';
     }
 
     let result = words.join(' ');
@@ -107,44 +107,46 @@ export default function NewsPage({ navigation }) {
     </View>;
   }
   return (
-    <View style={styles.container}>
-      <View style={{}}>
-        <FlatList
-          style={styles.subContainer}
-          data={newsData}
-          keyExtractor={item => item._id.toString()}
-          renderItem={({ item }) => {
+    <ImageBackground source={require('../assets/bg3.jpg')} style={{ flex: 1 }} resizeMode="cover" >
+      <View style={styles.container}>
+        <View style={{ marginTop: 10 }}>
+          <FlatList
+            data={newsData}
+            keyExtractor={item => item._id.toString()}
+            renderItem={({ item }) => {
 
-            return (
-              <TouchableOpacity onPress={() => NewsDetails(item)} activeOpacity={1}>
-                <View style={styles.card}>
-                  <View style={styles.flexImage}>
-                    <View style={styles.cardImage}>
-                      <Image width={100} height={100} source={{ uri: `${IMAGE_URL}/${item?.image}` }} />
-                    </View>
-                    <View style={styles.cardContent}>
-                      <Text style={styles.date}>{formatCreatedAt(item.created_at)}</Text>
-                      <Text style={styles.cardTitle}>{addEllipsisAfterTenWords(item.title)}</Text>
+              return (
+                <TouchableOpacity onPress={() => NewsDetails(item)} activeOpacity={0.9} style={styles.subContainer}>
+                  <View style={styles.card}>
+                    <View style={styles.flexImage}>
+
+
+                      <View style={styles.cardImage}>
+                        <Image width={100} height={100} source={{ uri: `${IMAGE_URL}/${item?.image}` }} />
+                      </View>
+                      <View style={styles.cardContent}>
+                        <Text style={styles.date}>{formatCreatedAt(item.created_at)}</Text>
+                        <Text style={styles.cardTitle}>{addEllipsisAfterTenWords(item.title)}</Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#dae4f0',
     height: '100%',
   },
   subContainer: {
     paddingHorizontal: '4%',
-    paddingBottom: 30,
+    paddingBottom: 2,
   },
 
   card: {
@@ -153,8 +155,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 10,
     overflow: 'hidden',
-    borderColor: 'gray',
-    borderWidth: 1,
     shadowColor: 'black',
     elevation: 5,
 
@@ -168,21 +168,16 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     height: '100%',
-    borderRightWidth: 1,
-    borderRightColor: 'gray',
-    // flexBasis: '30%',
   },
   cardContent: {
-    paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 5,
-    paddingTop: 5,
+    paddingVertical: 5,
     flexBasis: '70%',
-
   },
   cardTitle: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 14,
+    fontFamily: 'arial',
+    fontWeight: '600',
     color: 'black',
   },
   date: {

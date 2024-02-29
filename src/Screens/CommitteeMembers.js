@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
 
   MemberContainer: {
-    backgroundColor: '#edf9ff',
+    backgroundColor: '#fff',
     padding: 8,
     margin: 6,
     borderRadius: 8,

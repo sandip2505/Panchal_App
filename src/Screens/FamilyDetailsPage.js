@@ -308,12 +308,9 @@ const styles = StyleSheet.create({
     top: 7,
   },
   DeleteIcon: {
-    //  : 'absolute',
-    // display: "flex",
-    // justifyContent: "end",
+    position: 'absolute',
     right: 7,
-    top: 7,
-    left: 280,
+    bottom: 7,
   },
 
   FamilyName: {

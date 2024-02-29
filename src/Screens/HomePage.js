@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  ImageBackground
 } from 'react-native';
 import { IMAGE_URL } from '@env';
 import api from './api';
@@ -78,182 +79,171 @@ const HomePage = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.maindiv}>
-      <ScrollView>
-        <View style={{ height: sliderHeight, overflow: 'hidden' }}>
-          <SwiperFlatList
-            autoplay
-            autoplayDelay={2}
-            autoplayLoop
-            showPagination
-            autoplayLoopKeepAnimation
-            paginationStyle={{
-              padding: 10,
-              alignItems: 'center',
-            }}
-            paginationStyleItemActive={{
-              width: 15,
-              height: 8,
-              backgroundColor: '#383dc9',
-            }}
-            paginationStyleItemInactive={{
-              width: 8,
-              height: 8,
-              backgroundColor: '#f5f5f5',
-              opacity: 0.4,
-            }}
-            data={image}
-            renderItem={({ item, index }) =>
-              item ? (
-                <View key={index} style={{ width, height: sliderHeight }}>
-                  <Image
-                    style={{ width, height: sliderHeight }}
-                    source={{ uri: `${IMAGE_URL}/${item.image}` }}
-                    alt={`image-${index}`}
-                  />
-                </View>
-              ) : (
-                <View style={{ width, height: sliderHeight }}>
-                  <Image
-                    style={{ width, height: sliderHeight }}
-                    source={require('../assets/slide.jpeg')}
-                    alt={`image`}
-                  />
-                </View>
-              )
-            }
-          />
-        </View>
-
-        <View style={styles.container}>
-          <View style={styles.row}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('AboutUs')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/about.png')}
-                  alt="about"
-                />
-              </View>
-              <Text style={styles.boxText}>{t('aboutUs')}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => {
-                navigation.navigate('Directory');
-              }}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/directory.png')}
-                  alt="directory"
-                />
-              </View>
-              <Text style={styles.boxText}>{t('directory')}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('Villages')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/village2.png')}
-                  alt="villages"
-                />
-              </View>
-              <Text style={styles.boxText}>{t('villages')}</Text>
-            </TouchableOpacity>
+    <ImageBackground source={require('../assets/bg3.jpg')}>
+      <View style={styles.maindiv}>
+        <ScrollView>
+          <View style={{ height: sliderHeight }}>
+            <SwiperFlatList
+              autoplay
+              autoplayDelay={2}
+              autoplayLoop
+              showPagination
+              autoplayLoopKeepAnimation
+              paginationStyle={{
+                padding: 10,
+                alignItems: 'center',
+              }}
+              paginationStyleItemActive={{
+                width: 15,
+                height: 8,
+                backgroundColor: '#383dc9',
+              }}
+              paginationStyleItemInactive={{
+                width: 8,
+                height: 8,
+                backgroundColor: '#f5f5f5',
+                opacity: 0.4,
+              }}
+              data={image}
+              renderItem={({ item, index }) =>
+                item ? (
+                  <View key={index} style={{ width, height: sliderHeight }}>
+                    <Image
+                      style={{ width, height: sliderHeight }}
+                      source={{ uri: `${IMAGE_URL}/${item.image}` }}
+                      alt={`image-${index}`}
+                    />
+                  </View>
+                ) : (
+                  <View style={{ width, height: sliderHeight }}>
+                    <Image
+                      style={{ width, height: sliderHeight }}
+                      source={require('../assets/slide.jpeg')}
+                      alt={`image`}
+                    />
+                  </View>
+                )
+              }
+            />
           </View>
 
-          <View style={styles.row}>
-            {!isTestData && (
+          <View style={styles.container}>
+            <View style={styles.row}>
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.box}
-                onPress={() => navigation.navigate('FirstForm')}>
+                onPress={() => navigation.navigate('AboutUs')}>
                 <View style={styles.circle}>
                   <Image
                     style={styles.boxImage}
-                    source={require('../assets/register.png')}
-                    alt="register"
+                    source={require('../assets/about.png')}
+                    alt="about"
                   />
                 </View>
-                <Text style={styles.boxText}>{t('register')}</Text>
+                <Text style={styles.boxText}>{t('aboutUs')}</Text>
               </TouchableOpacity>
-            )}
 
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('SearchDirectory')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/search.png')}
-                  alt="search"
-                />
-              </View>
-              <Text style={styles.boxText}> {t('search')} </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('NewsPage')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/news.png')}
-                  alt="search"
-                />
-              </View>
-              <Text style={styles.boxText}> {t('news')} </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.box}
+                onPress={() => {
+                  navigation.navigate('Directory');
+                }}>
+                <View style={styles.circle}>
+                  <Image
+                    style={styles.boxImage}
+                    source={require('../assets/directory.png')}
+                    alt="directory"
+                  />
+                </View>
+                <Text style={styles.boxText}>{t('directory')}</Text>
+              </TouchableOpacity>
 
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.box}
+                onPress={() => navigation.navigate('Villages')}>
+                <View style={styles.circle}>
+                  <Image
+                    style={styles.boxImage}
+                    source={require('../assets/village2.png')}
+                    alt="villages"
+                  />
+                </View>
+                <Text style={styles.boxText}>{t('villages')}</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.row}>
+              {!isTestData && (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.box}
+                  onPress={() => navigation.navigate('FirstForm')}>
+                  <View style={styles.circle}>
+                    <Image
+                      style={styles.boxImage}
+                      source={require('../assets/register.png')}
+                      alt="register"
+                    />
+                  </View>
+                  <Text style={styles.boxText}>{t('register')}</Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.box}
+                onPress={() => navigation.navigate('SearchDirectory')}>
+                <View style={styles.circle}>
+                  <Image
+                    style={styles.boxImage}
+                    source={require('../assets/search.png')}
+                    alt="search"
+                  />
+                </View>
+                <Text style={styles.boxText}> {t('search')} </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.box}
+                onPress={() => navigation.navigate('NewsPage')}>
+                <View style={styles.circle}>
+                  <Image
+                    style={styles.boxImage}
+                    source={require('../assets/news.png')}
+                    alt="search"
+                  />
+                </View>
+                <Text style={styles.boxText}> {t('news')} </Text>
+              </TouchableOpacity>
+
+
+            </View>
+            {/* <View style={styles.row}>
+
+
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.box}
+                onPress={() => navigation.navigate('TestPage')}>
+                <View style={styles.circle}>
+                  <Image
+                    style={styles.boxImage}
+                    source={require('../assets/news.png')}
+                    alt="search"
+                  />
+                </View>
+                <Text style={styles.boxText}> Test </Text>
+              </TouchableOpacity>
+
+            </View> */}
 
           </View>
-          <View style={styles.row}>
-            
+        </ScrollView>
+      </View>
+    </ImageBackground>
 
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('TestPage')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/news.png')}
-                  alt="search"
-                />
-              </View>
-              <Text style={styles.boxText}> Test </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.box}
-              onPress={() => navigation.navigate('newLogin')}>
-              <View style={styles.circle}>
-                <Image
-                  style={styles.boxImage}
-                  source={require('../assets/news.png')}
-                  alt="search"
-                />
-              </View>
-              <Text style={styles.boxText}> newLogin </Text>
-            </TouchableOpacity>
-
-
-          </View>
-
-        </View>
-      </ScrollView>
-    </View>
   );
 };
 
@@ -263,7 +253,7 @@ const styles = StyleSheet.create({
   maindiv: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#fdf1d3',
+    // backgroundColor: '#fdf1d3',
   },
 
   image: {
