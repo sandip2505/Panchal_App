@@ -1,99 +1,60 @@
-import React, { Component } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import DropdownAlert, { DropdownAlertProps } from 'react-native-dropdownalert';
+import NotificationAndroid from '../context/NotificationAndroid';
 
-export default class TestPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-    };
-  }
 
-  handleDownload = () => {
-    this.setState({ isLoading: true });
-
-    // Simulate a 10-second loading process
-    setTimeout(() => {
-      // Set isLoading to false after 10 seconds
-      this.setState({ isLoading: false });
-
-      // Perform your download logic here (e.g., call a function to download the file)
-      // Replace the following line with your actual download logic
-      console.log('Download successful');
-    }, 10000);
+function App() {
+  const defaultSelected = {
+    name: 'Android notification',
+    color: '#1F89C7',
+    alertProps: {
+      dismissInterval: 0,
+      updateStatusBar: false,
+      children: <NotificationAndroid />,
+    },
+  };
+  const [selected, setSelected] = useState(defaultSelected);
+  useEffect(() => {
+    // handleShowAlert();
+  })
+  const handleShowAlert = () => {
+    alert.current(selected.alertProps);
   };
 
-  render() {
-    const { isLoading } = this.state;
-
-    return (
-      <View style={styles.details}>
-        <View style={styles.row}>
-          <Text style={styles.label}>invoice :</Text>
-          <TouchableOpacity
-            style={[styles.dlfamilybtn, isLoading && styles.disabledButton]}
-            onPress={this.handleDownload}
-            activeOpacity={0.6}
-            disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <ActivityIndicator size="small" color="#fff" />
-              </>
-            ) : (
-              <Text style={styles.dlbtntext}>Download</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
+  return (
+    <View style={styles.view}>
+      <TouchableOpacity
+        style={[styles.item, { backgroundColor: selected.color }]}
+        onPress={handleShowAlert}
+      >
+        <Text style={styles.name}>Android notification</Text>
+      </TouchableOpacity>
+ 
+      <DropdownAlert alert={(func) => (alert.current = func)} {...selected.alertProps} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-
-  disabledButton: {
-    backgroundColor: '#68b300',
-  },
-
-  details: {
-    backgroundColor: '#edf9ff',
-    borderRadius: 8,
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    marginVertical: 5,
-    marginHorizontal: 15,
-    shadowColor: 'black',
-    elevation: 3,
-  },
-
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-
-  label: {
-    alignItems: 'flex-start',
-    flexBasis: '40%',
-    fontSize: 17,
-    color: 'black',
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-
-  dlfamilybtn: {
-    height: 35,
-    backgroundColor: '#68b300',
-    borderRadius: 6,
-    alignItems: 'center',
+  view: {
+    flex: 1,
     justifyContent: 'center',
-    shadowColor: 'gray',
-    elevation: 3,
-    width: '48%',
+    alignItems: 'center',
+    backgroundColor: '#F4F3E9',
   },
-
-  dlbtntext: {
-    color: 'white',
-    fontSize: 20,
+  item: {
+    padding: 12,
+    borderRadius: 8,
+    borderColor: 'black',
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  name: {
+    fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'whitesmoke',
   },
-})
+});
+
+export default App;

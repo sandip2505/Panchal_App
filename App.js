@@ -14,7 +14,6 @@ import {
   PermissionsAndroid
 } from 'react-native';
 
-// import { PermissionsAndroid } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -65,7 +64,8 @@ import api from './src/Screens/api';
 import PushNotification from 'react-native-push-notification';
 import { useTranslation, initReactI18next } from 'react-i18next';
 import ForgotPassword from './src/Screens/ForgotPassword';
-
+import DropdownAlert, { DropdownAlertProps } from 'react-native-dropdownalert';
+import NotificationAndroid from './src/context/NotificationAndroid';
 
 
 const Stack = createNativeStackNavigator();
@@ -83,9 +83,15 @@ function FirstScreenStack({ navigation }) {
         console.log('Notification received:', notification);
 
         if (notification.userInteraction) {
-
           const _id = notification.data.newsId || notification.userData.newsId || notification.data._id;
-          navigation.navigate('NewsDetails', { item: _id });
+
+          const isForeground = notification.foreground;
+
+          if (isForeground) {
+            console.log('App is in the foreground');
+          } else {
+            navigation.navigate('NewsDetails', { item: _id });
+          }
 
           console.log('Notification pressed!', _id);
         }
@@ -95,18 +101,13 @@ function FirstScreenStack({ navigation }) {
 
 
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('FCM Message Data:', remoteMessage);
-      Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
+      console.log(remoteMessage.notification.title)
+      if (remoteMessage.notification.title) {
+        console.log("notification received on unsubscribe ")
 
-      const newsTitle = remoteMessage.data.title || (remoteMessage.notification && remoteMessage.notification.title);
-      const newsDescription = remoteMessage.data.description || (remoteMessage.notification && remoteMessage.notification.body);
-      const imageUrl = remoteMessage.data.image || (remoteMessage.notification && remoteMessage.notification.imageUrl);
-      const newsId = remoteMessage.data.newsId;
-      console.log(newsTitle, newsDescription, imageUrl, newsId, "Before notifyNewsAdded")
-      PushNotification.getChannels(function (channel_ids) {
-        console.log(channel_ids, "channel_ids");
-      });
-      notifyNewsAdded(newsTitle, newsDescription, imageUrl, newsId);
+        Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
+      }
+
     });
 
     return () => {
@@ -137,40 +138,14 @@ function FirstScreenStack({ navigation }) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
       );
-      console.log(granted, 'granted >>', PermissionsAndroid.RESULTS.GRANTED)
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Notification permission granted');
       } else {
-        console.log('Notification permission denied');
       }
     } catch (error) {
       console.error('Error requesting permission:', error);
     }
   };
 
-
-
-  const notifyNewsAdded = (newsTitle, newsDescription, imageUrl, newsId) => {
-    console.log(newsTitle, newsDescription, imageUrl, newsId, "notifyNewsAdded")
-    PushNotification.localNotification({
-      title: newsTitle,
-      message: newsDescription,
-      largeIcon: imageUrl,
-      userData: { newsId, newsTitle, newsDescription, imageUrl },
-      invokeApp: true,
-      onPress: () => {
-        console.log('Notification pressed! on notifyNewsAdded');
-        navigation.navigate('NewsDetails', { item: newsId });
-      },
-    });
-
-    PushNotification.localNotificationSchedule({
-      title: 'Notification Sent',
-      message: 'News notification sent successfully!',
-      date: new Date(Date.now()),
-    });
-
-  };
 
   return (
     <Stack.Navigator

@@ -29,9 +29,11 @@ const ProfilePage = () => {
   const navigation = useNavigation();
   const [parentsData, setParentsData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDownLoading, setIsDownLoading] = useState(false);
   const [villageData, setVillageData] = useState([]);
   const [image, setImage] = useState(null);
   const { t } = useTranslation();
+
 
   // Get items from asyncStorage
   useEffect(() => {
@@ -139,6 +141,8 @@ const ProfilePage = () => {
   };
 
   const downloadFile = (id) => {
+    setIsDownLoading(true);
+
     const { config, fs } = RNFetchBlob;
     const date = new Date();
     const fileDir = fs.dirs.DownloadDir;
@@ -167,21 +171,11 @@ const ProfilePage = () => {
           t('downloadsuccessfully'),
           2000,
         );
+        setIsDownLoading(false);
+
       });
   };
-  handleDownload = () => {
-    this.setState({ isLoading: true });
 
-    // Simulate a 10-second loading process
-    setTimeout(() => {
-      // Set isLoading to false after 10 seconds
-      this.setState({ isLoading: false });
-
-      // Perform your download logic here (e.g., call a function to download the file)
-      // Replace the following line with your actual download logic
-      console.log('Download successful');
-    }, 10000);
-  };
 
   return (
     <View style={styles.maincontainer}>
@@ -301,23 +295,23 @@ const ProfilePage = () => {
             </View>
           </View>
           <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>invoice :</Text>
-              <TouchableOpacity
-                style={[styles.dlfamilybtn, isLoading && styles.disabledButton]}
-                onPress={this.handleDownload}
-                activeOpacity={0.6}
-                disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <ActivityIndicator size="small" color="#fff" />
-                  </>
-                ) : (
-                  <Text style={styles.dlbtntext}>Download</Text>
-                )}
-              </TouchableOpacity>
-            </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>{t('invoice')} :</Text>
+            <TouchableOpacity
+              style={[styles.dlfamilybtn, isDownLoading && styles.disabledButton]}
+              onPress={() => requestStoragePermission(parentsData?._id)}
+              activeOpacity={0.6}
+              disabled={isDownLoading}>
+              {isDownLoading ? (
+                <>
+                  <ActivityIndicator size="small" color="#fff" />
+                </>
+              ) : (
+                <Text style={styles.dlbtntext}>{t('download')}</Text>
+              )}
+            </TouchableOpacity>
           </View>
+        </View>
         </ScrollView>
 
         <View style={styles.btncontainer}>
