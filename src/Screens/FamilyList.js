@@ -9,22 +9,22 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import { IMAGE_URL} from '@env';
+import React, { useState, useEffect } from 'react';
+import { IMAGE_URL } from '@env';
 import AgeCount from '../component/AgeCount';
 import moment from 'moment';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import api from './api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
-const FamilyList = ({navigation, route}) => {
-  const {userId} = route.params;
+const FamilyList = ({ navigation, route }) => {
+  const { userId } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [ChildData, setChildData] = useState([]);
   const [mainData, setmainData] = useState([]);
   const [villageData, setVillageData] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(0);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -33,19 +33,20 @@ const FamilyList = ({navigation, route}) => {
 
   const toggleDropdown = user => {
     setSelectedUser(selectedUser === user ? null : user);
-    setIsDropdownOpen(selectedUser === user ? null : !isDropdownOpen);
+    setIsDropdownOpen(selectedUser === user ? null : user._id);
   };
 
   const fetchVillagesData = async () => {
     try {
       setIsLoading(true);
       const response = await api.get(`/viewUser/${userId}`);
-      
+
       if (response.status === 200) {
         setIsLoading(true);
         const data = response.data;
         setChildData(response.data.allUser);
         setmainData(response.data.User);
+        console.log(mainData[0], "mainData");
         setVillageData(response.data.villageData);
         setIsLoading(false);
       } else {
@@ -65,16 +66,6 @@ const FamilyList = ({navigation, route}) => {
       {mainData.length > 0 && (
         <View style={styles.MainContainer}>
           <View style={styles.mainItem}>
-            {/* <Image
-              source={
-                mainData[0]?.photo
-                  ? {uri: `${IMAGE_URL}/${mainData[0]?.photo}`}
-                  : require('../assets/3135715.png')
-              }
-              alt="Profile"
-              style={styles.mainImage}
-              resizeMode="cover"
-            /> */}
             <View style={styles.mainDetailsContainer}>
               <Text style={styles.mainName}>
                 {mainData[0]?.firstname} {mainData[0]?.lastname}
@@ -139,7 +130,7 @@ const FamilyList = ({navigation, route}) => {
       )}
 
       {isLoading ? (
-        <View style={{paddingTop: 20}}>
+        <View style={{ paddingTop: 20 }}>
           <ActivityIndicator size="large" color="#00a9ff" />
         </View>
       ) : ChildData.length > 0 ? (
@@ -165,7 +156,7 @@ const FamilyList = ({navigation, route}) => {
                       {user.firstname} {user.lastname} ( {user.relationship} )
                     </Text>
                     <MaterialCommunityIcons
-                      name={isDropdownOpen ? 'chevron-right' : 'chevron-down'}
+                      name={isDropdownOpen == user._id ? 'chevron-right' : 'chevron-down'}
                       size={30}
                       color="#666"
                     />
@@ -247,7 +238,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 8,
     shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
@@ -305,7 +296,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 8,
     shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,

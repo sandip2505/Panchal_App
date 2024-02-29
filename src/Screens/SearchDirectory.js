@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,17 +9,18 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  ImageBackground,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import LoadingPage from './LoadingPage';
 
-import { IMAGE_URL} from '@env';
-import {ActivityIndicator} from 'react-native-paper';
+import { IMAGE_URL } from '@env';
+import { ActivityIndicator } from 'react-native-paper';
 import api from './api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
-const SearchDirectory = ({navigation}) => {
+const SearchDirectory = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
@@ -35,7 +36,7 @@ const SearchDirectory = ({navigation}) => {
         setIsLoading(true);
         let response;
         if (searchValue) {
-          response = await api.post('/search',{searchValue: searchValue,})
+          response = await api.post('/search', { searchValue: searchValue, })
         } else {
           response = await api.get('/user-list');
         }
@@ -69,14 +70,14 @@ const SearchDirectory = ({navigation}) => {
   };
 
   const handleUserSelect = userId => {
-    navigation.navigate('FamilyList', {userId: userId});
+    navigation.navigate('FamilyList', { userId: userId });
   };
 
-  const renderUserItem = ({item}) => (
+  const renderUserItem = ({ item }) => (
     <>
       <Pressable onPress={() => handleUserSelect(item._id)}>
         <View style={styles.userItem}>
-        <TouchableOpacity onPress={() => handleImageClick(item?.photo)}>
+          <TouchableOpacity onPress={() => handleImageClick(item?.photo)}>
             <View style={styles.userImageContainer}>
               {item?.photo ? (
                 <Image
@@ -120,7 +121,7 @@ const SearchDirectory = ({navigation}) => {
               <Text style={styles.userMobile}>{item?.mobile_number}</Text>
             </View>
           </View>
-          <View style={{flexBasis: '10%'}}>
+          <View style={{ flexBasis: '10%' }}>
             <MaterialCommunityIcons
               name="chevron-right"
               size={30}
@@ -133,52 +134,54 @@ const SearchDirectory = ({navigation}) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          value={searchValue}
-          placeholder={t('searchhere')}
-          placeholderTextColor="gray"
-          style={styles.searchInput}
-          onChangeText={setSearchValue}
-        />
-        <View style={styles.iconcontainer}>
-          <Ionicons name="search" size={20} style={styles.searchicon} />
-        </View>
-      </View>
-      {isLoading ? (
-        <LoadingPage />
-      ) : users.searchData ? (
-        <FlatList
-          data={users.searchData}
-          renderItem={renderUserItem}
-          keyExtractor={(item, index) => item._id + index.toString()}
-          contentContainerStyle={styles.userList}
-        />
-      ) : users && users.length ? (
-        <FlatList
-          data={users}
-          renderItem={renderUserItem}
-          keyExtractor={(item, index) => item._id + index.toString()}
-          contentContainerStyle={styles.userList}
-        />
-      ) : (
-        <View style={styles.blankcontainer}>
-          <Image
-            source={require('../assets/EmptySearch.png')}
-            alt="Empty"
-            style={styles.EmptySearchImage}
+    <ImageBackground source={require('../assets/bg3.jpg')}>
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            value={searchValue}
+            placeholder={t('searchhere')}
+            placeholderTextColor="gray"
+            style={styles.searchInput}
+            onChangeText={setSearchValue}
           />
-          <Text style={styles.blank}>{t('nosearchdatafound')}</Text>
+          <View style={styles.iconcontainer}>
+            <Ionicons name="search" size={20} style={styles.searchicon} />
+          </View>
         </View>
-      )}
-    </View>
+        {isLoading ? (
+          <LoadingPage />
+        ) : users.searchData ? (
+          <FlatList
+            data={users.searchData}
+            renderItem={renderUserItem}
+            keyExtractor={(item, index) => item._id + index.toString()}
+            contentContainerStyle={styles.userList}
+          />
+        ) : users && users.length ? (
+          <FlatList
+            data={users}
+            renderItem={renderUserItem}
+            keyExtractor={(item, index) => item._id + index.toString()}
+            contentContainerStyle={styles.userList}
+          />
+        ) : (
+          <View style={styles.blankcontainer}>
+            <Image
+              source={require('../assets/EmptySearch.png')}
+              alt="Empty"
+              style={styles.EmptySearchImage}
+            />
+            <Text style={styles.blank}>{t('nosearchdatafound')}</Text>
+          </View>
+        )}
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#dae4f0',
+    // backgroundColor: '#dae4f0',
     height: '100%',
     width: '100%',
   },
@@ -187,9 +190,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     margin: '6%',
-    borderWidth: 1,
-    borderColor: '#00a9ff',
-    paddingHorizontal: 5,
+    elevation: 5,
+    backgroundColor: "#fff",
+    paddingHorizontal: 3,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
   },
 
   userItem: {
-    backgroundColor: '#edf9ff',
+    backgroundColor: '#fff',
     padding: 8,
     marginVertical: 6,
     borderRadius: 8,

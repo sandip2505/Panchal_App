@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Modal,
+  ImageBackground,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -162,7 +163,7 @@ const Directory = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../assets/bg3.jpg')} style={styles.container}>
       <View style={styles.inputContainer}>
         <Picker
           selectedValue={searchValue}
@@ -189,7 +190,7 @@ const Directory = ({ navigation }) => {
         contentContainerStyle={styles.userList}
       />
 
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -197,7 +198,7 @@ export default Directory;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#dae4f0',
+    // backgroundColor: '#dae4f0',
     height: '100%',
   },
 
@@ -212,8 +213,10 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     height: 55,
-    borderWidth: 1,
-    borderColor: 'gray',
+    elevation:5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    backgroundColor: '#fff',
     borderRadius: 6,
     marginBottom: 16,
     justifyContent: 'center',
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
   },
 
   userItem: {
-    backgroundColor: '#edf9ff',
+    backgroundColor: '#fff',
     padding: 8,
     marginVertical: 6,
     borderRadius: 8,

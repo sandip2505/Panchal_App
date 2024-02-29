@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   Pressable,
+  ImageBackground,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
@@ -215,13 +216,13 @@ const RegisterForm = ({ route }) => {
           state: state,
           city: city,
           pincode: pincode,
-          gender:gender,
+          gender: gender,
           education: education,
           address: address,
           job: job,
           marital_status: marital_status,
           device_token: fcmtoken,
-          payment_id:null,
+          payment_id: null,
         }
         console.log(PerentsData, "PerentsData")
         AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
@@ -240,7 +241,7 @@ const RegisterForm = ({ route }) => {
         setJob('');
         setMaritalStatus('');
         navigation.navigate('PaymentPage');
-       
+
         // const response = await api
         //   .post(`/user_regisster`, {
         //     headers: {
@@ -252,7 +253,7 @@ const RegisterForm = ({ route }) => {
 
         //     const userId = res.data._id;
         //     const PerentsData = res.data;
-          
+
         //     if (res.data.mobileError === 'Mobile number already register') {
         //       showToast(
         //         'error',
@@ -308,7 +309,7 @@ const RegisterForm = ({ route }) => {
     try {
       let fcmtoken = await AsyncStorage.getItem("fcmtoken");
       setFcmtoken(fcmtoken)
-      console.log(fcmtoken, "old token");
+
       if (!fcmtoken) {
         const femtoken = await messaging().getToken();
         if (femtoken) {
@@ -323,25 +324,10 @@ const RegisterForm = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* <Text style={styles.title}>Register Form</Text> */}
-
+    <ImageBackground source={require('../assets/bg3.jpg')} style={{ flex: 1 }} resizeMode="cover" >
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={styles.childContainer}>
           <View>
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                { borderColor: firstnameError ? '#ff0000' : 'gray' },
-              ]}
-              placeholder={t('firstname')}
-              value={firstname}
-              onChangeText={setFirstname}
-            />
-            {firstnameError && (
-              <Text style={styles.error}>{firstnameError}</Text>
-            )}
             <TextInput
               placeholderTextColor="gray"
               style={[
@@ -351,6 +337,16 @@ const RegisterForm = ({ route }) => {
               editable={false}
               value='Panchal'
             />
+            <TextInput
+              placeholderTextColor="gray"
+              style={[
+                styles.input,
+                { shadowColor: firstnameError ? '#ff0000' : 'gray' },
+              ]}
+              placeholder={t('firstname')}
+              value={firstname}
+              onChangeText={setFirstname}
+            />
             {firstnameError && (
               <Text style={styles.error}>{firstnameError}</Text>
             )}
@@ -358,8 +354,9 @@ const RegisterForm = ({ route }) => {
             <TextInput
               placeholderTextColor="gray"
               style={[
-                styles.input,
-                { borderColor: middlenameError ? '#ff0000' : 'gray' },
+                styles.input, {
+                  shadowColor: middlenameError ? '#ff0000' : 'gray'
+                },
               ]}
               placeholder={t('middlename')}
               value={middlename}
@@ -369,12 +366,13 @@ const RegisterForm = ({ route }) => {
               <Text style={styles.error}>{middlenameError}</Text>
             )}
 
+
           </View>
 
           <TextInput
             style={[
               styles.input,
-              { borderColor: passwordError ? '#ff0000' : 'gray' },
+              { shadowColor: passwordError ? '#ff0000' : 'gray' },
             ]}
             placeholder={t('password')}
             placeholderTextColor="gray"
@@ -389,7 +387,7 @@ const RegisterForm = ({ route }) => {
               <TextInput
                 style={[
                   styles.input,
-                  { borderColor: dobError ? '#ff0000' : 'gray' },
+                  { shadowColor: dobError ? '#ff0000' : 'gray' },
                 ]}
                 placeholderTextColor="gray"
                 placeholder={t('dateofbirth')}
@@ -415,11 +413,12 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                { borderColor: mobile_numberError ? '#ff0000' : 'gray' },
+                { shadowColor: mobile_numberError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('mobile')}
               value={mobile_number}
               onChangeText={setMobileNumber}
+              maxLength={10}
               keyboardType="numeric"
             />
             {mobile_numberError && (
@@ -430,7 +429,7 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                { borderColor: addressError ? '#ff0000' : 'gray' },
+                { shadowColor: addressError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('address')}
               value={address}
@@ -442,7 +441,7 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                { borderColor: cityError ? '#ff0000' : 'gray' },
+                { shadowColor: cityError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('city')}
               value={city}
@@ -454,7 +453,7 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                { borderColor: stateError ? '#ff0000' : 'gray' },
+                { shadowColor: stateError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('state')}
               value={state}
@@ -466,7 +465,7 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                { borderColor: pincodeError ? '#ff0000' : 'gray' },
+                { shadowColor: pincodeError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('pincode')}
               value={pincode}
@@ -479,7 +478,7 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                { borderColor: educationError ? '#ff0000' : 'gray' },
+                { shadowColor: educationError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('education')}
               value={education}
@@ -493,7 +492,7 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                { borderColor: jobError ? '#ff0000' : 'gray' },
+                { shadowColor: jobError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('profession')}
               value={job}
@@ -506,7 +505,7 @@ const RegisterForm = ({ route }) => {
             style={[
               styles.inputContainer,
               {
-                borderColor: maritalStatusError ? '#ff0000' : 'gray',
+                shadowColor: maritalStatusError ? '#ff0000' : 'gray',
                 marginBottom: maritalStatusError ? 16 : 0,
               },
             ]}>
@@ -542,7 +541,7 @@ const RegisterForm = ({ route }) => {
           <View
             style={[
               styles.gender,
-              { borderColor: genderError ? '#ff0000' : 'gray' },
+              { shadowColor: genderError ? '#ff0000' : 'gray' },
             ]}>
             <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
 
@@ -579,14 +578,13 @@ const RegisterForm = ({ route }) => {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#dae4f0',
   },
 
   childContainer: {
@@ -613,7 +611,9 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderWidth: 1,
+    // borderWidth: 1,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
     borderRadius: 6,
     color: 'black',
@@ -623,16 +623,20 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     height: 45,
-    borderWidth: 1,
+    // borderWidth: 1,
+    elevation: 5,
+    backgroundColor: '#fff',
     borderRadius: 6,
     marginTop: 16,
     justifyContent: 'center',
+    overflow: 'hidden'
   },
 
   button: {
     height: 50,
     backgroundColor: '#00a9ff',
     borderRadius: 6,
+    elevation: 5,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -647,12 +651,14 @@ const styles = StyleSheet.create({
 
   gender: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'start',
     justifyContent: 'space-between',
     padding: 5,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 6,
   },
 
@@ -669,8 +675,8 @@ const styles = StyleSheet.create({
   error: {
     color: '#ff0000',
     fontSize: 15,
-    textAlign: 'justify',
-    paddingRight: 7,
+    textAlign: 'right',
+    paddingRight: 6,
   },
 });
 

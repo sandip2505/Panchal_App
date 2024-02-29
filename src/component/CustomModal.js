@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Modal, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import { View, Modal, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-const CustomModal = ({showModal, setShowModal, onConfirm, Title, Message}) => {
+const CustomModal = ({ showModal, setShowModal, onConfirm, Title, Message }) => {
   const { t } = useTranslation();
 
   return (

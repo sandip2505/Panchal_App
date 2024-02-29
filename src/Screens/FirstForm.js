@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pressable } from 'react-native';
+import { ImageBackground, Pressable } from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  TouchableWithoutFeedback ,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
@@ -57,52 +57,54 @@ const FirstForm = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../assets/bg3.jpg')} style={styles.container}>
       <ScrollView>
-        <View style={styles.inputContainer}>
-          <Picker
-            selectedValue={locations}
-            onValueChange={itemValue => setLocations(itemValue)}
-            style={styles.input}
-            dropdownIconColor="gray"
-            mode="dropdown">
-            <Picker.Item
-              label={initialLabel}
-              value=""
-              selectedValue
-              enabled={true}
-            />
-            {options.map(option => (
+        <View style={{ margin: 10 }}>
+          <View style={styles.inputContainer}>
+            <Picker
+              selectedValue={locations}
+              onValueChange={itemValue => setLocations(itemValue)}
+              style={styles.input}
+              dropdownIconColor="gray"
+              mode="dropdown">
               <Picker.Item
-                key={option._id}
-                label={option.village}
-                value={option._id}
+                label={initialLabel}
+                value=""
+                selectedValue
+                enabled={true}
               />
-            ))}
-          </Picker>
-          
-        </View>
-        <View>
-          <Pressable style={styles.button} onPress={handleRegister}>
-            <Text style={styles.btntext}>{t('next')}</Text>
-          </Pressable>
+              {options.map(option => (
+                <Picker.Item
+                  key={option._id}
+                  label={option.village}
+                  value={option._id}
+                />
+              ))}
+            </Picker>
+          </View>
+          <View>
+            <Pressable style={styles.button} onPress={handleRegister}>
+              <Text style={styles.btntext}>{t('next')}</Text>
+            </Pressable>
+          </View>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#fff',
   },
 
   inputContainer: {
     height: 55,
-    borderWidth: 1,
-    borderColor: 'gray',
+    backgroundColor: '#fff',
+    elevation: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
     borderRadius: 6,
     marginBottom: 16,
     justifyContent: 'center',
@@ -119,6 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    elevation:5
   },
 
   btntext: {

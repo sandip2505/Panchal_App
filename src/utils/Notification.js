@@ -31,7 +31,7 @@ export default function Notification() {
   const GetFCMToken = async () => {
     try {
       let fcmtoken = await AsyncStorage.getItem("fcmtoken");
-      console.log(fcmtoken, "old token");
+      
       if (!fcmtoken) {
         const femtoken = await messaging().getToken();
         if (femtoken) {
