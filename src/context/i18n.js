@@ -142,6 +142,7 @@ const resources = {
       cancel: 'Cancel',
       yes: 'Yes',
       shereapp: 'Shere App',
+      entermobilenumberandpassword: 'Enter mobile number and password',
     },
   },
   gu: {
@@ -280,7 +281,7 @@ const resources = {
       cancel: 'રદ કરો',
       yes: 'હા',
       shereapp: 'એપ્લિકેશન શેર કરો',
-
+      entermobilenumberandpassword: 'મોબાઇલ નંબર અને પાસવર્ડ દાખલ કરો',
 
     },
   },

@@ -10,11 +10,14 @@ import {
   ActivityIndicator,
   Alert,
   PermissionsAndroid,
+  ImageBackground
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppState } from 'react-native';
-import ImagePicker from 'react-native-image-crop-picker';
+// import ImagePicker from 'react-native-image-crop-picker';
+import * as ImagePicker from 'react-native-image-picker';
+
 import AgeCount from '../component/AgeCount';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { API_BASE_URL, IMAGE_URL } from '@env';
@@ -69,23 +72,39 @@ const ProfilePage = () => {
 
   const selectImage = async () => {
     try {
-      const image = await ImagePicker.openPicker({
-        width: 300,
-        height: 400,
-        cropping: true,
-        cropperCircleOverlay: true,
-      });
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Downloader App Storage Permission',
+          message:
+            'Downloader App needs access to your storage' +
+            'so you can download files',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
-      const userData = new FormData();
-      const imagePath = image.path;
-      const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
-      userData.append('image', {
-        uri: image.path,
-        type: image.mime,
-        name: fileName,
-      });
+        const image = await ImagePicker.launchImageLibrary({
+          selectionLimit: 1,
+          mediaType: 'photo',
+          includeBase64: true,
+        })
+        if (image.didCancel) throw new Error("User canceled ImagePicker")
 
-      try {
+        const userData = new FormData();
+        const imagePath = image.assets[0].uri;
+        const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+        const fileType = image.assets[0].type;
+
+        userData.append('image', {
+          uri: imagePath,
+          type: fileType,
+          name: fileName,
+        });
+        console.log(userData, "---userData---")
         setIsLoading(true);
         const response = await api
           .post(`/profile_image/${parentsData?._id}`, userData, {
@@ -94,29 +113,21 @@ const ProfilePage = () => {
               Accept: 'application/json',
             },
           })
-          .then(response => {
-            AsyncStorage.removeItem('userData').then(() => {
-              setIsLoading(true);
-              setParentsData('');
-              const userData = JSON.stringify(response.data);
-              AsyncStorage.setItem('userData', userData);
-              navigation.navigate('HomePage');
-              navigation.navigate('ProfilePage');
-              showToast('success', t('profileimageupdatedsuccessfully'), 2500);
-              setIsLoading(false);
-            });
-          });
+        await AsyncStorage.removeItem('userData')
+        const userDataWithImage = JSON.stringify(response.data);
+        await AsyncStorage.setItem('userData', userDataWithImage);
+        setIsLoading(true);
+        setParentsData('');
+        navigation.navigate('HomePage');
+        navigation.navigate('ProfilePage');
+        showToast('success', t('profileimageupdatedsuccessfully'), 2500);
         setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        console.error('Error sending image to API:', err);
       }
     } catch (error) {
       setIsLoading(false);
       console.error('ImagePicker Error:', error);
     }
   };
-
   const requestStoragePermission = async (id) => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -178,159 +189,161 @@ const ProfilePage = () => {
 
 
   return (
-    <View style={styles.maincontainer}>
-      <View style={styles.container}>
-        <View style={styles.img}>
-          <Pressable onPress={selectImage}>
-            <View style={styles.imageContainer}>
-              {isLoading ? (
-                <View>
-                  <ActivityIndicator size="large" color="#00a9ff" />
-                </View>
-              ) : parentsData?.photo ? (
-                <View style={styles.imageIconContainer}>
-                  <Image
-                    source={{ uri: `${IMAGE_URL}/${parentsData?.photo}` }}
-                    alt="profile"
-                    style={styles.image}
-                  />
-                  <Text style={styles.imageIcon}>
-                    <MaterialCommunityIcons
-                      name="account-edit-outline"
-                      size={30}
-                      color="#fff"
+    <ImageBackground source={require('../assets/bg3.jpg')} style={{ flex: 1 }} resizeMode="cover" >
+      <View style={styles.maincontainer}>
+        <View style={styles.container}>
+          <View style={styles.img}>
+            <Pressable onPress={selectImage}>
+              <View style={styles.imageContainer}>
+                {isLoading ? (
+                  <View>
+                    <ActivityIndicator size="large" color="#00a9ff" />
+                  </View>
+                ) : parentsData?.photo ? (
+                  <View style={styles.imageIconContainer}>
+                    <Image
+                      source={{ uri: `${IMAGE_URL}/${parentsData?.photo}` }}
+                      alt="profile"
+                      style={styles.image}
                     />
-                  </Text>
-                </View>
-              ) : (
-                <View style={styles.imageIconContainer}>
-                  <Image
-                    source={require('../assets/3135715.png')}
-                    alt="profile"
-                    style={styles.image}
-                  />
-                  <Text style={styles.imageIcon}>
-                    <MaterialCommunityIcons
-                      name="camera-plus-outline"
-                      size={25}
-                      color="#fff"
+                    <Text style={styles.imageIcon}>
+                      <MaterialCommunityIcons
+                        name="account-edit-outline"
+                        size={30}
+                        color="#fff"
+                      />
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={styles.imageIconContainer}>
+                    <Image
+                      source={require('../assets/3135715.png')}
+                      alt="profile"
+                      style={styles.image}
                     />
-                  </Text>
-                </View>
-              )}
-            </View>
-          </Pressable>
-        </View>
-
-        <View style={styles.main}>
-          <Text style={styles.name}>
-            {parentsData &&
-              parentsData?.firstname + ' ' + parentsData?.lastname}
-          </Text>
-          <Text style={styles.personal_id}>
-            {parentsData && parentsData?.personal_id}
-          </Text>
-        </View>
-
-        <ScrollView>
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('dateofbirth')} :</Text>
-              <Text style={styles.userInfo}>
-                {formattedDate} ( {age} years )
-              </Text>
-            </View>
+                    <Text style={styles.imageIcon}>
+                      <MaterialCommunityIcons
+                        name="camera-plus-outline"
+                        size={25}
+                        color="#fff"
+                      />
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </Pressable>
           </View>
 
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('mobile')} :</Text>
-              <Text style={styles.userInfo}>
-                {parentsData && parentsData?.mobile_number}
-              </Text>
-            </View>
+          <View style={styles.main}>
+            <Text style={styles.name}>
+              {parentsData &&
+                parentsData?.firstname + ' ' + parentsData?.lastname}
+            </Text>
+            <Text style={styles.personal_id}>
+              {parentsData && parentsData?.personal_id}
+            </Text>
           </View>
 
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('education')} :</Text>
-              <Text style={styles.userInfo}>
-                {parentsData && parentsData?.education}
-              </Text>
+          <ScrollView>
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('dateofbirth')} :</Text>
+                <Text style={styles.userInfo}>
+                  {formattedDate} ( {age} years )
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('gender')} :</Text>
-              <Text style={styles.userInfo}>
-                {parentsData && parentsData?.gender}
-              </Text>
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('mobile')} :</Text>
+                <Text style={styles.userInfo}>
+                  {parentsData && parentsData?.mobile_number}
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('profession')} :</Text>
-              <Text style={styles.userInfo}>
-                {parentsData && parentsData?.job}
-              </Text>
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('education')} :</Text>
+                <Text style={styles.userInfo}>
+                  {parentsData && parentsData?.education}
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('village')} :</Text>
-              <Text style={styles.userInfo}>
-                {villageData ? villageData[0]?.village : '-'}
-              </Text>
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('gender')} :</Text>
+                <Text style={styles.userInfo}>
+                  {parentsData && parentsData?.gender}
+                </Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.details}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{t('address')} :</Text>
-              <Text style={styles.userInfo}>
-                {parentsData && parentsData?.address}
-              </Text>
+
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('profession')} :</Text>
+                <Text style={styles.userInfo}>
+                  {parentsData && parentsData?.job}
+                </Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.details}>
-          <View style={styles.row}>
-            <Text style={styles.label}>{t('invoice')} :</Text>
+
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('village')} :</Text>
+                <Text style={styles.userInfo}>
+                  {villageData ? villageData[0]?.village : '-'}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('address')} :</Text>
+                <Text style={styles.userInfo}>
+                  {parentsData && parentsData?.address}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.details}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{t('invoice')} :</Text>
+                <TouchableOpacity
+                  style={[styles.dlfamilybtn, isDownLoading && styles.disabledButton]}
+                  onPress={() => requestStoragePermission(parentsData?._id)}
+                  activeOpacity={0.6}
+                  disabled={isDownLoading}>
+                  {isDownLoading ? (
+                    <>
+                      <ActivityIndicator size="small" color="#fff" />
+                    </>
+                  ) : (
+                    <Text style={styles.dlbtntext}>{t('download')}</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+
+          <View style={styles.btncontainer}>
             <TouchableOpacity
-              style={[styles.dlfamilybtn, isDownLoading && styles.disabledButton]}
-              onPress={() => requestStoragePermission(parentsData?._id)}
-              activeOpacity={0.6}
-              disabled={isDownLoading}>
-              {isDownLoading ? (
-                <>
-                  <ActivityIndicator size="small" color="#fff" />
-                </>
-              ) : (
-                <Text style={styles.dlbtntext}>{t('download')}</Text>
-              )}
+              style={styles.familybtn}
+              onPress={() => navigation.navigate('FamilyDetailsPage')}
+              activeOpacity={0.6}>
+              <Text style={styles.btntext}>{t('familyMembers')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.logoutbtn}
+              onPress={() => navigation.navigate('ChangePassword')}
+              activeOpacity={0.6}>
+              <Text style={styles.btntext}>{t('changePassword')}</Text>
             </TouchableOpacity>
           </View>
         </View>
-        </ScrollView>
-
-        <View style={styles.btncontainer}>
-          <TouchableOpacity
-            style={styles.familybtn}
-            onPress={() => navigation.navigate('FamilyDetailsPage')}
-            activeOpacity={0.6}>
-            <Text style={styles.btntext}>{t('familyMembers')}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.logoutbtn}
-            onPress={() => navigation.navigate('ChangePassword')}
-            activeOpacity={0.6}>
-            <Text style={styles.btntext}>{t('changePassword')}</Text>
-          </TouchableOpacity>
-        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -340,14 +353,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     height: '100%',
   },
 
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#dae4f0',
+    // backgroundColor: '#dae4f0',
   },
 
   img: {
@@ -407,7 +420,7 @@ const styles = StyleSheet.create({
   },
 
   details: {
-    backgroundColor: '#edf9ff',
+    backgroundColor: '#fff',
     borderRadius: 8,
     paddingVertical: 15,
     paddingHorizontal: 25,
@@ -494,7 +507,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     // textTransform: 'uppercase',
   },
-  
+
   disabledButton: {
     backgroundColor: '#68b300',
   },

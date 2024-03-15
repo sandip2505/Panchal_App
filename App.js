@@ -65,7 +65,6 @@ import messaging from '@react-native-firebase/messaging';
 import api from './src/Screens/api';
 import PushNotification from 'react-native-push-notification';
 import { useTranslation, initReactI18next } from 'react-i18next';
-import ForgotPassword from './src/Screens/ForgotPassword';
 import DropdownAlert, { DropdownAlertProps } from 'react-native-dropdownalert';
 import NotificationAndroid from './src/context/NotificationAndroid';
 

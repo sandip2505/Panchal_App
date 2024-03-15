@@ -7,6 +7,7 @@ import {
   Button,
   ScrollView,
   Pressable,
+  ImageBackground
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
@@ -268,140 +269,142 @@ const FamilyRegister = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../assets/bg3.jpg')} style={styles.container}>
       <Text style={styles.mainTitle}> {t('familyMembers')} </Text>
       <ScrollView>
-        {forms.map((form, index) => (
-          <View key={index}>
-            <View style={styles.header}>
-              <Text style={styles.title}> {t('form')} - {index + 1} </Text>
-              {index > 0 && (
-                <Pressable
-                  style={styles.removebtn}
-                  onPress={() => handleRemoveForm(index)}>
-                  <Text style={styles.removetext}> x </Text>
+        <View style={styles.childContainer}>
+
+          {forms.map((form, index) => (
+            <View key={index}>
+              <View style={styles.header}>
+                <Text style={styles.title}> {t('form')} - {index + 1} </Text>
+                {index > 0 && (
+                  <Pressable
+                    style={styles.removebtn}
+                    onPress={() => handleRemoveForm(index)}>
+                    <Text style={styles.removetext}> x </Text>
+                  </Pressable>
+                )}
+              </View>
+              <TextInput
+                placeholderTextColor="gray"
+                style={[
+                  styles.input,
+                  {
+                    borderColor: formErrors[index]?.firstname
+                      ? '#ff0000'
+                      : 'gray',
+                  },
+                ]}
+                placeholder={t('firstname')}
+                value={form.firstname}
+                onChangeText={value =>
+                  handleInputChange(index, 'firstname', value)
+                }
+              />
+              {formErrors[index]?.firstname && (
+                <Text style={styles.errorText}>
+                  {formErrors[index].firstname}
+                </Text>
+              )}
+
+              <TextInput
+                placeholderTextColor="gray"
+                style={[
+                  styles.input,
+                  {
+                    borderColor: formErrors[index]?.middlename
+                      ? '#ff0000'
+                      : 'gray',
+                  },
+                ]}
+                placeholder={t('middlename')}
+                value={form.middlename}
+                onChangeText={value =>
+                  handleInputChange(index, 'middlename', value)
+                }
+              />
+              {formErrors[index]?.middlename && (
+                <Text style={styles.errorText}>
+                  {formErrors[index].middlename}
+                </Text>
+              )}
+
+              <View>
+                <Pressable onPress={() => handleToggleDatePicker(index)}>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      { borderColor: formErrors[index]?.dob ? '#ff0000' : 'gray' },
+                    ]}
+                    placeholderTextColor="gray"
+                    placeholder={t('dateofbirth')}
+                    editable={false}
+                    value={form.dob ? formatDate(form.dob) : ''}
+                  />
                 </Pressable>
-              )}
-            </View>
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {
-                  borderColor: formErrors[index]?.firstname
-                    ? '#ff0000'
-                    : 'gray',
-                },
-              ]}
-              placeholder={t('firstname')}
-              value={form.firstname}
-              onChangeText={value =>
-                handleInputChange(index, 'firstname', value)
-              }
-            />
-            {formErrors[index]?.firstname && (
-              <Text style={styles.errorText}>
-                {formErrors[index].firstname}
-              </Text>
-            )}
+                {formErrors[index]?.dob && (
+                  <Text style={styles.errorText}>{formErrors[index].dob}</Text>
+                )}
 
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {
-                  borderColor: formErrors[index]?.middlename
-                    ? '#ff0000'
-                    : 'gray',
-                },
-              ]}
-              placeholder={t('middlename')}
-              value={form.middlename}
-              onChangeText={value =>
-                handleInputChange(index, 'middlename', value)
-              }
-            />
-            {formErrors[index]?.middlename && (
-              <Text style={styles.errorText}>
-                {formErrors[index].middlename}
-              </Text>
-            )}
+                {form.showPicker && (
+                  <DateTimePicker
+                    value={form.dob || new Date()}
+                    mode="date"
+                    onChange={(event, date) => handleDateChange(index, date)}
+                    display="spinner"
+                    maximumDate={new Date()}
+                  />
+                )}
+              </View>
 
-            <View>
-              <Pressable onPress={() => handleToggleDatePicker(index)}>
-                <TextInput
-                  style={[
-                    styles.input,
-                    { borderColor: formErrors[index]?.dob ? '#ff0000' : 'gray' },
-                  ]}
-                  placeholderTextColor="gray"
-                  placeholder={t('dateofbirth')}
-                  editable={false}
-                  value={form.dob ? formatDate(form.dob) : ''}
-                />
-              </Pressable>
-              {formErrors[index]?.dob && (
-                <Text style={styles.errorText}>{formErrors[index].dob}</Text>
+              <TextInput
+                placeholderTextColor="gray"
+                style={[
+                  styles.input,
+                  {
+                    borderColor: formErrors[index]?.education
+                      ? '#ff0000'
+                      : 'gray',
+                  },
+                ]}
+                placeholder={t('education')}
+                value={form.education}
+                onChangeText={value =>
+                  handleInputChange(index, 'education', value)
+                }
+              />
+              {formErrors[index]?.education && (
+                <Text style={styles.errorText}>
+                  {formErrors[index].education}
+                </Text>
               )}
 
-              {form.showPicker && (
-                <DateTimePicker
-                  value={form.dob || new Date()}
-                  mode="date"
-                  onChange={(event, date) => handleDateChange(index, date)}
-                  display="spinner"
-                  maximumDate={new Date()}
-                />
+              <TextInput
+                placeholderTextColor="gray"
+                style={[
+                  styles.input,
+                  { borderColor: formErrors[index]?.job ? '#ff0000' : 'gray' },
+                ]}
+                placeholder={t('profession')}
+                value={form.job}
+                onChangeText={value => handleInputChange(index, 'job', value)}
+              />
+              {formErrors[index]?.job && (
+                <Text style={styles.errorText}>{formErrors[index].job}</Text>
               )}
-            </View>
 
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                {
-                  borderColor: formErrors[index]?.education
-                    ? '#ff0000'
-                    : 'gray',
-                },
-              ]}
-              placeholder={t('education')}
-              value={form.education}
-              onChangeText={value =>
-                handleInputChange(index, 'education', value)
-              }
-            />
-            {formErrors[index]?.education && (
-              <Text style={styles.errorText}>
-                {formErrors[index].education}
-              </Text>
-            )}
-
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-                { borderColor: formErrors[index]?.job ? '#ff0000' : 'gray' },
-              ]}
-              placeholder={t('profession')}
-              value={form.job}
-              onChangeText={value => handleInputChange(index, 'job', value)}
-            />
-            {formErrors[index]?.job && (
-              <Text style={styles.errorText}>{formErrors[index].job}</Text>
-            )}
-
-            <View
-              style={[
-                styles.inputContainer,
-                {
-                  borderColor: formErrors[index]?.relationship
-                    ? '#ff0000'
-                    : 'gray',
-                },
-              ]}>
-              {/* <Picker
-                style={[styles.input, { marginTop: 0 }]}
+              <View
+                style={[
+                  styles.inputContainer,
+                  {
+                    borderColor: formErrors[index]?.relationship
+                      ? '#ff0000'
+                      : 'gray',
+                  },
+                ]}>
+                {/* <Picker
+                style={[styles.input, { backgroundColor:"none" }]}
                 selectedValue={form.relationship}
                 onValueChange={value => handleRelationshipChange(index, value)}
                 dropdownIconColor="gray"
@@ -426,137 +429,136 @@ const FamilyRegister = ({ route }) => {
                 <Picker.Item label="Brother / ભાઈ" value="Brother" />
                 <Picker.Item label="Sister / બહેન" value="Sister" />
               </Picker> */}
-              <Picker
-                style={[styles.input, { marginTop: 0 }]}
-                selectedValue={form.relationship}
-                onValueChange={value => handleRelationshipChange(index, value)}
-                dropdownIconColor="gray"
-                mode="dropdown">
+                <Picker
+                  style={[styles.input, { backgroundColor: "none", marginTop: 0 }]}
+                  selectedValue={form.relationship}
+                  onValueChange={value => handleRelationshipChange(index, value)}
+                  dropdownIconColor="gray"
+                  mode="dropdown">
 
-                <Picker.Item
-                  label={t('selectrelation')}
-                  value=""
-                  selectedValue
-                  enabled={false}
-                />
-
-                {relationshipData.map(item => (
                   <Picker.Item
-                    // key={item.key}
-                    label={`${item.value}`}
-                    value={item.key}
+                    label={t('selectrelation')}
+                    value=""
+                    selectedValue
+                    enabled={true}
                   />
-                ))}
 
-              </Picker>
-            </View>
-            {formErrors[index]?.relationship && (
-              <Text style={styles.errorText}>
-                {formErrors[index].relationship}
-              </Text>
-            )}
+                  {relationshipData.map(item => (
+                    <Picker.Item
+                      // key={item.key}
+                      label={`${item.value}`}
+                      value={item.key}
+                    />
+                  ))}
 
-            <View
-              style={[
-                styles.inputContainer,
-                {
-                  borderColor: formErrors[index]?.maritalStatus
-                    ? '#ff0000'
-                    : 'gray',
-                },
-              ]}>
-              <Picker
-                style={[styles.input, { marginTop: 0 }]}
-                selectedValue={form.maritalStatus}
-                onValueChange={value => handleMaritalStatusChange(index, value)}
-                dropdownIconColor="gray"
-                mode="dropdown">
-                <Picker.Item
-                  label={initialLabel}
-                  value=""
-                  selectedValue
-                  enabled={false}
-                />
-                <Picker.Item label={unmarried} value="Unmarried" />
-                <Picker.Item label={married} value="Married" />
-                <Picker.Item label={widower} value="widower" />
-                <Picker.Item label={widow} value="Widow" />
-                <Picker.Item
-                  label={divorcee}
-                  value="Divorcee"
-                />
-              </Picker>
-            </View>
-            {formErrors[index]?.maritalStatus && (
-              <Text style={styles.errorText}>
-                {formErrors[index].maritalStatus}
-              </Text>
-            )}
-
-            <View
-              style={[
-                styles.gender,
-                {
-                  borderColor: formErrors[index]?.gender ? '#ff0000' : 'gray',
-                },
-              ]}>
-              <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
-              <View style={styles.radioContainer}>
-                <Text style={styles.radioLabel}>{t('male')}</Text>
-                <RadioButton
-                  value="male"
-                  status={form.gender === 'male' ? 'checked' : 'unchecked'}
-                  onPress={() => handleInputChange(index, 'gender', 'male')}
-                  color="blue"
-                />
-
-                <Text style={styles.radioLabel}>{t('female')}</Text>
-                <RadioButton
-                  value="female"
-                  status={form.gender === 'female' ? 'checked' : 'unchecked'}
-                  onPress={() => handleInputChange(index, 'gender', 'female')}
-                  color="blue"
-                />
-
-                <Text style={styles.radioLabel}>{t('other')}</Text>
-                <RadioButton
-                  value="other"
-                  status={form.gender === 'other' ? 'checked' : 'unchecked'}
-                  onPress={() => handleInputChange(index, 'gender', 'other')}
-                  color="blue"
-                />
+                </Picker>
               </View>
+              {formErrors[index]?.relationship && (
+                <Text style={styles.errorText}>
+                  {formErrors[index].relationship}
+                </Text>
+              )}
+
+              <View
+                style={[
+                  styles.inputContainer,
+                  {
+                    borderColor: formErrors[index]?.maritalStatus
+                      ? '#ff0000'
+                      : 'gray',
+                  },
+                ]}>
+                <Picker
+                  style={[styles.input, { backgroundColor: "none", marginTop: 0 }]}
+                  selectedValue={form.maritalStatus}
+                  onValueChange={value => handleMaritalStatusChange(index, value)}
+                  dropdownIconColor="gray"
+                  mode="dropdown">
+                  <Picker.Item
+                    label={initialLabel}
+                    value=""
+                    selectedValue
+                    enabled={true}
+                  />
+                  <Picker.Item label={unmarried} value="Unmarried" />
+                  <Picker.Item label={married} value="Married" />
+                  <Picker.Item label={widower} value="widower" />
+                  <Picker.Item label={widow} value="Widow" />
+                  <Picker.Item
+                    label={divorcee}
+                    value="Divorcee"
+                  />
+                </Picker>
+              </View>
+              {formErrors[index]?.maritalStatus && (
+                <Text style={styles.errorText}>
+                  {formErrors[index].maritalStatus}
+                </Text>
+              )}
+
+              <View
+                style={[
+                  styles.gender,
+                  {
+                    borderColor: formErrors[index]?.gender ? '#ff0000' : 'gray',
+                  },
+                ]}>
+                <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
+                <View style={styles.radioContainer}>
+                  <Text style={styles.radioLabel}>{t('male')}</Text>
+                  <RadioButton
+                    value="male"
+                    status={form.gender === 'male' ? 'checked' : 'unchecked'}
+                    onPress={() => handleInputChange(index, 'gender', 'male')}
+                    color="blue"
+                  />
+
+                  <Text style={styles.radioLabel}>{t('female')}</Text>
+                  <RadioButton
+                    value="female"
+                    status={form.gender === 'female' ? 'checked' : 'unchecked'}
+                    onPress={() => handleInputChange(index, 'gender', 'female')}
+                    color="blue"
+                  />
+
+                  <Text style={styles.radioLabel}>{t('other')}</Text>
+                  <RadioButton
+                    value="other"
+                    status={form.gender === 'other' ? 'checked' : 'unchecked'}
+                    onPress={() => handleInputChange(index, 'gender', 'other')}
+                    color="blue"
+                  />
+                </View>
+              </View>
+              {formErrors[index]?.gender && (
+                <Text style={styles.errorText}>{formErrors[index].gender}</Text>
+              )}
             </View>
-            {formErrors[index]?.gender && (
-              <Text style={styles.errorText}>{formErrors[index].gender}</Text>
-            )}
+          ))}
+          <View style={styles.btngroup}>
+            <Pressable
+              style={[
+                styles.button,
+                { backgroundColor: '#007bff', marginRight: 5 },
+              ]}
+              onPress={handleAddForm}>
+              <Text style={styles.btntext}>{t('addform')}</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, { backgroundColor: '#4BB543', marginLeft: 5 }]}
+              onPress={handleRegister}>
+              <Text style={styles.btntext}>{t('submit')}</Text>
+            </Pressable>
           </View>
-        ))}
-        <View style={styles.btngroup}>
-          <Pressable
-            style={[
-              styles.button,
-              { backgroundColor: '#007bff', marginRight: 5 },
-            ]}
-            onPress={handleAddForm}>
-            <Text style={styles.btntext}>{t('addform')}</Text>
-          </Pressable>
-          <Pressable
-            style={[styles.button, { backgroundColor: '#4BB543', marginLeft: 5 }]}
-            onPress={handleRegister}>
-            <Text style={styles.btntext}>{t('submit')}</Text>
-          </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#dae4f0',
+    height: '100%',
   },
   errorText: {
     color: 'red',
@@ -620,13 +622,13 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 1,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
     borderRadius: 6,
     color: 'black',
     paddingHorizontal: 8,
+    height: 50,
   },
 
   btngroup: {
@@ -634,15 +636,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 10,
   },
-
+  childContainer: {
+    padding: 16,
+  },
   button: {
     height: 50,
-    width: '45%',
+    backgroundColor: '#00a9ff',
     borderRadius: 6,
+    elevation: 5,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 10,
+  },
+
+  btntext: {
+    color: 'white',
+    fontSize: 20,
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
   },
 
   removebtn: {
@@ -663,22 +675,29 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    height: 45,
-    borderWidth: 1,
-    borderColor: 'gray',
+    height: 50,
+    elevation: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    backgroundColor: '#fff',
     borderRadius: 6,
-    marginTop: 16,
+    // marginBottom: 16,
     justifyContent: 'center',
+    marginTop: 20,
+    overflow: 'hidden'
+    // marginHorizontal: 15,
   },
-
   gender: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'start',
     justifyContent: 'space-between',
     padding: 5,
-    borderWidth: 1,
-    borderRadius: 6,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
+    // borderWidth: 1,
+    borderRadius: 6,
   },
 
   radioContainer: {

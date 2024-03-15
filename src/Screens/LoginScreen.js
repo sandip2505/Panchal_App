@@ -123,15 +123,15 @@ export default function LoginScreen({ navigation }) {
             </View>
 
             <View style={styles.containerBox}>
-              <Text style={styles.title}>Enter mobile number and password</Text>
+              <Text style={styles.title}>{t('entermobilenumberandpassword')}</Text>
               <View style={styles.inputGroup}>
                 <View style={styles.inputView}>
-                  <TextInput placeholder='Mobile Number' placeholderTextColor="gray" onChangeText={setmobile_no} keyboardType="numeric" maxLength={10} style={[styles.inputText, { shadowColor: mobileError ? 'red' : 'black' }]} value={mobile_no} />
+                  <TextInput placeholder={t('mobile')} placeholderTextColor="gray" onChangeText={setmobile_no} keyboardType="numeric" maxLength={10} style={[styles.inputText, { shadowColor: mobileError ? 'red' : 'black' }]} value={mobile_no} />
                   {mobileError && <Text style={styles.error}>{mobileError}</Text>}
 
                 </View>
                 <View style={styles.inputView}>
-                  <TextInput placeholder='Password' placeholderTextColor="gray" onChangeText={setPassword} style={[styles.inputText, { shadowColor: passwordError ? 'red' : 'black' }]}
+                  <TextInput placeholder={t('password')} placeholderTextColor="gray" onChangeText={setPassword} style={[styles.inputText, { shadowColor: passwordError ? 'red' : 'black' }]}
                     secureTextEntry={isVisible ? false : true}
                     value={password}
                   />
@@ -148,18 +148,18 @@ export default function LoginScreen({ navigation }) {
                   {passwordError && <Text style={styles.error}>{passwordError}</Text>}
                 </View>
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.forgotParent}
                 onPress={() => navigation.navigate('ForgotPassword')}
               >
                 <Text style={styles.forgotText}>Forgot password?</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.loginBtn}
                 onPress={handleLogin}
                 activeOpacity={0.6}>
-                <Text style={styles.loginText}>Submit</Text>
+                <Text style={styles.loginText}>{t('submit')}</Text>
               </TouchableOpacity>
             </View>
 
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   containerBox: {
     width: 350,
-    height: 320,
+    height: 300,
     borderRadius: 25,
     backgroundColor: '#ffffff',
     display: 'flex',
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: '5%',
+    marginVertical: '8%',
     shadowColor: 'black',
     elevation: 5,
   },

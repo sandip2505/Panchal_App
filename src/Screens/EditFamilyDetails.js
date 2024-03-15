@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,15 +8,16 @@ import {
   ScrollView,
   Alert,
   Pressable,
+  ImageBackground
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {useNavigation} from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import api from './api';
-import {RadioButton} from 'react-native-paper';
-import {showToast} from '../component/CustomToast';
+import { RadioButton } from 'react-native-paper';
+import { showToast } from '../component/CustomToast';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 const CustomDateField = props => {
@@ -27,9 +28,9 @@ const CustomDateField = props => {
   );
 };
 
-const EditMainDetails = ({route}) => {
+const EditMainDetails = ({ route }) => {
   const navigation = useNavigation();
-  const {childId} = route.params;
+  const { childId } = route.params;
   const { t } = useTranslation();
   const initialLabel = t('maritalstatus');
   const married = t('married');
@@ -37,7 +38,7 @@ const EditMainDetails = ({route}) => {
   const widower = t('widower');
   const widow = t('widow');
   const divorcee = t('divorcee');
-  
+
   const [firstname, setFirstname] = useState('');
   const [middlename, setMiddlename] = useState('');
   const [lastname, setLastname] = useState('');
@@ -69,7 +70,7 @@ const EditMainDetails = ({route}) => {
 
   const formatDate = date => {
     const formattedDate = new Date(date);
-    const options = {year: 'numeric', month: 'long', day: 'numeric'};
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return formattedDate.toLocaleDateString(undefined, options);
   };
 
@@ -150,7 +151,7 @@ const EditMainDetails = ({route}) => {
 
       try {
 
-        const response = await api.post(`/child_update/${childId}`,Updatedata);
+        const response = await api.post(`/child_update/${childId}`, Updatedata);
 
         if (response.status === 200) {
           const data = response.data;
@@ -172,10 +173,10 @@ const EditMainDetails = ({route}) => {
 
           showToast(
             'success',
-           t('dataupdatedsuccessfully'),
+            t('dataupdatedsuccessfully'),
             2500,
           );
-          
+
           navigation.navigate('ProfilePage');
         } else {
           console.log('child_update Request failed with status:', response.status);
@@ -233,7 +234,8 @@ const EditMainDetails = ({route}) => {
     }
   };
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../assets/bg3.jpg')} style={styles.container}>
+      {/* <View style={styles.container}> */}
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={styles.childContainer}>
           <View>
@@ -241,41 +243,41 @@ const EditMainDetails = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: firstnameError ? '#ff0000' : 'gray'},
+                { borderColor: firstnameError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('firstname')}
               value={firstname}
               onChangeText={setFirstname}
             />
             {firstnameError && (
-              <Text style={styles.error}>{firstnameError}</Text>
+              <Text style={styles.errorText}>{firstnameError}</Text>
             )}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: middlenameError ? '#ff0000' : 'gray'},
+                { borderColor: middlenameError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('middlename')}
               value={middlename}
               onChangeText={setMiddlename}
             />
             {middlenameError && (
-              <Text style={styles.error}>{middlenameError}</Text>
+              <Text style={styles.errorText}>{middlenameError}</Text>
             )}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: lastnameError ? '#ff0000' : 'gray'},
+                { borderColor: lastnameError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('lastname')}
               value={lastname}
               onChangeText={setLastname}
             />
-            {lastnameError && <Text style={styles.error}>{lastnameError}</Text>}
+            {lastnameError && <Text style={styles.errorText}>{lastnameError}</Text>}
           </View>
 
           <View>
@@ -283,7 +285,7 @@ const EditMainDetails = ({route}) => {
               <TextInput
                 style={[
                   styles.input,
-                  {borderColor: dobError ? '#ff0000' : 'gray'},
+                  { borderColor: dobError ? '#ff0000' : 'gray' },
                 ]}
                 placeholderTextColor="gray"
                 placeholder={t('dateofbirth')}
@@ -291,7 +293,7 @@ const EditMainDetails = ({route}) => {
                 value={dob ? formatDate(dob) : ''}
               />
             </Pressable>
-            {dobError && <Text style={styles.error}>{dobError}</Text>}
+            {dobError && <Text style={styles.errorText}>{dobError}</Text>}
 
             {showPicker && (
               <DateTimePicker
@@ -308,27 +310,27 @@ const EditMainDetails = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: educationError ? '#ff0000' : 'gray'},
+                { borderColor: educationError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('education')}
               value={education}
               onChangeText={setEducation}
             />
             {educationError && (
-              <Text style={styles.error}>{educationError}</Text>
+              <Text style={styles.errorText}>{educationError}</Text>
             )}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: jobError ? '#ff0000' : 'gray'},
+                { borderColor: jobError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('profession')}
               value={job}
               onChangeText={setJob}
             />
-            {jobError && <Text style={styles.error}>{jobError}</Text>}
+            {jobError && <Text style={styles.errorText}>{jobError}</Text>}
           </View>
 
           <View
@@ -340,27 +342,23 @@ const EditMainDetails = ({route}) => {
               },
             ]}>
             <Picker
-              style={[styles.input, {marginTop: relationshipError ? 16 : 0}]}
+              style={[styles.input, { marginTop: relationshipError ? 16 : 0, backgroundColor: 'none' }]}
               selectedValue={relationship}
               onValueChange={itemValue => setRelationship(itemValue)}
               mode="dropdown"
-              defaultValue="Married"
+            
               dropdownIconColor="gray">
-              <Picker.Item
-                label={married}
-                value="Married"
-                defaultValue
-              />
-             {relationshipData.map(item => (
-                  <Picker.Item
-                    // key={item.key}
-                    label={`${item.value}`}
-                    value={item.key}
-                  />
-                ))}
+             
+              {relationshipData.map(item => (
+                <Picker.Item
+                  // key={item.key}
+                  label={`${item.value}`}
+                  value={item.key}
+                />
+              ))}
             </Picker>
             {relationshipError && (
-              <Text style={styles.error}>{relationshipError}</Text>
+              <Text style={styles.errorText}>{relationshipError}</Text>
             )}
           </View>
           <View
@@ -372,7 +370,7 @@ const EditMainDetails = ({route}) => {
               },
             ]}>
             <Picker
-              style={[styles.input, {marginTop: maritalStatusError ? 16 : 0}]}
+              style={[styles.input, { marginTop: maritalStatusError ? 16 : 0, backgroundColor: 'none' }]}
               selectedValue={marital_status}
               onValueChange={itemValue => setMaritalStatus(itemValue)}
               mode="dropdown"
@@ -389,16 +387,16 @@ const EditMainDetails = ({route}) => {
               <Picker.Item label={divorcee} value="Divorcee" />
             </Picker>
             {maritalStatusError && (
-              <Text style={styles.error}>{maritalStatusError}</Text>
+              <Text style={styles.errorText}>{maritalStatusError}</Text>
             )}
           </View>
 
           <View
             style={[
               styles.gender,
-              {borderColor: genderError ? '#ff0000' : 'gray'},
+              { borderColor: genderError ? '#ff0000' : 'gray' },
             ]}>
-              <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
+            <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
             <View style={styles.radioContainer}>
               <Text style={styles.radioLabel}>{t('male')}</Text>
               <RadioButton
@@ -438,31 +436,31 @@ const EditMainDetails = ({route}) => {
               />
             </View>
           </View>
-          {genderError && <Text style={styles.error}>{genderError}</Text>}
-        </View>
+          {genderError && <Text style={styles.errorText}>{genderError}</Text>}
+        
 
         <View style={styles.btngroup}>
-          <Pressable style={styles.button} onPress={handleUpdate}>
+          <Pressable style={[styles.button, { backgroundColor: '#4BB543' }]} onPress={handleUpdate}>
             <Text style={styles.btntext}>{t('update')}</Text>
           </Pressable>
         </View>
+        </View>
       </ScrollView>
-    </View>
+      {/* </View> */}
+    </ImageBackground>
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#dae4f0',
     height: '100%',
-    flexDirection: 'column',
   },
-
-  childContainer: {
-    padding: 16,
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 5,
   },
-
   mainTitle: {
     fontSize: 25,
     fontWeight: 'bold',
@@ -488,12 +486,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     borderRadius: 6,
+    paddingHorizontal: 8,
   },
 
   bdaypicker: {
     flexBasis: '70%',
   },
-
   bdayText: {
     flexBasis: '30%',
     color: 'gray',
@@ -512,55 +510,83 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 15,
   },
+  button: {
+    height: 50,
+    backgroundColor: '#00a9ff',
+    borderRadius: 6,
+    elevation: 5,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
 
   btntext: {
     color: 'white',
     fontSize: 20,
     textTransform: 'uppercase',
+    fontWeight: 'bold',
   },
-
   input: {
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 1,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
     borderRadius: 6,
     color: 'black',
     paddingHorizontal: 8,
+    height: 50,
   },
 
   btngroup: {
-    paddingHorizontal: 16,
+    flex: 1,
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+  childContainer: {
+    padding: 16,
   },
 
-  button: {
-    height: 50,
+  removebtn: {
+    height: 40,
+    width: '15%',
     borderRadius: 6,
-    flex: 1,
+    backgroundColor: 'red',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 10,
-    backgroundColor: '#007bff',
+    marginHorizontal: 5,
+  },
+
+  removetext: {
+    color: 'white',
+    fontSize: 20,
+    textTransform: 'capitalize',
   },
 
   inputContainer: {
-    height: 45,
-    borderWidth: 1,
-    borderColor: 'gray',
+    height: 55,
+    elevation: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    backgroundColor: '#fff',
     borderRadius: 6,
-    marginTop: 16,
+    marginBottom: 16,
     justifyContent: 'center',
+    marginVertical: 20,
+    overflow: 'hidden'
+    // marginHorizontal: 15,
   },
-
   gender: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'start',
     justifyContent: 'space-between',
     padding: 5,
-    borderWidth: 1,
-    borderRadius: 6,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
+    // borderWidth: 1,
+    borderRadius: 6,
   },
 
   radioContainer: {
@@ -571,12 +597,6 @@ const styles = StyleSheet.create({
   radioLabel: {
     marginLeft: 6,
     color: 'black',
-  },
-
-  error: {
-    color: '#ff0000',
-    fontSize: 12,
-    marginBottom: 5,
   },
 });
 

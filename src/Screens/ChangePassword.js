@@ -117,8 +117,8 @@ const ChangePassword = () => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../assets/bg4.jpg')}
-        resizeMode="stretch"
+        source={require('../assets/bg3.jpg')}
+        // resizeMode="stretch"
         style={styles.bgImg}>
         <View
           style={{
@@ -243,22 +243,20 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginVertical: 12,
+    elevation: 5,
+    backgroundColor: '#fff',
+    marginTop: 16,
     borderRadius: 6,
     color: 'black',
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    elevation: 5,
-    width: '100%',
+    paddingHorizontal: 8,
     height: 50,
+    width: '100%',
   },
 
   passwordBtn: {
     position: 'absolute',
     right: '2%',
-    top: '24%',
+    top: '35%',
     padding: 5,
   },
 
@@ -286,9 +284,8 @@ const styles = StyleSheet.create({
   },
 
   error: {
-    color: '#ff0000',
-    fontSize: 15,
-    textAlign: 'right',
-    paddingRight: 7,
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 5,
   },
 });

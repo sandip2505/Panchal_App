@@ -170,9 +170,10 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   cardContent: {
-    paddingRight: 10,
+    padding: 10,
     paddingVertical: 5,
     flexBasis: '70%',
+
   },
   cardTitle: {
     fontSize: 14,

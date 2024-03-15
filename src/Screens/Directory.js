@@ -189,7 +189,6 @@ const Directory = ({ navigation }) => {
         keyExtractor={item => item._id}
         contentContainerStyle={styles.userList}
       />
-
     </ImageBackground>
   );
 };
@@ -210,12 +209,12 @@ const styles = StyleSheet.create({
     color: 'black',
     paddingHorizontal: 18,
   },
-
+  childContainer: {
+    padding: 16,
+  },
   inputContainer: {
     height: 55,
-    elevation:5,
-    // borderWidth: 1,
-    // borderColor: 'gray',
+    elevation: 5,
     backgroundColor: '#fff',
     borderRadius: 6,
     marginBottom: 16,

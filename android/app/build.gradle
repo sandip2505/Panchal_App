@@ -81,8 +81,9 @@ android {
         applicationId "com.panchal_application"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "7"
+        missingDimensionStrategy 'react-native-camera', 'general'
+        versionCode 8
+        versionName "8"
     }
     signingConfigs {
         debug {

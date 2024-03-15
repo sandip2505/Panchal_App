@@ -51,14 +51,14 @@ const SettingsScreen = () => {
             mode="dropdown"
 
           >
-            <Picker.Item label={initialLabel} value="" enabled={true} />
+            <Picker.Item label={initialLabel} value="" enabled={false} />
             <Picker.Item label="English" value="en" />
             <Picker.Item label="ગુજરાતી" value="gu" />
           </Picker>
         </View>
         <View>
           <Pressable style={styles.button} onPress={() => changeLanguage(language)}>
-            <Text style={styles.btntext}>Submit</Text>
+            <Text style={styles.btntext}>{t('submit')}</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
   btntext: {
     color: 'white',
     fontSize: 20,
-    textTransform: 'uppercase',
   },
 });
 

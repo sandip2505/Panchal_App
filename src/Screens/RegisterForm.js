@@ -225,61 +225,34 @@ const RegisterForm = ({ route }) => {
           payment_id: null,
         }
         console.log(PerentsData, "PerentsData")
-        AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
-        setFirstname('');
-        setMiddlename('');
-        setPassword('');
-        setDob(null);
-        setShowPicker(false);
-        setMobileNumber('');
-        setState('');
-        setCity('');
-        setPincode('');
-        setGender('');
-        setEducation('');
-        setAddress('');
-        setJob('');
-        setMaritalStatus('');
-        navigation.navigate('PaymentPage');
 
-        // const response = await api
-        //   .post(`/user_regisster`, {
-        //     headers: {
-        //       Accept: 'application/json',
-        //     },
-        //     userData,
-        //   })
-        //   .then(res => {
+        const response = await api.post(`/check_mobile`, {mobile_number: mobile_number,})
+       console.log(response.data, "check_mobile")
+        if (response.data.mobileError === 'Mobile number already register') {
+          showToast(
+            'error',
+            t('mobilenumberisalreadyregistered'),
+            2500,
+          );
+        } else {
+          AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
+          setFirstname('');
+          setMiddlename('');
+          setPassword('');
+          setDob(null);
+          setShowPicker(false);
+          setMobileNumber('');
+          setState('');
+          setCity('');
+          setPincode('');
+          setGender('');
+          setEducation('');
+          setAddress('');
+          setJob('');
+          setMaritalStatus('');
+          navigation.navigate('PaymentPage');
+        }
 
-        //     const userId = res.data._id;
-        //     const PerentsData = res.data;
-
-        //     if (res.data.mobileError === 'Mobile number already register') {
-        //       showToast(
-        //         'error',
-        //         t('mobilenumberisalreadyregistered'),
-        //         2500,
-        //       );
-        //     } else {
-        //       AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
-        //       setFirstname('');
-        //       setMiddlename('');
-        //       setPassword('');
-        //       setDob(null);
-        //       setShowPicker(false);
-        //       setMobileNumber('');
-        //       setState('');
-        //       setCity('');
-        //       setPincode('');
-        //       setGender('');
-        //       setEducation('');
-        //       setAddress('');
-        //       setJob('');
-        //       setMaritalStatus('');
-        //       navigation.navigate('PaymentPage');
-        //     }
-        //   })
-        //   .catch(err => { });
       } catch (error) {
         if (error.response) {
           console.log('Status code:', error.response);

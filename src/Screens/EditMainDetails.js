@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,16 +8,17 @@ import {
   ScrollView,
   Alert,
   Pressable,
+  ImageBackground
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {useNavigation} from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import api from './api';
-import {RadioButton} from 'react-native-paper';
-import {showToast} from '../component/CustomToast';
+import { RadioButton } from 'react-native-paper';
+import { showToast } from '../component/CustomToast';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 const CustomDateField = props => {
@@ -28,8 +29,8 @@ const CustomDateField = props => {
   );
 };
 
-const EditMainDetails = ({route}) => {
-  const {mainId} = route.params;
+const EditMainDetails = ({ route }) => {
+  const { mainId } = route.params;
 
   const navigation = useNavigation();
 
@@ -78,7 +79,7 @@ const EditMainDetails = ({route}) => {
 
   const formatDate = date => {
     const formattedDate = new Date(date);
-    const options = {year: 'numeric', month: 'long', day: 'numeric'};
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return formattedDate.toLocaleDateString(undefined, options);
   };
 
@@ -199,7 +200,7 @@ const EditMainDetails = ({route}) => {
       };
       try {
 
-        const response = await api.post(`user-update/${mainId}`,Updatedata);
+        const response = await api.post(`user-update/${mainId}`, Updatedata);
 
         if (response.status === 200) {
           const data = response.data;
@@ -262,7 +263,8 @@ const EditMainDetails = ({route}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../assets/bg3.jpg')} style={styles.container}>
+
       {/* <Text style={styles.title}>Register Form</Text> */}
 
       <ScrollView keyboardShouldPersistTaps="handled">
@@ -272,41 +274,41 @@ const EditMainDetails = ({route}) => {
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: firstnameError ? '#ff0000' : 'gray'},
+                { shadowColor: firstnameError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('firstname')}
               value={firstname}
               onChangeText={setFirstname}
             />
             {firstnameError && (
-              <Text style={styles.error}>{firstnameError}</Text>
+              <Text style={styles.errorText}>{firstnameError}</Text>
             )}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: middlenameError ? '#ff0000' : 'gray'},
+                { shadowColor: middlenameError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('middlename')}
               value={middlename}
               onChangeText={setMiddlename}
             />
             {middlenameError && (
-              <Text style={styles.error}>{middlenameError}</Text>
+              <Text style={styles.errorText}>{middlenameError}</Text>
             )}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: lastnameError ? '#ff0000' : 'gray'},
+                { shadowColor: lastnameError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('lastname')}
               value={lastname}
               onChangeText={setLastname}
             />
-            {lastnameError && <Text style={styles.error}>{lastnameError}</Text>}
+            {lastnameError && <Text style={styles.errorText}>{lastnameError}</Text>}
           </View>
 
           <View>
@@ -314,7 +316,7 @@ const EditMainDetails = ({route}) => {
               <TextInput
                 style={[
                   styles.input,
-                  {borderColor: dobError ? '#ff0000' : 'gray'},
+                  { shadowColor: dobError ? '#ff0000' : 'gray' },
                 ]}
                 placeholderTextColor="gray"
                 placeholder={t('dateofbirth')}
@@ -322,7 +324,7 @@ const EditMainDetails = ({route}) => {
                 value={dob ? formatDate(dob) : ''}
               />
             </Pressable>
-            {dobError && <Text style={styles.error}>{dobError}</Text>}
+            {dobError && <Text style={styles.errorText}>{dobError}</Text>}
 
             {showPicker && (
               <DateTimePicker
@@ -348,83 +350,83 @@ const EditMainDetails = ({route}) => {
               keyboardType="numeric"
             />
             {mobile_numberError && (
-              <Text style={styles.error}>{mobile_numberError}</Text>
+              <Text style={styles.errorText}>{mobile_numberError}</Text>
             )} */}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: addressError ? '#ff0000' : 'gray'},
+                { shadowColor: addressError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('address')}
               value={address}
               onChangeText={setAddress}
             />
-            {addressError && <Text style={styles.error}>{addressError}</Text>}
+            {addressError && <Text style={styles.errorText}>{addressError}</Text>}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: cityError ? '#ff0000' : 'gray'},
+                { shadowColor: cityError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('city')}
               value={city}
               onChangeText={setCity}
             />
-            {cityError && <Text style={styles.error}>{cityError}</Text>}
+            {cityError && <Text style={styles.errorText}>{cityError}</Text>}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: stateError ? '#ff0000' : 'gray'},
+                { shadowColor: stateError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('state')}
               value={state}
               onChangeText={setState}
             />
-            {stateError && <Text style={styles.error}>{stateError}</Text>}
+            {stateError && <Text style={styles.errorText}>{stateError}</Text>}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: pincodeError ? '#ff0000' : 'gray'},
+                { shadowColor: pincodeError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('pincode')}
               value={pincode}
               onChangeText={setPincode}
               keyboardType="numeric"
             />
-            {pincodeError && <Text style={styles.error}>{pincodeError}</Text>}
+            {pincodeError && <Text style={styles.errorText}>{pincodeError}</Text>}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: educationError ? '#ff0000' : 'gray'},
+                { shadowColor: educationError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('education')}
               value={education}
               onChangeText={setEducation}
             />
             {educationError && (
-              <Text style={styles.error}>{educationError}</Text>
+              <Text style={styles.errorText}>{educationError}</Text>
             )}
 
             <TextInput
               placeholderTextColor="gray"
               style={[
                 styles.input,
-                {borderColor: jobError ? '#ff0000' : 'gray'},
+                { shadowColor: jobError ? '#ff0000' : 'gray' },
               ]}
               placeholder={t('profession')}
               value={job}
               onChangeText={setJob}
             />
-            {jobError && <Text style={styles.error}>{jobError}</Text>}
+            {jobError && <Text style={styles.errorText}>{jobError}</Text>}
           </View>
 
           <View
@@ -436,7 +438,7 @@ const EditMainDetails = ({route}) => {
               },
             ]}>
             <Picker
-              style={[styles.input, {marginTop: maritalStatusError ? 16 : 0}]}
+              style={[styles.input, { marginTop: maritalStatusError ? 16 : 0 }]}
               selectedValue={marital_status}
               onValueChange={itemValue => setMaritalStatus(itemValue)}
               mode="dropdown"
@@ -459,16 +461,16 @@ const EditMainDetails = ({route}) => {
               <Picker.Item label={widow} value="Widow" />
             </Picker>
             {maritalStatusError && (
-              <Text style={styles.error}>{maritalStatusError}</Text>
+              <Text style={styles.errorText}>{maritalStatusError}</Text>
             )}
           </View>
 
           <View
             style={[
               styles.gender,
-              {borderColor: genderError ? '#ff0000' : 'gray'},
+              { shadowColor: genderError ? '#ff0000' : 'gray' },
             ]}>
-              <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
+            <Text style={styles.radioLabel}>{t('chooseyourgender')}</Text>
 
             <View style={styles.radioContainer}>
               <Text style={styles.radioLabel}>{t('male')}</Text>
@@ -496,48 +498,85 @@ const EditMainDetails = ({route}) => {
               />
             </View>
           </View>
-          {genderError && <Text style={styles.error}>{genderError}</Text>}
+          {genderError && <Text style={styles.errorText}>{genderError}</Text>}
 
           <Pressable style={styles.button} onPress={handleUpdate}>
             <Text style={styles.btntext}> {t('update')} </Text>
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#dae4f0',
+    height: '100%',
   },
-
-  childContainer: {
-    padding: 16,
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 5,
   },
-
-  title: {
+  mainTitle: {
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 16,
+    paddingVertical: 10,
     color: '#515151',
     textTransform: 'uppercase',
   },
 
-  image: {
-    flex: 1,
-    alignItems: 'center',
-    marginBottom: 10,
-    borderRadius: 6,
-    borderColor: 'gray',
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'gray',
+    textTransform: 'uppercase',
+  },
+
+  bday: {
+    flexDirection: 'row',
+    padding: 10,
     borderWidth: 1,
-    paddingVertical: 1,
+    borderColor: 'gray',
+    height: 40,
+    borderWidth: 1,
+    marginBottom: 16,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+  },
+
+  bdaypicker: {
+    flexBasis: '70%',
+  },
+  bdayText: {
+    flexBasis: '30%',
+    color: 'gray',
+  },
+
+  dobbtn: {
+    color: 'red',
+    backgroundColor: 'red',
+    marginBottom: 50,
+  },
+
+  header: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 15,
+  },
+
+  btntext: {
+    color: 'white',
+    fontSize: 20,
+    textTransform: 'uppercase',
   },
 
   input: {
-    borderWidth: 1,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
     borderRadius: 6,
     color: 'black',
@@ -545,18 +584,19 @@ const styles = StyleSheet.create({
     height: 50,
   },
 
-  inputContainer: {
-    height: 45,
-    borderWidth: 1,
-    borderRadius: 6,
-    marginTop: 16,
-    justifyContent: 'center',
+  btngroup: {
+    flex: 1,
+    flexDirection: 'row',
+    marginVertical: 10,
   },
-
+  childContainer: {
+    padding: 16,
+  },
   button: {
     height: 50,
     backgroundColor: '#00a9ff',
     borderRadius: 6,
+    elevation: 5,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -567,16 +607,49 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     textTransform: 'uppercase',
+    fontWeight: 'bold',
   },
 
+  removebtn: {
+    height: 40,
+    width: '15%',
+    borderRadius: 6,
+    backgroundColor: 'red',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 5,
+  },
+
+  removetext: {
+    color: 'white',
+    fontSize: 20,
+    textTransform: 'capitalize',
+  },
+
+  inputContainer: {
+    height: 50,
+    elevation: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    // marginBottom: 16,
+    justifyContent: 'center',
+    marginTop: 20,
+    overflow: 'hidden'
+    // marginHorizontal: 15,
+  },
   gender: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'start',
     justifyContent: 'space-between',
     padding: 5,
+    elevation: 5,
+    backgroundColor: '#fff',
     marginTop: 16,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 6,
   },
 
@@ -586,16 +659,8 @@ const styles = StyleSheet.create({
   },
 
   radioLabel: {
-    marginLeft: 5,
+    marginLeft: 6,
     color: 'black',
   },
-
-  error: {
-    color: '#ff0000',
-    fontSize: 15,
-    textAlign: 'justify',
-    paddingRight: 7,
-  },
 });
-
 export default EditMainDetails;

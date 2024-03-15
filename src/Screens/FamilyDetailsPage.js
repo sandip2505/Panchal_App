@@ -262,7 +262,7 @@ const FamilyDetailsPage = () => {
         {renderChildDetails()}
         {childData.length < 7 && (
           <Pressable
-            style={styles.btn}
+            style={styles.button}
             onPress={() =>
               navigation.navigate('FamilyRegister', {
                 userId: parentsData?._id,
@@ -362,23 +362,33 @@ const styles = StyleSheet.create({
     width: '90%',
   },
 
-  btn: {
+  button: {
+    height: 50,
+    backgroundColor: '#00a9ff',
+    borderRadius: 6,
+    elevation: 5,
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0083ff',
-    borderRadius: 8,
-    padding: 10,
-    margin: 10,
     flexDirection: 'row',
+    // flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    marginHorizontal: 15,
   },
 
   btnText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 20,
     textTransform: 'uppercase',
     fontWeight: 'bold',
   },
+
+  // btnText: {
+  //   color: '#fff',
+  //   fontSize: 20,
+  //   textTransform: 'uppercase',
+  //   fontWeight: 'bold',
+  // },
 });
 
 export default FamilyDetailsPage;
