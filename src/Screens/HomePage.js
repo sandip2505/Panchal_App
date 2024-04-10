@@ -10,7 +10,7 @@ import {
   ImageBackground
 } from 'react-native';
 import { IMAGE_URL } from '@env';
-import api from './api';
+import api from '../context/api';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';

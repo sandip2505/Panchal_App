@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
-import api from './api';
+import api from '../context/api';
 
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import LoadingPage from './LoadingPage';

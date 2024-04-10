@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, StyleSheet, Image, Text, View, Alert, TouchableOpacity, ImageBackground } from 'react-native';
 import LoadingPage from './LoadingPage';
-import api from './api';
+import api from '../context/api';
 import { IMAGE_URL } from '@env';
 
 import { useTranslation } from 'react-i18next';

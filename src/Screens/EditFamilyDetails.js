@@ -15,7 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-import api from './api';
+import api from '../context/api';
 import { RadioButton } from 'react-native-paper';
 import { showToast } from '../component/CustomToast';
 import { useTranslation, initReactI18next } from 'react-i18next';

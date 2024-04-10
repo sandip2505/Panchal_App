@@ -10,7 +10,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import api from './api';
+import api from '../context/api';
 import LoadingPage from './LoadingPage';
 
 const CommitteeMembers = () => {

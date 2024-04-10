@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL, API_KEY } from '@env';
-import MaintenanceScreen from './MaintenanceScreen';
+import MaintenanceScreen from '../Screens/MaintenanceScreen';
 import { Alert, StyleSheet } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 console.log(API_BASE_URL, 'API_BASE_URL')

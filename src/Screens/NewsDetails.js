@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import { IMAGE_URL } from '@env';
-import api from './api';
+import api from '../context/api';
 import LoadingPage from './LoadingPage';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;

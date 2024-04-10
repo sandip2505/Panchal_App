@@ -15,7 +15,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showToast } from '../component/CustomToast';
-import api from './api';
+import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 const FirstForm = () => {

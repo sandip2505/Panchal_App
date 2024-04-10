@@ -12,7 +12,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import api from './api';
+import api from '../context/api';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showToast } from '../component/CustomToast';

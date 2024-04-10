@@ -62,7 +62,7 @@ import SettingsScreen from './src/Screens/SettingsScreen';
 import NewsPage from './src/Screens/NewsPage';
 import NewsDetails from './src/Screens/NewsDetails';
 import messaging from '@react-native-firebase/messaging';
-import api from './src/Screens/api';
+import api from './src/context/api';
 import PushNotification from 'react-native-push-notification';
 import { useTranslation, initReactI18next } from 'react-i18next';
 import DropdownAlert, { DropdownAlertProps } from 'react-native-dropdownalert';

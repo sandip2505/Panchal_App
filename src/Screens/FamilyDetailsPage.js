@@ -7,7 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import AgeCount from '../component/AgeCount';
 import CustomModal from '../component/CustomModal';
 import { showToast } from '../component/CustomToast';
-import api from './api';
+import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 

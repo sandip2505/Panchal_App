@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import { showToast } from '../component/CustomToast';
-import api from './api';
+import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 const PaymentPage = ({ navigation }) => {

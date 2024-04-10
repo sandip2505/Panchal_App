@@ -11,7 +11,7 @@ import {
   Linking,
 } from 'react-native';
 import {Divider} from 'native-base';
-import api from './api';
+import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 
@@ -22,6 +22,8 @@ const ContactUs = ({navigation}) => {
   const [contactno2, setcontactno2] = useState('');
   const [facebook, setfacebook] = useState('');
   const [telegram, settelegram] = useState('');
+  const [email, setEmail] = useState('');
+  
   useEffect(() => {
     paymentamout();
   }, []);
@@ -39,6 +41,7 @@ const ContactUs = ({navigation}) => {
         const contactno2 = data.find(item => item.key === 'contactno2');
         const facebook = data.find(item => item.key === 'facebook');
         const telegram = data.find(item => item.key === 'telegram');
+        const email = data.find(item => item.key === 'email');
 
         setcontact1(contact1?.value);
         setcontactno1(contactno1?.value);
@@ -46,6 +49,7 @@ const ContactUs = ({navigation}) => {
         setcontactno2(contactno2?.value);
         setfacebook(facebook?.value);
         settelegram(telegram?.value);
+        setEmail(email?.value);
       } else {
         console.log('listsettings Request failed with status:', response.status);
       }
@@ -62,10 +66,18 @@ const ContactUs = ({navigation}) => {
   };
 
   const handleSecondNumberPress = () => {
-    // const phoneNumber = '9876543210';
     Linking.openURL(`tel:${contactno2}`).catch(error => {
       console.error('Error opening phone number:', error);
     });
+  };
+  const handleEmailPress = () => {
+    const recipientEmail = email; // Replace with the actual email address
+    const mailtoUrl = `mailto:${recipientEmail}`;
+  
+    Linking.openURL(mailtoUrl)
+      .catch(error => {
+        console.error('Error opening email client:', error);
+      });
   };
 
   // const handleFacebookLinkPress = () => {
@@ -114,19 +126,14 @@ const ContactUs = ({navigation}) => {
                 {contactno2}
               </Text>
             </View>
+            <View>
+              <Text style={styles.contact}>Email Address</Text>
+              <Text style={styles.number} onPress={handleEmailPress}>
+                {email}
+              </Text>
+            </View>
 
-            {/* <View style={styles.link}>
-              <Pressable onPress={handleFacebookLinkPress}>
-                <Text style={styles.linktext}>
-                  Click here to Like us on Facebook
-                </Text>
-              </Pressable>
-              <Pressable onPress={handleTeligramLinkPress}>
-                <Text style={styles.linktext}>
-                  Click here to join us on Telegram
-                </Text>
-              </Pressable>
-            </View> */}
+            
           </View>
 
           <View style={styles.divider}></View>

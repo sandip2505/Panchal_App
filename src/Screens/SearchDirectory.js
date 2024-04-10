@@ -17,7 +17,7 @@ import LoadingPage from './LoadingPage';
 
 import { IMAGE_URL } from '@env';
 import { ActivityIndicator } from 'react-native-paper';
-import api from './api';
+import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 const SearchDirectory = ({ navigation }) => {

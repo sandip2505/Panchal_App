@@ -2,7 +2,7 @@ import { StyleSheet, View, ActivityIndicator, ImageBackground } from 'react-nati
 import React, { useEffect, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import LoadingPage from './LoadingPage';
-import api from './api';
+import api from '../context/api';
 const AboutUs = ({ navigation }) => {
   const [aboutUs, setaboutUs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

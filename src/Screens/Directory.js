@@ -18,7 +18,7 @@ import LoadingPage from './LoadingPage';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 import { IMAGE_URL } from '@env';
-import api from './api';
+import api from '../context/api';
 
 const Directory = ({ navigation }) => {
   const [users, setUsers] = useState([]);
@@ -147,7 +147,7 @@ const Directory = ({ navigation }) => {
                 styles.userName
               }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
             <Text style={styles.userMobile}>
-              <Text style={{ fontWeight: 'bold' }}>Mo.</Text> {item.mobile_number}
+              <Text style={{ fontWeight: 'bold' }}>Village.</Text> {item.mobile_number}
             </Text>
           </View>
           <View>

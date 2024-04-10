@@ -24,7 +24,7 @@ import { API_BASE_URL, IMAGE_URL } from '@env';
 import moment from 'moment';
 import { showToast } from '../component/CustomToast';
 import RNFetchBlob from 'rn-fetch-blob';
-import api from './api';
+import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 console.log(IMAGE_URL)

@@ -14,7 +14,7 @@ import { IMAGE_URL } from '@env';
 import AgeCount from '../component/AgeCount';
 import moment from 'moment';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import api from './api';
+import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
 
 const FamilyList = ({ navigation, route }) => {
