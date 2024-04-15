@@ -34,8 +34,10 @@ const RegisterForm = ({ route }) => {
   const navigation = useNavigation();
 
   const [firstname, setFirstname] = useState('');
+  const [SurName, setSurName] = useState('')
   const [middlename, setMiddlename] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setemail] = useState('')
   const [dob, setDob] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
   const [mobile_number, setMobileNumber] = useState('');
@@ -49,7 +51,10 @@ const RegisterForm = ({ route }) => {
   const [marital_status, setMaritalStatus] = useState('');
 
   const [firstnameError, setfirstnameError] = useState('');
+  const [surnameError, setsurnameError] = useState('');
   const [middlenameError, setmiddlenameError] = useState('');
+  const [emailError, setemailError] = useState('')
+
   const [dobError, setdobError] = useState('');
   const [mobile_numberError, setmobile_numberError] = useState('');
   const [stateError, setstateError] = useState('');
@@ -91,11 +96,19 @@ const RegisterForm = ({ route }) => {
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
 
     let isValid = true;
+
     if (!firstname) {
       setfirstnameError(t('pleaseenterfirstname'));
       isValid = false;
     } else {
       setfirstnameError('');
+    }
+
+    if (!SurName) {
+      setsurnameError(t('please enter surname'));
+      isValid = false;
+    } else {
+      setsurnameError('');
     }
 
     if (!middlename) {
@@ -104,6 +117,15 @@ const RegisterForm = ({ route }) => {
     } else {
       setmiddlenameError('');
     }
+
+    if (!email) {
+      setemailError(t('please enter middlename'));
+      isValid = false;
+    } else {
+      setemailError('');
+    }
+
+
     if (!password) {
       setPasswordError(t('pleaseenterpassword'));
       isValid = false;
@@ -208,9 +230,10 @@ const RegisterForm = ({ route }) => {
         const PerentsData = {
           firstname: firstname,
           middlename: middlename,
-          lastname: 'Panchal',
+          lastname: SurName,
           locations_id: locations_id,
           dob: dob,
+          email: email,
           mobile_number: mobile_number,
           password: password,
           state: state,
@@ -226,8 +249,8 @@ const RegisterForm = ({ route }) => {
         }
         console.log(PerentsData, "PerentsData")
 
-        const response = await api.post(`/check_mobile`, {mobile_number: mobile_number,})
-       console.log(response.data, "check_mobile")
+        const response = await api.post(`/check_mobile`, { mobile_number: mobile_number, })
+        console.log(response.data, "check_mobile")
         if (response.data.mobileError === 'Mobile number already register') {
           showToast(
             'error',
@@ -237,6 +260,8 @@ const RegisterForm = ({ route }) => {
         } else {
           AsyncStorage.setItem('PerentsData', JSON.stringify(PerentsData));
           setFirstname('');
+          setSurName('');
+          setemail('');
           setMiddlename('');
           setPassword('');
           setDob(null);
@@ -301,15 +326,7 @@ const RegisterForm = ({ route }) => {
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={styles.childContainer}>
           <View>
-            <TextInput
-              placeholderTextColor="gray"
-              style={[
-                styles.input,
-              ]}
-              placeholder={t('lastname')}
-              editable={false}
-              value='Panchal'
-            />
+
             <TextInput
               placeholderTextColor="gray"
               style={[
@@ -328,6 +345,20 @@ const RegisterForm = ({ route }) => {
               placeholderTextColor="gray"
               style={[
                 styles.input, {
+                  shadowColor: surnameError ? '#ff0000' : 'gray'
+                },
+              ]}
+              placeholder={t('Sur Name')}
+              value={SurName}
+              onChangeText={setSurName}
+            />
+            {surnameError && (
+              <Text style={styles.error}>{surnameError}</Text>
+            )}
+            <TextInput
+              placeholderTextColor="gray"
+              style={[
+                styles.input, {
                   shadowColor: middlenameError ? '#ff0000' : 'gray'
                 },
               ]}
@@ -339,6 +370,18 @@ const RegisterForm = ({ route }) => {
               <Text style={styles.error}>{middlenameError}</Text>
             )}
 
+            {/* Email field */}
+            <TextInput
+              placeholderTextColor="gray"
+              style={[
+                styles.input,
+                { shadowColor: emailError ? '#ff0000' : 'gray' },
+              ]}
+              placeholder={t('Email')}
+              value={email}
+              onChangeText={setemail}
+            />
+            {emailError && <Text style={styles.errorText}>{emailError}</Text>}
 
           </View>
 

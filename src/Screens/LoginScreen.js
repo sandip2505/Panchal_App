@@ -148,13 +148,13 @@ export default function LoginScreen({ navigation }) {
                   {passwordError && <Text style={styles.error}>{passwordError}</Text>}
                 </View>
               </View>
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.forgotParent}
                 onPress={() => navigation.navigate('ForgotPassword')}
               >
                 <Text style={styles.forgotText}>Forgot password?</Text>
-              </TouchableOpacity> */}
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.loginBtn}
                 onPress={handleLogin}

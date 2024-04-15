@@ -49,6 +49,7 @@ import LoginScreen from './src/Screens/LoginScreen';
 import ForgotPassword from './src/Screens/ForgotPassword';
 import ResetPassword from './src/Screens/ResetPassword';
 import ProfilePage from './src/Screens/ProfilePage';
+import EmailRegister from './src/Screens/EmailRegister'
 import FamilyDetailsPage from './src/Screens/FamilyDetailsPage';
 import SearchDirectory from './src/Screens/SearchDirectory';
 import ChangePassword from './src/Screens/ChangePassword';
@@ -253,6 +254,13 @@ function FirstScreenStack({ navigation }) {
         component={ProfilePage}
         options={{ title: `${t('profile')}` }}
       />
+
+      <Stack.Screen
+        name="EmailRegister"
+        component={EmailRegister}
+        options={{ title: `${t('profile')}` }}
+      />
+
       <Stack.Screen
         name="ContactUs"
         component={ContactUs}

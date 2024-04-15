@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,13 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import {Divider} from 'native-base';
+import { Divider } from 'native-base';
 import api from '../context/api';
 import { useTranslation, initReactI18next } from 'react-i18next';
+import { background } from 'native-base/lib/typescript/theme/styled-system';
 
 
-const ContactUs = ({navigation}) => {
+const ContactUs = ({ navigation }) => {
   const [contact1, setcontact1] = useState('');
   const [contactno1, setcontactno1] = useState('');
   const [contact2, setcontact2] = useState('');
@@ -23,7 +24,7 @@ const ContactUs = ({navigation}) => {
   const [facebook, setfacebook] = useState('');
   const [telegram, settelegram] = useState('');
   const [email, setEmail] = useState('');
-  
+
   useEffect(() => {
     paymentamout();
   }, []);
@@ -43,13 +44,14 @@ const ContactUs = ({navigation}) => {
         const telegram = data.find(item => item.key === 'telegram');
         const email = data.find(item => item.key === 'email');
 
+
         setcontact1(contact1?.value);
         setcontactno1(contactno1?.value);
         setcontact2(contact2?.value);
         setcontactno2(contactno2?.value);
         setfacebook(facebook?.value);
         settelegram(telegram?.value);
-        setEmail(email?.value);
+        setEmail('pragatimandalsevatrust@gmail.com');
       } else {
         console.log('listsettings Request failed with status:', response.status);
       }
@@ -73,7 +75,7 @@ const ContactUs = ({navigation}) => {
   const handleEmailPress = () => {
     const recipientEmail = email; // Replace with the actual email address
     const mailtoUrl = `mailto:${recipientEmail}`;
-  
+
     Linking.openURL(mailtoUrl)
       .catch(error => {
         console.error('Error opening email client:', error);
@@ -133,7 +135,7 @@ const ContactUs = ({navigation}) => {
               </Text>
             </View>
 
-            
+
           </View>
 
           <View style={styles.divider}></View>
@@ -170,8 +172,8 @@ const ContactUs = ({navigation}) => {
             </Pressable>
           </View>
         </View>
-      </ImageBackground>
-    </View>
+      </ImageBackground >
+    </View >
   );
 };
 

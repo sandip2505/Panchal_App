@@ -9,6 +9,7 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native';
+
 import React, { useState, useEffect } from 'react';
 import { IMAGE_URL } from '@env';
 import AgeCount from '../component/AgeCount';

@@ -48,12 +48,15 @@ const EditMainDetails = ({ route }) => {
   const [address, setAddress] = useState('');
   const [job, setJob] = useState('');
   const [marital_status, setMaritalStatus] = useState('');
+  const [email, setemail] = useState('')
+
 
   const [firstnameError, setfirstnameError] = useState('');
   const [middlenameError, setmiddlenameError] = useState('');
   const [lastnameError, setlastnameError] = useState('');
   const [dobError, setdobError] = useState('');
   // const [mobile_numberError, setmobile_numberError] = useState('');
+  const [emailError, setemailError] = useState('')
   const [stateError, setstateError] = useState('');
   const [cityError, setcityError] = useState('');
   const [pincodeError, setpincodeError] = useState('');
@@ -104,6 +107,14 @@ const EditMainDetails = ({ route }) => {
       isValid = false;
     } else {
       setmiddlenameError('');
+    }
+
+
+    if (!email) {
+      setemailError(t('please enter middlename'));
+      isValid = false;
+    } else {
+      setemailError('');
     }
 
     if (!dob) {
@@ -189,6 +200,7 @@ const EditMainDetails = ({ route }) => {
         lastname,
         dob,
         // mobile_number,
+        email,
         state,
         city,
         pincode,
@@ -243,6 +255,7 @@ const EditMainDetails = ({ route }) => {
         const data = response.data;
         setFirstname(data.firstname);
         // setMobile_number(data.mobile_number);
+        setemail(data.email)
         setMiddlename(data.middlename);
         setLastname(data.lastname);
         setState(data.state);
@@ -297,7 +310,6 @@ const EditMainDetails = ({ route }) => {
             {middlenameError && (
               <Text style={styles.errorText}>{middlenameError}</Text>
             )}
-
             <TextInput
               placeholderTextColor="gray"
               style={[
@@ -309,6 +321,20 @@ const EditMainDetails = ({ route }) => {
               onChangeText={setLastname}
             />
             {lastnameError && <Text style={styles.errorText}>{lastnameError}</Text>}
+
+            {/* Email input */}
+            <TextInput
+              placeholderTextColor="gray"
+              style={[
+                styles.input,
+                { shadowColor: emailError ? '#ff0000' : 'gray' },
+              ]}
+              placeholder={t('Email')}
+              value={email}
+              onChangeText={setemail}
+            />
+            {emailError && <Text style={styles.errorText}>{emailError}</Text>}
+
           </View>
 
           <View>
@@ -505,7 +531,7 @@ const EditMainDetails = ({ route }) => {
           </Pressable>
         </View>
       </ScrollView>
-    </ImageBackground>
+    </ImageBackground >
   );
 };
 

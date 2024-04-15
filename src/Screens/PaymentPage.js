@@ -124,7 +124,7 @@ const PaymentPage = ({ navigation }) => {
             user_id: PerentsData && PerentsData?._id,
           });
           PerentsData.payment_id = data.razorpay_payment_id;
-          console.log(PerentsData,data.razorpay_payment_id,PerentsData.payment_id, 'PerentsData')
+          console.log(PerentsData, data.razorpay_payment_id, PerentsData.payment_id, 'PerentsData')
           const registerData = await api
             .post(`/user_register`, {
               headers: {

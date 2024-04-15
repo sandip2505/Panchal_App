@@ -11,6 +11,7 @@ import {
   Linking,
   Pressable,
   ScrollView,
+  Alert,
 } from 'react-native';
 import api from '../context/api';
 
@@ -22,14 +23,14 @@ import { useTranslation, initReactI18next } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen({ navigation }) {
-  const [mobile_no, setmobile_no] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setemail] = useState('');
+  const [otp, setotp] = useState('');
   const [fcmtoken, setFcmtoken] = useState('');
   const [sendOtp, setSendOtp] = useState(false);
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const [mobileError, setMobileError] = useState('');
+  const [emailError, setemailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const { t } = useTranslation();
 
@@ -40,7 +41,6 @@ export default function LoginScreen({ navigation }) {
     try {
       let fcmtoken = await AsyncStorage.getItem("fcmtoken");
       setFcmtoken(fcmtoken)
-
       if (!fcmtoken) {
         const femtoken = await messaging().getToken();
         if (femtoken) {
@@ -53,6 +53,68 @@ export default function LoginScreen({ navigation }) {
       console.log(error, "error in GetFCMToken");
     }
   };
+
+  const handleSendOtp = async () => {
+    if (email == '') {
+      setemailError('Please enter Email Address');
+    } else {
+      setemailError('');
+      try {
+        const response = await api.post('/send-otp', { email: email });
+        console.log(response.data, "response of handelSendOtp");
+        if (response.data.status === true) {
+          console.log('Gotcha ');
+          showToast(
+            'success',
+            response.data.message,
+            2000,
+          );
+          setSendOtp(true)
+
+        } else {
+          showToast(
+            'error',
+            response.data.message,
+            2000,
+          );
+          console.log('Not Gotcha ');
+          setSendOtp(false)
+        }
+      } catch (error) {
+        console.log(error.response.data, "error of handelSendOtp");
+      }
+    }
+  }
+
+  const handleVerifyOtp = async () => {
+    console.log('handleVerifyOtp');
+    console.log(otp, 'otp from handleVerifyOtp');
+    try {
+
+      const response = await api.post('/check-otp', { otp: otp });
+      if (response.data.status === true) {
+        console.log('Gotcha');
+        showToast(
+          'success',
+          response.data.message,
+          2000,
+        );
+        navigation.navigate('ResetPassword', { userId: response.data.user_id })
+      } else {
+        showToast(
+          'error',
+          response.data.message,
+          2000,
+        );
+        console.log('Not Gotcha ');
+      }
+      console.log(response.data, 'response of handleVerifyOtp');
+
+    } catch (error) {
+      console.log(error, 'error of handleVerifyOtp');
+    }
+
+  }
 
   return (
     <ImageBackground source={require('../assets/bg3.jpg')} style={{ flex: 1 }} resizeMode="cover" >
@@ -68,20 +130,43 @@ export default function LoginScreen({ navigation }) {
             </View>
             <View style={styles.containerBox}>
               <View style={styles.textGroup}>
-                <Text style={styles.title}>Enter your mobile number to get a one-time password (OTP) for changing your password.</Text>
+                <Text style={styles.title}>Enter your Email to get a one-time password (OTP) for changing your password.</Text>
                 <View>
-                  <TextInput placeholder='Mobile Number' editable={sendOtp ? false : true} selectTextOnFocus={sendOtp ? false : true} placeholderTextColor="grey" keyboardType='numeric' maxLength={10} style={[styles.inputText, sendOtp ? { backgroundColor: '#D3D3D3' } : {}]} />
+                  <TextInput placeholder='Email Address' placeholderTextColor="grey" keyboardType='email-address'
+                    // maxLength={10}
+                    value={email}
+                    onChangeText={(text) => setemail(text)}
+                    style={[styles.inputText, sendOtp ? { backgroundColor: '#D3D3D3' } : {}]} />
                 </View>
+                {emailError ? <Text style={[styles.errorText, { color: 'red' }]}>{emailError}</Text> : null}
+
                 <View>
-                  <TextInput placeholder='OTP' editable={sendOtp ? true : false} selectTextOnFocus={sendOtp ? true : false} placeholderTextColor="grey" keyboardType='numeric' maxLength={10} style={[styles.inputText, !sendOtp ? { backgroundColor: '#D3D3D3' } : {}]} />
+                  <TextInput placeholder='OTP' value={otp}
+                    onChange={(e) => setotp(e.nativeEvent.text)}
+                    editable={sendOtp ? true : false} selectTextOnFocus={sendOtp ? true : false} placeholderTextColor="grey" keyboardType='numeric' maxLength={10} style={[styles.inputText, !sendOtp ? { backgroundColor: '#D3D3D3' } : {}]} />
                 </View>
               </View>
-              <TouchableOpacity
-                style={styles.loginBtn}
-                onPress={() => navigation.navigate('ResetPassword')}
-                activeOpacity={0.6}>
-                <Text style={styles.loginText}>Send OTP</Text>
-              </TouchableOpacity>
+
+
+
+              {sendOtp && sendOtp ? (
+                <TouchableOpacity
+                  style={styles.loginBtn}
+                  onPress={handleVerifyOtp}
+                  activeOpacity={0.6}
+                >
+                  <Text style={styles.loginText}>Submit</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.loginBtn}
+                  // onPress={() => navigation.navigate('ResetPassword')}
+                  onPress={handleSendOtp}
+                  activeOpacity={0.6}>
+                  <Text style={styles.loginText}>Send OTP</Text>
+                </TouchableOpacity>
+              )}
+
             </View>
           </View>
         </ScrollView>

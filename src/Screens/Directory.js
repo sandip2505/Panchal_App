@@ -29,7 +29,6 @@ const Directory = ({ navigation }) => {
   const [options, setOptions] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const { t } = useTranslation();
-
   useEffect(() => {
     fetchOptions();
   }, []);
@@ -58,7 +57,7 @@ const Directory = ({ navigation }) => {
           response = await api.get('/user-list');
 
         }
-
+        console.log(response.data, "response")
         if (response.status === 200) {
           setIsLoading(true);
           const data = response.data;
@@ -147,7 +146,8 @@ const Directory = ({ navigation }) => {
                 styles.userName
               }>{`${item.firstname} ${item.middlename} ${item.lastname}`}</Text>
             <Text style={styles.userMobile}>
-              <Text style={{ fontWeight: 'bold' }}>Village.</Text> {item.mobile_number}
+              <Text style={{ fontWeight: 'bold' }}>Village : </Text>
+              {item.locationsData.length > 0 ? item.locationsData[0].village : ""}
             </Text>
           </View>
           <View>

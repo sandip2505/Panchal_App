@@ -25,6 +25,7 @@ const HomePage = ({ navigation }) => {
   const [isTestData, setIsTestData] = useState(false);
   const [language, setLanguage] = useState('');
 
+
   const { width, height } = Dimensions.get('window');
   const sliderHeight = height * 0.32;
   const { t } = useTranslation();
@@ -50,6 +51,27 @@ const HomePage = ({ navigation }) => {
     };
 
     getSelectedLanguage();
+  }, []);
+
+
+
+  useEffect(() => {
+    const findEmail = async () => {
+      try {
+        const value = await AsyncStorage.getItem('userData');
+        const userData = JSON.parse(value);
+        // console.log(userData._id, 'This is userData');
+        // console.log(userData.email, 'This is userData');
+        if (!userData.email || userData.email === '') {
+          navigation.navigate('EmailRegister');
+        }
+      } catch (error) {
+        console.log('Error retrieving user data:', error);
+      }
+
+    };
+
+    findEmail();
   }, []);
 
   const keyUpdate = () => {
